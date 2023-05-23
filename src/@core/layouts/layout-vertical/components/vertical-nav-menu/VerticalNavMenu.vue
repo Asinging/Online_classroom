@@ -114,7 +114,6 @@
 				toggleCollapsed,
 				updateMouseHovered,
 			} = useVerticalNavMenu(props);
-			const navMenuItems = ref([]);
 
 			const { skin } = useAppConfig();
 
@@ -131,22 +130,18 @@
 			const collapseTogglerIconFeather = computed(() =>
 				collapseTogglerIcon.value === "unpinned" ? "CircleIcon" : "DiscIcon"
 			);
+			const navMenuItems = computed(() => {
+				let clientIsIn = store.getters["appConfig/whoIsinGetter"];
+
+				return clientIsIn
+					? store.getters["verticalMenu/clientAppSideBarMenuListGetter"]
+					: store.getters["verticalMenu/adminAppSideBarMenuListGetter"];
+			});
 
 			// App Name
 			const { appName, appLogoImage } = $themeConfig.app;
 
-			onBeforeMount(() => {
-				// let adminNavMenuItems =
-				// 	store.getters["verticalMenu/adminAppSideBarMenuListGetter"];
-				let clientIsIn = JSON.parse(
-					localStorage.getItem("isClientIn") || "false"
-				);
-
-				let menuSidebar = clientIsIn
-					? store.getters["verticalMenu/clientAppSideBarMenuListGetter"]
-					: store.getters["verticalMenu/adminAppSideBarMenuListGetter"];
-				navMenuItems.value = menuSidebar;
-			});
+			onBeforeMount(() => {});
 
 			return {
 				navMenuItems,

@@ -8,31 +8,31 @@ export const $themeBreakpoints = {};
 const isClientIn = JSON.parse(localStorage.getItem('isClientIn') || 'false');
 // APP CONFIG
 export const $themeConfig = {
-    app: {
-        appName: 'O.C', // Will update name in navigation menu (Branding)
-        // eslint-disable-next-line global-require
-        appLogoImage: require('@/assets/images/logo/logo.svg') // Will update logo in navigation menu (Branding)
-    },
-    layout: {
-        isRTL: false,
-        skin: isClientIn ? 'light' : 'semi-dark', // light, dark, bordered, semi-dark
-        // skin: 'semi-dark', // light, dark, bordered, semi-dark
-        routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
-        type: 'vertical', // vertical, horizontal
-        contentWidth: 'full', // full, boxed
-        menu: {
-            hidden: false,
-            isCollapsed: false
-        },
-        navbar: {
-            // ? For horizontal menu, navbar type will work for navMenu type
-            type: 'sticky', // static , sticky , floating, hidden
-            backgroundColor: isClientIn ? '' : 'secondary' // BS color options [primary, success, etc]
-        },
-        footer: {
-            type: isClientIn ? 'static' : 'sticky' // static, sticky, hidden
-        },
-        customizer: true,
-        enableScrollToTop: true
-    }
+   app: {
+      appName: 'O.C', // Will update name in navigation menu (Branding)
+      // eslint-disable-next-line global-require
+      appLogoImage: require('@/assets/images/logo/logo.svg') // Will update logo in navigation menu (Branding)
+   },
+   layout: {
+      isRTL: false,
+      skin: isClientIn ? 'light' : 'semi-dark', // light, dark, bordered, semi-dark
+      // skin: 'semi-dark', // light, dark, bordered, semi-dark
+      routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
+      type: 'vertical', // vertical, horizontal
+      contentWidth: 'full', // full, boxed
+      menu: {
+         hidden: false,
+         isCollapsed: false
+      },
+      navbar: {
+         // ? For horizontal menu, navbar type will work for navMenu type
+         type: isClientIn ? 'floating' : 'sticky', // static , sticky , floating, hidden
+         backgroundColor: isClientIn ? 'primary' : 'info' // BS color options [primary, success, etc]
+      },
+      footer: {
+         type: isClientIn ? 'static' : 'sticky' // static, sticky, hidden
+      },
+      customizer: false,
+      enableScrollToTop: true
+   }
 };
