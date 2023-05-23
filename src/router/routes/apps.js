@@ -3,7 +3,7 @@ export default [
     // *--------- EMAIL & IT'S FILTERS N LABELS -------------------------------*
     // *===============================================---*
     {
-        path: '/apps/email',
+        path: '/admin/apps/email',
         name: 'apps-email',
         component: () =>
             import ('@/views/apps/email/Email.vue'),
@@ -13,7 +13,7 @@ export default [
         }
     },
     {
-        path: '/apps/email/:folder',
+        path: '/admin/apps/email/:folder',
         name: 'apps-email-folder',
         component: () =>
             import ('@/views/apps/email/Email.vue'),
@@ -47,19 +47,19 @@ export default [
     // *--------- USER ---- ---------------------------------------*
     // *===============================================---*
     {
-        path: '/apps/users/list',
+        path: '/admin/admin/apps/users/list',
         name: 'apps-users-list',
         component: () =>
             import ('@/views/apps/user/users-list/UsersList.vue')
     },
     {
-        path: '/apps/users/view/:id',
+        path: '/admin/apps/users/view/:id',
         name: 'apps-users-view',
         component: () =>
             import ('@/views/apps/user/users-view/UsersView.vue')
     },
     {
-        path: '/apps/users/edit/:id',
+        path: '/admin/apps/users/edit/:id',
         name: 'apps-users-edit',
         component: () =>
             import ('@/views/apps/user/users-edit/UsersEdit.vue')
