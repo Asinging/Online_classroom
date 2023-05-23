@@ -5,7 +5,7 @@ export const $themeColors = {};
 // App Breakpoints
 // Initially this will be blank. Later on when app is initialized we will assign bootstrap breakpoints to this object from CSS variables.
 export const $themeBreakpoints = {};
-
+const isClientIn = JSON.parse(localStorage.getItem('isClientIn') || 'false');
 // APP CONFIG
 export const $themeConfig = {
     app: {
@@ -15,7 +15,7 @@ export const $themeConfig = {
     },
     layout: {
         isRTL: false,
-        skin: JSON.parse(localStorage.getItem('isClientIn') || 'false') ? 'light' : 'semi-dark', // light, dark, bordered, semi-dark
+        skin: isClientIn ? 'light' : 'semi-dark', // light, dark, bordered, semi-dark
         // skin: 'semi-dark', // light, dark, bordered, semi-dark
         routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
         type: 'vertical', // vertical, horizontal
@@ -26,13 +26,13 @@ export const $themeConfig = {
         },
         navbar: {
             // ? For horizontal menu, navbar type will work for navMenu type
-            type: 'floating', // static , sticky , floating, hidden
-            backgroundColor: '' // BS color options [primary, success, etc]
+            type: 'sticky', // static , sticky , floating, hidden
+            backgroundColor: isClientIn ? '' : 'secondary' // BS color options [primary, success, etc]
         },
         footer: {
-            type: 'static' // static, sticky, hidden
+            type: isClientIn ? 'static' : 'sticky' // static, sticky, hidden
         },
-        customizer: false,
+        customizer: true,
         enableScrollToTop: true
     }
 };
