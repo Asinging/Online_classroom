@@ -27,7 +27,7 @@ export const $themeConfig = {
       navbar: {
          // ? For horizontal menu, navbar type will work for navMenu type
          type: isClientIn ? 'floating' : 'sticky', // static , sticky , floating, hidden
-         backgroundColor: isClientIn ? 'primary' : 'info' // BS color options [primary, success, etc]
+         backgroundColor: isClientIn ? 'primary' : 'dark' // BS color options [primary, success, etc]
       },
       footer: {
          type: isClientIn ? 'static' : 'sticky' // static, sticky, hidden
