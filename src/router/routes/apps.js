@@ -47,10 +47,20 @@ export default [
     // *--------- USER ---- ---------------------------------------*
     // *===============================================---*
     {
-        path: '/admin/admin/apps/users/list',
+        path: '/admin/apps/users/list',
         name: 'apps-users-list',
         component: () =>
-            import ('@/views/apps/user/users-list/UsersList.vue')
+            import ('@/views/apps/user/users-list/UsersList.vue'),
+        meta: {
+            pageTitle: 'Users',
+            breadcrumb: [{
+                    text: 'All users'
+                },
+                {
+                    text: 'List'
+                }
+            ]
+        }
     },
     {
         path: '/admin/apps/users/view/:id',

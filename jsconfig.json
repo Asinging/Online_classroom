@@ -4,6 +4,8 @@
         "paths": {
             "@/*": ["src/*"],
             "@core/*": ["src/@core/*"],
+            // "@firebase/*": ["src/config/*"],
+
         }
     }
 }

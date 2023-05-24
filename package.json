@@ -10,6 +10,9 @@
     "dependencies": {
         "@casl/ability": "4.1.6",
         "@casl/vue": "1.1.1",
+        "@firebase/analytics": "^0.10.0",
+        "@firebase/app": "^0.9.10",
+        "@firebase/firestore": "^3.12.0",
         "@fullcalendar/common": "5.x",
         "@fullcalendar/core": "5.x",
         "@fullcalendar/daygrid": "5.x",
