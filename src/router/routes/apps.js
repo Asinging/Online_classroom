@@ -1,7 +1,24 @@
-export default [
+export default [{
+        path: '/admin/upload-course',
+        name: 'upload-courses',
+        component: () =>
+            import ('@/views/apps/upload/index'),
+        meta: {
+            resource: 'Auth',
+            pageTitle: 'Upload',
+            breadcrumb: [{
+                    text: 'Upload'
+                },
+                {
+                    text: 'Course material'
+                }
+            ]
+        }
+    },
     // *===============================================---*
     // *--------- EMAIL & IT'S FILTERS N LABELS -------------------------------*
     // *===============================================---*
+
     {
         path: '/admin/apps/email',
         name: 'apps-email',
@@ -46,6 +63,7 @@ export default [
     // *===============================================---*
     // *--------- USER ---- ---------------------------------------*
     // *===============================================---*
+
     {
         path: '/admin/apps/users/list',
         name: 'apps-users-list',

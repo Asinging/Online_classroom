@@ -8,11 +8,23 @@
 				<ecommerce-statistics :data="data.statisticsItems" />
 			</b-col>
 		</b-row>
+		<b-card>
+			<div class="video-container">
+				<iframe
+					width="560"
+					height="315"
+					src="https://www.youtube.com/embed/2hR-uWjBAgw"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+					allowfullscreen
+				></iframe>
+			</div>
+		</b-card>
 	</section>
 </template>
 
 <script>
-	import { BRow, BCol } from "bootstrap-vue";
+	import { BRow, BCol, BCard } from "bootstrap-vue";
 
 	import { getUserData } from "@/auth/utils";
 	import EcommerceMedal from "./EcommerceMedal.vue";
@@ -20,6 +32,7 @@
 
 	export default {
 		components: {
+			BCard,
 			BRow,
 			BCol,
 

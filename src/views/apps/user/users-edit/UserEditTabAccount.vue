@@ -154,8 +154,8 @@
 		BFormCheckbox,
 	} from "bootstrap-vue";
 	import { avatarText } from "@core/utils/filter";
-	import vSelect from "vue-select";
 	import { useInputImageRenderer } from "@core/comp-functions/forms/form-utils";
+	import vSelect from "vue-select";
 	import { ref, computed } from "@vue/composition-api";
 	import useUsersList from "../users-list/useUsersList";
 	import { serverTimestamp } from "firebase/firestore";
@@ -342,6 +342,7 @@
 
 			return {
 				saveRecord,
+				inputImageRenderer,
 				avatarText,
 				isRemovingProfilePhoto,
 				isUpdateProfilePhoto,
@@ -357,7 +358,6 @@
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
 				previewEl,
-				inputImageRenderer,
 			};
 		},
 	};

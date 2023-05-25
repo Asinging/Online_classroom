@@ -1,3 +1,3 @@
-# Vuexy - Vuejs, React, HTML & Laravel Admin Dashboard Template
+# A COLLABORATIVE PLATFORM FOR VERY CURIOUS MINDS, THOSE DESPERATE TO KNOW THE THINGS THAT MAKES A SUCCESSFUL LIFE AS IT PARTAINS ATTITUTED AND THE RIGHT LEARNING MATERIALS
 
-**Vuexy – Vuejs, React, HTML & Laravel Admin Dashboard Template** – is the most developer friendly & highly customizable Admin Dashboard Template based on Bootstrap 4, Bootstrap Vue & Reactstrap.
+**VUE FIREBASE** – Come and learn the things that work.
