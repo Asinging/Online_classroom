@@ -46,6 +46,7 @@
 			},
 		},
 		beforeCreate() {
+			localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
 			const isClientIn = JSON.parse(
 				localStorage.getItem("isClientIn") || "false"
 			);

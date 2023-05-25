@@ -30,7 +30,6 @@ export default {
                 const docRef = doc(db, 'Users', payload.id);
                 try {
                     const docSnap = updateDoc(docRef, payload.data);
-                    debugger;
 
                     resolve(docSnap);
                 } catch (err) {

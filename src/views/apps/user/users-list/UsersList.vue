@@ -198,7 +198,7 @@
 								<span class="align-middle ml-50">Edit</span>
 							</b-dropdown-item>
 
-							<b-dropdown-item>
+							<b-dropdown-item @click="deleteUser(data.item.id)">
 								<feather-icon icon="TrashIcon" />
 								<span class="align-middle ml-50">Delete</span>
 							</b-dropdown-item>
@@ -336,6 +336,7 @@
 				resolveUserRoleVariant,
 				resolveUserRoleIcon,
 				resolveUserStatusVariant,
+				deleteUser,
 
 				// Extra Filters
 				roleFilter,
@@ -378,6 +379,7 @@
 				deleteClick,
 				refetchData,
 				fetchUsers,
+				deleteUser,
 				// Filter
 				avatarText,
 				resolveUserRoleVariant,

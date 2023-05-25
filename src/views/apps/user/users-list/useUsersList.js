@@ -9,6 +9,7 @@ import ToastificationContent from '@core/components/toastification/Toastificatio
 import { paginateCounteFromOne, countFromOne } from '@/helpers/number-helpers/numberIndex';
 import { paginate } from '@/helpers/pagination-helpers/generalPagination';
 import router from '@/router';
+import Swal from 'sweetalert2';
 
 import { useRoute } from 'vue-router';
 
@@ -128,6 +129,41 @@ export default function useUsersList() {
 
     //*************************************************************** */
     // ********************** FUNCTIONS (MEHTODS) ********************************//
+    const deleteUser = userId => {
+        new Swal({
+            title: ' 😕 Carefull! ',
+            text: `You are about to delete this user permanently`,
+            icon: 'info',
+
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-outline-danger ml-1'
+            },
+            buttonsStyling: false
+        }).then(async result => {
+            if (result.value) {
+                try {
+                    let payload = {
+                        signInUser: localStorage.getItem('signInUser'),
+                        data: {
+                            status: 0
+                        },
+                        id: userId
+                    };
+                    let doc = await store.dispatch('Users/UPDATE_SINGLE_USER', payload);
+                    fetchUsers();
+                    new Swal('Good job!', 'User successfully deleted!', 'success');
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        });
+    };
 
     const fetchUsers = async(page, pageNumber) => {
         let payload = {
@@ -253,6 +289,7 @@ export default function useUsersList() {
         resolveUserRoleIcon,
         resolveUserStatusVariant,
         refetchData,
+        deleteUser,
 
         // Extra Filters
         roleFilter,
