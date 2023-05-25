@@ -89,6 +89,7 @@
 			const { isRTL } = $themeConfig.layout;
 			document.documentElement.setAttribute("dir", isRTL ? "rtl" : "ltr");
 		},
+
 		setup() {
 			const { skin, skinClasses } = useAppConfig();
 			const { enableScrollToTop } = $themeConfig.layout;

@@ -12,16 +12,23 @@ import {
     and,
     or,
     doc,
-    updateDoc
+    updateDoc,
+    auth
 } from 'firebase/firestore';
 export default {
     namespaced: true,
     state: {
-        users: []
+        users: [],
+        signInUser: null
     },
     mutations: {
         mAllUser(state, val) {
             state.users = val;
+        },
+        mSignInUser(state) {
+            console.log(auth);
+            debugger;
+            state.signInUser = `${auth?.currentUser?.uuid}`
         }
     },
     actions: {
@@ -118,6 +125,9 @@ export default {
     getters: {
         allUserGetter(state) {
             return state.users;
+        },
+        getSignInUser(state) {
+            return state.signInUser;
         }
     }
 };
