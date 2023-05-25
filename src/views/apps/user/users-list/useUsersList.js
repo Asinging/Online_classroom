@@ -56,7 +56,6 @@ export default function useUsersList() {
     const countries = ref([]);
     const contactType = { name: 'Customers', value: 1 };
     const returnSearchedUser = ref([]);
-    const filteredUserObject = ref([]);
 
     const roleOptions = [{ label: 'Admin', value: 1 }, { label: 'Student', value: 2 }];
 

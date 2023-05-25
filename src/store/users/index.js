@@ -1,6 +1,19 @@
 import { db } from '@/config/firebase.js';
 
-import { getDocs, getDoc, addDoc, collection, query, orderBy, limit, where, and, or, doc } from 'firebase/firestore';
+import {
+    getDocs,
+    getDoc,
+    addDoc,
+    collection,
+    query,
+    orderBy,
+    limit,
+    where,
+    and,
+    or,
+    doc,
+    updateDoc
+} from 'firebase/firestore';
 export default {
     namespaced: true,
     state: {
@@ -12,6 +25,20 @@ export default {
         }
     },
     actions: {
+        UPDATE_SINGLE_USER({ commit }, payload) {
+            return new Promise(async(resolve, reject) => {
+                const docRef = doc(db, 'Users', payload.id);
+                try {
+                    const docSnap = updateDoc(docRef, payload.data);
+                    debugger;
+
+                    resolve(docSnap);
+                } catch (err) {
+                    console.log(err);
+                    reject(err);
+                }
+            });
+        },
         GET_SINGLE_USER({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
                 const docRef = doc(db, 'Users', payload.id);

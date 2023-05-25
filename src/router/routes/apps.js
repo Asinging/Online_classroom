@@ -66,12 +66,25 @@ export default [
         path: '/admin/apps/users/view/:id',
         name: 'apps-users-view',
         component: () =>
-            import ('@/views/apps/user/users-view/UsersView.vue')
+            import ('@/views/apps/user/users-view/UsersView.vue'),
+
+        meta: {
+            pageTitle: 'User Overview',
+            breadcrumb: [{
+                text: 'User'
+            }]
+        }
     },
     {
         path: '/admin/apps/users/edit/:id',
         name: 'apps-users-edit',
         component: () =>
-            import ('@/views/apps/user/users-edit/UsersEdit.vue')
+            import ('@/views/apps/user/users-edit/UsersEdit.vue'),
+        meta: {
+            pageTitle: 'Edit User',
+            breadcrumb: [{
+                text: 'User'
+            }]
+        }
     }
 ];

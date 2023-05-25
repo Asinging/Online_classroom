@@ -90,6 +90,7 @@
 								id="email"
 								v-model="userData.email"
 								:state="getValidationState(validationContext)"
+								disabled
 								trim
 							/>
 
@@ -222,8 +223,8 @@
 	import vSelect from "vue-select";
 	import countries from "@/@fake-db/data/other/countries";
 	import store from "@/store";
-	import { db } from "@/config/firebase.js";
-	import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+	import { serverTimestamp } from "firebase/firestore";
 	import { useToast } from "vue-toastification/composition";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
