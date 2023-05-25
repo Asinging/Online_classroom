@@ -5,8 +5,6 @@ import { title } from '@core/utils/filter';
 // Notification
 import { useToast } from 'vue-toastification/composition';
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue';
-import { db } from '@/config/firebase.js';
-import { getDocs, collection } from 'firebase/firestore';
 
 import { paginateCounteFromOne, countFromOne } from '@/helpers/number-helpers/numberIndex';
 import { paginate } from '@/helpers/pagination-helpers/generalPagination';
@@ -60,21 +58,13 @@ export default function useUsersList() {
     const returnSearchedUser = ref([]);
     const filteredUserObject = ref([]);
 
-    const roleOptions = [{ label: 'Admin', value: 'admin' }, { label: 'Student', value: 'student' }];
-
-    const planOptions = [
-        { label: 'Basic', value: 'basic' },
-        { label: 'Company', value: 'company' },
-        { label: 'Enterprise', value: 'enterprise' },
-        { label: 'Team', value: 'team' }
-    ];
+    const roleOptions = [{ label: 'Admin', value: 1 }, { label: 'Student', value: 2 }];
 
     const statusOptions = [
         { label: 'Pending', value: 2 },
         { label: 'Active', value: 1 },
         { label: 'Inactive', value: 0 }
     ];
-    const CompanyContactType = [{ name: 'Customers', value: 1 }, { name: 'Vendors | Suppliers', value: 2 }];
 
     onBeforeMount(() => {
         fetchUsers();
@@ -93,12 +83,11 @@ export default function useUsersList() {
     });
 
     const computeUsers = computed(() => {
-        let getUsersObj = filteredUserObject.value;
-
+        let getUsersObj = store.getters['Users/allUserGetter'];
         let users = searchQuery.value ? returnSearchedUser.value : getUsersObj;
 
         responseObject.value = getUsersObj;
-        totalUsers.value = users.length;
+        // totalUsers.value = users.length;
 
         // let payload = {
         //     data: paginate(users, currentPage.value, perPage.value),
@@ -113,46 +102,26 @@ export default function useUsersList() {
     // ********************** WATCHERS ********************************//
 
     watch([currentPage, perPage, responseObject], val => {
-        // refetchData(val);
+        refetchData(val);
     });
     watch(
         searchQuery,
-        val => {
+        async val => {
             if (!val) {
                 returnSearchedUser.value = [];
                 return false;
             }
             isBusy.value = true;
-            let channelId = store.getters['User/channelIdGetter'];
-            let _storeActionPayload = '';
-            let _storeActionUrl = '';
-            if (navUserDiff.value == 2) {
-                _storeActionUrl = 'User/SEARCH_CUSTOMERS_NAME';
-                _storeActionPayload = {
-                    channelId,
-                    search: val
-                };
-            } else {
-                _storeActionUrl = 'User/SEARCH_EMPLOYEE_OR_USER';
-                _storeActionPayload = {
-                    search: val
-                };
-            }
-
-            store.dispatch(_storeActionUrl, _storeActionPayload).then(resp => {
-                if (!resp) {
-                    returnSearchedUser.value = [];
-                    return false;
-                }
-                let payload = {
-                    data: paginate(resp.data, currentPage.value, perPage.value),
-                    perPage: perPage.value,
-                    currentPage: currentPage.value
-                };
-                let _resolveData = paginateCounteFromOne(payload);
-
+            let payload = {
+                searchString: val.toLocaleLowerCase()
+            };
+            try {
+                let response = await store.dispatch('Users/SEARCH_USERS', payload);
+                returnSearchedUser.value = response;
                 isBusy.value = false;
-            });
+            } catch (err) {
+                isBusy.value = false;
+            }
         }, {
             immediate: false
         }
@@ -162,18 +131,16 @@ export default function useUsersList() {
     // ********************** FUNCTIONS (MEHTODS) ********************************//
 
     const fetchUsers = async(page, pageNumber) => {
-        const listOfUsers = collection(db, 'Users');
-        let filteredData = [];
+        let payload = {
+            page,
+            pageNumber
+        };
         try {
-            let fetcheData = await getDocs(listOfUsers);
-            filteredUserObject.value = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
-            totalUsers.value = fetcheData.size;
-            console.log(filteredUserObject.value);
+            let resp = await store.dispatch('Users/GET_USERS', payload);
             isBusy.value = false;
-            return filteredData;
+            totalUsers.value = resp.length;
         } catch (err) {
             isBusy.value = false;
-            console.log(err);
         }
     };
 
@@ -253,9 +220,8 @@ export default function useUsersList() {
         contactType,
         isAddNewUserSidebarActive,
         roleOptions,
-        planOptions,
+
         statusOptions,
-        CompanyContactType,
 
         tableColumns,
         perPage,

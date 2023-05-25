@@ -10,7 +10,6 @@
 			<user-list-add-new
 				:is-add-new-user-sidebar-active.sync="isAddNewUserSidebarActive"
 				:role-options="roleOptions"
-				:plan-options="planOptions"
 				@refetch-data="refetchData"
 			/>
 
@@ -85,7 +84,7 @@
 						</div>
 					</template>
 
-					<!-- Column: User -->
+					<!-- Column: Name -->
 					<template #cell(f_name)="data">
 						<b-media vertical-align="center">
 							<template #aside>
@@ -109,11 +108,11 @@
 									name: 'apps-users-view',
 									params: { id: data.item.id },
 								}"
-								class="font-weight-bold d-block text-nowrap"
+								class="font-weight-bold d-block text-nowrap text-capitalize"
 							>
 								{{ data.item.f_name }}
 							</b-link>
-							<small class="text-muted"
+							<small class="text-muted text-lighten-blue"
 								>@{{ data.item.username }}</small
 							>
 						</b-media>
@@ -123,15 +122,17 @@
 					<template #cell(user_type)="data">
 						<div class="text-nowrap">
 							<feather-icon
-								:icon="resolveUserRoleIcon(data.item.role)"
+								:icon="resolveUserRoleIcon(data.item.user_type)"
 								size="18"
 								class="mr-50"
 								:class="`text-${resolveUserRoleVariant(
-									data.item.user_type || 'student'
+									data.item.user_type == 1
+										? 'admin'
+										: 'student'
 								)}`"
 							/>
 							<span class="align-text-top text-capitalize">{{
-								data.item.user_type || "Not Assigned"
+								data.item.user_type == 1 ? "Admin" : "Student"
 							}}</span>
 						</div>
 					</template>
@@ -151,7 +152,7 @@
 						<b-badge
 							pill
 							:variant="`light-${resolveUserStatusVariant(
-								data.item.status
+								data.item.enabled
 							)}`"
 							class="text-capitalize"
 						>
@@ -341,7 +342,6 @@
 				planFilter,
 				statusFilter,
 				roleOptions,
-				planOptions,
 			} = useUsersList();
 
 			return {
@@ -359,7 +359,6 @@
 				isSortDirDesc,
 				refUserListTable,
 				roleOptions,
-				planOptions,
 
 				// Extra Filters
 				roleFilter,
