@@ -1,5 +1,6 @@
 import { db } from '@/config/firebase.js';
-import { getDocs, addDoc, collection, query, orderBy, limit, where, and, or } from 'firebase/firestore';
+
+import { getDocs, getDoc, addDoc, collection, query, orderBy, limit, where, and, or, doc } from 'firebase/firestore';
 export default {
     namespaced: true,
     state: {
@@ -11,6 +12,20 @@ export default {
         }
     },
     actions: {
+        GET_SINGLE_USER({ commit }, payload) {
+            return new Promise(async(resolve, reject) => {
+                const docRef = doc(db, 'Users', payload.id);
+                try {
+                    const docSnap = await getDoc(docRef);
+
+                    resolve({...docSnap.data(), id: docSnap.id });
+                } catch (err) {
+                    console.log(err);
+                    reject(err);
+                }
+            });
+        },
+
         GET_USERS({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
                 const listOfUsers = collection(db, 'Users');
@@ -37,24 +52,20 @@ export default {
             });
         },
         SEARCH_USERS({ commit }, payload) {
-            // debugger;
+            // ;
             return new Promise(async(resolve, reject) => {
                 const listOfUsers = collection(db, 'Users');
 
                 try {
                     const q = query(
                         listOfUsers,
-                        // limit(50),
-                        // orderBy('is_root', 'desc'),
-                        // orderBy('created_at', 'desc'),
-                        // and(
-                        //     where('status', '==', 1),
-                        //     where('is_root', '!=', true),
-
+                        limit(50),
+                        orderBy('f_name', 'asc'),
+                        orderBy('created_at', 'desc'),
+                        where('status', '==', 1),
+                        where('is_root', '==', false),
                         where('f_name', '>=', payload.searchString),
                         where('f_name', '<', payload.searchString + '\uf8ff')
-
-                        // )
                     );
                     let fetcheData = await getDocs(q);
                     let filteredUserObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
