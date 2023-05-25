@@ -174,6 +174,7 @@ export default function useUsersList() {
             let resp = await store.dispatch('Users/GET_USERS', payload);
             isBusy.value = false;
             totalUsers.value = resp.length;
+            refreshCard.value.showLoading = false;
         } catch (err) {
             isBusy.value = false;
         }

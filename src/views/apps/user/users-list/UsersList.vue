@@ -307,6 +307,7 @@
 		},
 		setup() {
 			const {
+				refreshCard,
 				isAddNewUserSidebarActive,
 				tableColumns,
 				perPage,
@@ -347,6 +348,7 @@
 
 			return {
 				// Sidebar
+				refreshCard,
 				isAddNewUserSidebarActive,
 
 				tableColumns,
