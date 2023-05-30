@@ -26,8 +26,8 @@ export default {
             state.users = val;
         },
         mSignInUser(state) {
-            console.log(auth);
-            debugger;
+
+
             state.signInUser = `${auth?.currentUser?.uuid}`
         }
     },
@@ -45,13 +45,42 @@ export default {
                 }
             });
         },
-        GET_SINGLE_USER({ commit }, payload) {
+        GET_SINGLE_USER_BY_Id({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
+                debugger
                 const docRef = doc(db, 'Users', payload.id);
                 try {
                     const docSnap = await getDoc(docRef);
 
                     resolve({...docSnap.data(), id: docSnap.id });
+                } catch (err) {
+                    console.log(err);
+                    reject(err);
+                }
+            });
+        },
+        GET_SINGLE_USER({ commit }, payload) {
+
+            return new Promise(async(resolve, reject) => {
+                const userRef = collection(db, 'Users');
+
+                try {
+                    const q = query(
+                        userRef,
+                        where(`${payload.field}`, '==', `${payload.value}`),
+
+                    );
+                    let fetcheData = await getDocs(q);
+                    let user = fetcheData.docs[0]
+
+                    debugger
+                    if (user) {
+
+                        resolve({...user.data(), id: user.id });
+                        return
+                    }
+                    resolve([])
+
                 } catch (err) {
                     console.log(err);
                     reject(err);

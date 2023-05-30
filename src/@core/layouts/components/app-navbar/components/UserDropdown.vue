@@ -20,7 +20,7 @@
 				badge-variant="success"
 			>
 				<feather-icon
-					v-if="!userData.fullName"
+					v-if="userData.fullName"
 					icon="UserIcon"
 					size="22"
 				/>
@@ -62,7 +62,7 @@
 		},
 		data() {
 			return {
-				userData: JSON.parse(localStorage.getItem("userData")),
+				userData: JSON.parse(localStorage.getItem("userData") || "{}"),
 				avatarText,
 			};
 		},

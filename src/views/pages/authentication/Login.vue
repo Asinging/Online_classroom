@@ -3,11 +3,9 @@
 		<b-row class="auth-inner m-0">
 			<!-- Brand logo-->
 			<b-link class="brand-logo">
-				<vuexy-logo />
+				<logo />
 			</b-link>
-			<!-- /Brand logo-->
 
-			<!-- Left Text-->
 			<b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
 				<div
 					class="w-100 d-lg-flex align-items-center justify-content-center px-5"
@@ -15,60 +13,31 @@
 					<b-img fluid :src="imgUrl" alt="Login V2" />
 				</div>
 			</b-col>
-			<!-- /Left Text-->
 
-			<!-- Login-->
 			<b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
 				<b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
-					<b-card-title class="mb-1 font-weight-bold" title-tag="h2">
-						Welcome to Vuexy! 👋
+					<b-link class="brand-logo-2 d-none">
+						<logo />
+					</b-link>
+
+					<b-card-title
+						title-tag="h2"
+						class="font-weight-bold mb-1 text-center text-lg-left"
+					>
+						Welcome to O.C 👋
 					</b-card-title>
-					<b-card-text class="mb-2">
+					<b-card-text class="mb-2 text-center text-lg-left">
 						Please sign-in to your account and start the adventure
 					</b-card-text>
-
-					<b-alert variant="primary" show>
-						<div class="alert-body font-small-2">
-							<p>
-								<small class="mr-50"
-									><span class="font-weight-bold"
-										>Admin:</span
-									>
-									admin@demo.com | admin</small
-								>
-							</p>
-							<p>
-								<small class="mr-50"
-									><span class="font-weight-bold"
-										>Client:</span
-									>
-									client@demo.com | client</small
-								>
-							</p>
-						</div>
-						<feather-icon
-							v-b-tooltip.hover.left="
-								'This is just for ACL demo purpose'
-							"
-							icon="HelpCircleIcon"
-							size="18"
-							class="position-absolute"
-							style="top: 10; right: 10"
-						/>
-					</b-alert>
-
+					<!-- <network-checker /> -->
 					<!-- form -->
-					<validation-observer ref="loginForm" #default="{ invalid }">
-						<b-form
-							class="auth-login-form mt-2"
-							@submit.prevent="login"
-						>
+					<validation-observer ref="loginValidation">
+						<b-form class="auth-login-form mt-2" @submit.prevent>
 							<!-- email -->
 							<b-form-group label="Email" label-for="login-email">
 								<validation-provider
 									#default="{ errors }"
 									name="Email"
-									vid="email"
 									rules="required|email"
 								>
 									<b-form-input
@@ -91,7 +60,9 @@
 								<div class="d-flex justify-content-between">
 									<label for="login-password">Password</label>
 									<b-link
-										:to="{ name: 'auth-forgot-password' }"
+										:to="{
+											name: 'auth-forgot-password-v2',
+										}"
 									>
 										<small>Forgot Password?</small>
 									</b-link>
@@ -99,7 +70,6 @@
 								<validation-provider
 									#default="{ errors }"
 									name="Password"
-									vid="password"
 									rules="required"
 								>
 									<b-input-group
@@ -119,7 +89,7 @@
 											class="form-control-merge"
 											:type="passwordFieldType"
 											name="login-password"
-											placeholder="Password"
+											placeholder="············"
 										/>
 										<b-input-group-append is-text>
 											<feather-icon
@@ -137,32 +107,35 @@
 								</validation-provider>
 							</b-form-group>
 
-							<!-- checkbox -->
-							<b-form-group>
-								<b-form-checkbox
-									id="remember-me"
-									v-model="status"
-									name="checkbox-1"
-								>
-									Remember Me
-								</b-form-checkbox>
-							</b-form-group>
-
 							<!-- submit buttons -->
 							<b-button
 								type="submit"
 								variant="primary"
+								class="pb-1"
 								block
-								:disabled="invalid"
+								@click="login"
+								:disabled="isLogining"
 							>
-								Sign in
+								<span>Sign in</span>
+								<span class="pl-1">
+									<span v-if="!isLogining">
+										<feather-icon icon="ChevronsRightIcon"
+									/></span>
+									<span v-else>
+										<b-spinner
+											label="Loading..."
+											class="mr-25"
+											small
+										/>
+									</span>
+								</span>
 							</b-button>
 						</b-form>
 					</validation-observer>
 
 					<b-card-text class="text-center mt-2">
 						<span>New on our platform? </span>
-						<b-link :to="{ name: 'auth-register' }">
+						<b-link @click="toCreateAccount">
 							<span>&nbsp;Create an account</span>
 						</b-link>
 					</b-card-text>
@@ -183,9 +156,6 @@
 						<b-button variant="google" href="javascript:void(0)">
 							<feather-icon icon="MailIcon" />
 						</b-button>
-						<b-button variant="github" href="javascript:void(0)">
-							<feather-icon icon="GithubIcon" />
-						</b-button>
 					</div>
 				</b-col>
 			</b-col>
@@ -197,7 +167,7 @@
 <script>
 	/* eslint-disable global-require */
 	import { ValidationProvider, ValidationObserver } from "vee-validate";
-	import VuexyLogo from "@core/layouts/components/Logo.vue";
+	import Logo from "@core/layouts/components/Logo.vue";
 	import {
 		BRow,
 		BCol,
@@ -222,6 +192,7 @@
 	import { getHomeRouteForLoggedInUser } from "@/auth/utils";
 
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
+	import { onAuthStateChanged } from "firebase/auth";
 
 	export default {
 		directives: {
@@ -242,7 +213,7 @@
 			BForm,
 			BButton,
 			BAlert,
-			VuexyLogo,
+			Logo,
 			ValidationProvider,
 			ValidationObserver,
 		},
@@ -253,12 +224,17 @@
 				password: "admin",
 				userEmail: "admin@demo.com",
 				sideImg: require("@/assets/images/pages/login-v2.svg"),
+				isLogining: false,
 
 				// validation rules
 				required,
 				email,
 			};
 		},
+		mounted() {
+			this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
+		},
+
 		computed: {
 			passwordToggleIcon() {
 				return this.passwordFieldType === "password"
@@ -275,6 +251,11 @@
 			},
 		},
 		methods: {
+			toCreateAccount() {
+				this.$router.push({
+					name: "auth-register",
+				});
+			},
 			login() {
 				this.$refs.loginForm.validate().then(async (success) => {
 					if (success) {
@@ -341,4 +322,17 @@
 
 <style lang="scss">
 	@import "@core/scss/vue/pages/page-auth.scss";
+	.brand-logo {
+		@media only screen and (max-width: 992px) {
+			display: none !important;
+		}
+	}
+	.brand-logo-2 {
+		@media only screen and (max-width: 991px) {
+			padding-top: 2rem;
+			padding-bottom: 2rem;
+			display: flex !important;
+			justify-content: center !important;
+		}
+	}
 </style>
