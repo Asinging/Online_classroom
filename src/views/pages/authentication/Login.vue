@@ -31,7 +31,10 @@
 					</b-card-text>
 					<!-- <network-checker /> -->
 					<!-- form -->
-					<validation-observer ref="loginValidation">
+					<b-alert variant="danger" v-if="errorMessage">
+						{{ errorMessage }}
+					</b-alert>
+					<validation-observer ref="loginForm">
 						<b-form class="auth-login-form mt-2" @submit.prevent>
 							<!-- email -->
 							<b-form-group label="Email" label-for="login-email">
@@ -169,6 +172,7 @@
 	import { ValidationProvider, ValidationObserver } from "vee-validate";
 	import Logo from "@core/layouts/components/Logo.vue";
 	import {
+		BSpinner,
 		BRow,
 		BCol,
 		BLink,
@@ -199,6 +203,7 @@
 			"b-tooltip": VBTooltip,
 		},
 		components: {
+			BSpinner,
 			BRow,
 			BCol,
 			BLink,
@@ -225,6 +230,7 @@
 				userEmail: "admin@demo.com",
 				sideImg: require("@/assets/images/pages/login-v2.svg"),
 				isLogining: false,
+				errorMessage: null,
 
 				// validation rules
 				required,
@@ -258,62 +264,50 @@
 			},
 			login() {
 				this.$refs.loginForm.validate().then(async (success) => {
-					if (success) {
-						useJwt
-							.login({
-								email: this.userEmail,
-								password: this.password,
-							})
-							.then((response) => {
-								const { userData } = response.data;
-								useJwt.setToken(response.data.accessToken);
-								useJwt.setRefreshToken(response.data.refreshToken);
-								localStorage.setItem(
-									"userData",
-									JSON.stringify(userData)
-								);
-								this.$ability.update(userData.ability);
+					if (!success) {
+						this.$toast({
+							component: ToastificationContent,
+							position: "top-right",
+							props: {
+								title: `Opss`,
+								icon: "AlertTriangleIcon",
+								variant: "danger",
+								text: `A required input box is empty, please check`,
+							},
+						});
+						return false;
+					}
+					this.isLogining = true;
+					let payload = {
+						email: this.userEmail,
+						password: this.password,
+					};
+					this.$store
+						.dispatch("Auth/SIGN_IN", payload)
+						.then((resp) => {
+							this.isLogining = false;
+							if (!resp) {
+								return false;
+							}
 
-								// ? This is just for demo purpose as well.
-								// ? Because we are showing eCommerce app's cart items count in navbar
-								this.$store.commit(
-									"app-ecommerce/UPDATE_CART_ITEMS_COUNT",
-									userData.extras.eCommerceCartItemsCount
-								);
-
-								// ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-								this.$router
-									.replace(
-										getHomeRouteForLoggedInUser(userData.role)
-									)
-									.then(() => {
-										this.$toast({
-											component: ToastificationContent,
-											position: "top-right",
-											props: {
-												title: `Welcome ${
-													userData.fullName ||
-													userData.username
-												}`,
-												icon: "CoffeeIcon",
-												variant: "success",
-												text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
-											},
-										});
-									});
-							})
-							.catch((error) => {
-								this.$refs.loginForm.setErrors(
-									error.response.data.error
-								);
+							this.$router.push({
+								name: "auth-init",
 							});
-					}
+						})
+						.catch((err) => {
+							this.$toast({
+								component: ToastificationContent,
+								props: {
+									title: "Error",
+									text: `${err?.message}`,
+									icon: "AlertTriangleIcon",
+									variant: "danger",
+								},
+							});
+							this.errorMessage = err?.message;
 
-					try {
-						await this.$store.commit("Users/mSignInUser");
-					} catch (err) {
-						console.log(err);
-					}
+							this.isLogining = false;
+						});
 				});
 			},
 		},

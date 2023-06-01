@@ -20,11 +20,11 @@ export default {
             type: $themeConfig.layout.footer.type
          }
       },
-      isClientIn: false
+      isAdminIn: false
    },
    getters: {
       whoIsinGetter(state) {
-         return state.isClientIn;
+         return state.isAdminIn;
       }
    },
    mutations: {
@@ -34,7 +34,7 @@ export default {
       },
       UPDATE_WHO_IS_IN(state, val) {
          //  debugger;
-         state.isClientIn = val;
+         state.isAdminIn = val;
       },
       UPDATE_SKIN(state, skin) {
          state.layout.skin = skin;

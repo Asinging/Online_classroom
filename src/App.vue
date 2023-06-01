@@ -46,10 +46,11 @@
 			},
 		},
 		beforeCreate() {
-			// localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
-			// const isClientIn = JSON.parse(
-			// 	localStorage.getItem("isClientIn") || "false"
-			// );
+			localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
+			const isAdminIn = JSON.parse(
+				localStorage.getItem("isAdminIn") || "false"
+			);
+			this.$store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
 
 			// Set colors in theme
 			const colors = [

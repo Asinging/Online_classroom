@@ -27,9 +27,7 @@
 							<span class="brand-logo">
 								<b-img :src="appLogoImage" alt="logo" />
 							</span>
-							<h2 class="brand-text">
-								{{ appName }}
-							</h2>
+							<h2 class="brand-text">{{ appName }}</h2>
 						</b-link>
 					</li>
 
@@ -79,15 +77,14 @@
 </template>
 
 <script>
-	// import navMenuItems from '@/navigation/vertical'
+	import navMenuItems from "@/navigation/verticals/client";
 	import VuePerfectScrollbar from "vue-perfect-scrollbar";
 	import { BLink, BImg } from "bootstrap-vue";
-	import { provide, computed, ref, onBeforeMount } from "@vue/composition-api";
+	import { provide, computed, ref } from "@vue/composition-api";
 	import useAppConfig from "@core/app-config/useAppConfig";
 	import { $themeConfig } from "@themeConfig";
 	import VerticalNavMenuItems from "./components/vertical-nav-menu-items/VerticalNavMenuItems.vue";
 	import useVerticalNavMenu from "./useVerticalNavMenu";
-	import store from "@/store";
 
 	export default {
 		components: {
@@ -130,18 +127,10 @@
 			const collapseTogglerIconFeather = computed(() =>
 				collapseTogglerIcon.value === "unpinned" ? "CircleIcon" : "DiscIcon"
 			);
-			const navMenuItems = computed(() => {
-				let clientIsIn = store.getters["appConfig/whoIsinGetter"];
-
-				return clientIsIn
-					? store.getters["verticalMenu/clientAppSideBarMenuListGetter"]
-					: store.getters["verticalMenu/adminAppSideBarMenuListGetter"];
-			});
 
 			// App Name
 			const { appName, appLogoImage } = $themeConfig.app;
-
-			onBeforeMount(() => {});
+			console.log(navMenuItems);
 
 			return {
 				navMenuItems,

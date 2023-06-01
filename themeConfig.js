@@ -5,7 +5,7 @@ export const $themeColors = {};
 // App Breakpoints
 // Initially this will be blank. Later on when app is initialized we will assign bootstrap breakpoints to this object from CSS variables.
 export const $themeBreakpoints = {};
-const isClientIn = JSON.parse(localStorage.getItem('isClientIn') || 'false');
+const isAdminIn = JSON.parse(localStorage.getItem('isAdminIn') || 'false');
 // APP CONFIG
 export const $themeConfig = {
    app: {
@@ -15,7 +15,7 @@ export const $themeConfig = {
    },
    layout: {
       isRTL: false,
-      skin: isClientIn ? 'light' : 'semi-dark', // light, dark, bordered, semi-dark
+      skin: isAdminIn ? 'semi-dark' : 'light', // light, dark, bordered, semi-dark
       // skin: 'semi-dark', // light, dark, bordered, semi-dark
       routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
       type: 'vertical', // vertical, horizontal
@@ -26,11 +26,11 @@ export const $themeConfig = {
       },
       navbar: {
          // ? For horizontal menu, navbar type will work for navMenu type
-         type: isClientIn ? 'floating' : 'sticky', // static , sticky , floating, hidden
-         backgroundColor: isClientIn ? 'primary' : 'dark' // BS color options [primary, success, etc]
+         type: isAdminIn ? 'sticky' : 'floating', // static , sticky , floating, hidden
+         backgroundColor: isAdminIn ? 'dark' : 'primary' // BS color options [primary, success, etc]
       },
       footer: {
-         type: isClientIn ? 'static' : 'sticky' // static, sticky, hidden
+         type: isAdminIn ? 'sticky' : 'static' // static, sticky, hidden
       },
       customizer: false,
       enableScrollToTop: true

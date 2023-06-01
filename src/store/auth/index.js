@@ -17,7 +17,7 @@ export default {
          return new Promise(async (resolve, reject) => {
             try {
                let user = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
-               console.log(user);
+
                resolve(user);
             } catch (error) {
                console.log(error);
@@ -25,11 +25,11 @@ export default {
             }
          });
       },
-      SIGN_in({}, payload) {
+      SIGN_IN({}, payload) {
          return new Promise(async (resolve, reject) => {
             try {
                let user = await signInWithEmailAndPassword(auth, payload.email, payload.password);
-               console.log(user);
+
                resolve(user);
             } catch (error) {
                console.log(error);

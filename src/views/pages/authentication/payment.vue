@@ -60,6 +60,7 @@
 	// import { HollowDotsSpinner } from "epic-spinners";
 	import store from "@/store/index";
 	import PaymentCard from "@/views/components/paymentCard.vue";
+	import Ripple from "vue-ripple-directive";
 
 	export default {
 		components: {
