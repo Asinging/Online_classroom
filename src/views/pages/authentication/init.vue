@@ -43,7 +43,7 @@
 	import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 	import store from "@/store/index";
 	import { onAuthStateChanged } from "firebase/auth";
-	import { auth } from "@/config/firebase.js";
+	import { authentication } from "@/config/firebase.js";
 
 	export default {
 		components: {
@@ -77,8 +77,7 @@
 		watch: {
 			counter(val) {
 				if (val >= 2) {
-					// debugger;
-					onAuthStateChanged(auth, (user) => {
+					onAuthStateChanged(authentication, (user) => {
 						this.user = user;
 					});
 				}

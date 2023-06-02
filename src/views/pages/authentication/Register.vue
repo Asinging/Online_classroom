@@ -29,14 +29,23 @@
 					<b-link class="brand-logo-2 d-none">
 						<logo />
 					</b-link>
-					<b-card-title
-						class="font-weight-bold mb-1 text-center text-lg-left"
-					>
+					<b-card-title class="font-weight-bold mb-1 text-center">
 						Sign Up to begin 🚀
 					</b-card-title>
-					<b-card-text class="mb-2 text-center text-lg-left">
+					<b-card-text class="mb-2 text-center">
 						The possibilities are endless!
 					</b-card-text>
+
+					<b-alert
+						variant="danger"
+						v-if="emailVericationSent"
+						show
+						class="text-center"
+					>
+						<div class="alert-body text-center">
+							Check your mailbox for verification link!!!
+						</div>
+					</b-alert>
 
 					<!-- form -->
 					<validation-observer
@@ -145,7 +154,7 @@
 								</validation-provider>
 							</b-form-group>
 
-							<b-form-group>
+							<!-- <b-form-group>
 								<validation-provider
 									#default="{ errors }"
 									name="Privacy Policies"
@@ -167,14 +176,18 @@
 										errors[0]
 									}}</small>
 								</validation-provider>
-							</b-form-group>
+							</b-form-group> -->
 							<b-button
 								type="submit"
 								variant="primary"
 								class="pb-1"
 								block
 								@click="registerUser"
-								:disabled="isSigningUp || invalid"
+								:disabled="
+									isSigningUp ||
+									invalid ||
+									emailVericationSent
+								"
 							>
 								<span>Sign Up</span>
 								<span class="pl-1">
@@ -199,23 +212,6 @@
 							<span>&nbsp;Sign in instead</span>
 						</b-link>
 					</p>
-
-					<!-- divider -->
-					<div class="divider my-2">
-						<div class="divider-text">or</div>
-					</div>
-
-					<div class="auth-footer-btn d-flex justify-content-center">
-						<b-button variant="facebook" href="javascript:void(0)">
-							<feather-icon icon="FacebookIcon" />
-						</b-button>
-						<b-button variant="twitter" href="javascript:void(0)">
-							<feather-icon icon="TwitterIcon" />
-						</b-button>
-						<b-button variant="google" href="javascript:void(0)">
-							<feather-icon icon="MailIcon" />
-						</b-button>
-					</div>
 				</b-col>
 			</b-col>
 			<!-- /Register-->
@@ -227,6 +223,7 @@
 	/* eslint-disable global-require */
 	import { ValidationProvider, ValidationObserver } from "vee-validate";
 	import Logo from "@core/layouts/components/Logo.vue";
+	import { authentication } from "@/config/firebase.js";
 	import {
 		BSpinner,
 		BRow,
@@ -242,16 +239,21 @@
 		BImg,
 		BCardTitle,
 		BCardText,
+		BAlert,
 	} from "bootstrap-vue";
 	import { required, email } from "@validations";
 	import { togglePasswordVisibility } from "@core/mixins/ui/forms";
 	import store from "@/store/index";
 	import { serverTimestamp } from "firebase/firestore";
+	import { onAuthStateChanged } from "firebase/auth";
+	import { getAuth, sendEmailVerification } from "firebase/auth";
+	const auth = getAuth();
 
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
 	export default {
 		components: {
+			BAlert,
 			BSpinner,
 			Logo,
 			BRow,
@@ -284,7 +286,50 @@
 				// validation
 				required,
 				email,
+				user: null,
+				emailVericationSent: false,
+				events: ["click", "mousedown", "scroll", "keypress", "mouseover"],
 			};
+		},
+		watch: {
+			user: {
+				deep: true,
+				handler(val) {
+					if (!val) return false;
+
+					// if (val.emailVerified) {
+					// 	this.emailVericationSent = true;
+
+					// 	this.userEmail = "";
+					// 	this.userName = "";
+					// 	this.password = "";
+
+					// 	this.events.forEach((event) => {
+					// 		window.removeEventListener(event, this.runTimer);
+					// 	});
+
+					// 	this.$router.push({
+					// 		name: "auth-init",
+					// 	});
+					// 	return false;
+					// }
+					// if (!this.emailVericationSent) {
+					// 	sendEmailVerification(auth?.currentUser)
+					// 		.then(() => {
+					// 			this.emailVericationSent = true;
+					// 		})
+					// 		.catch((err) => console.log(err));
+					// }
+					this.$router.push({
+						name: "auth-init",
+					});
+				},
+			},
+		},
+		mounted() {
+			this.events.forEach((event) => {
+				window.addEventListener(event, this.resetTimer);
+			});
 		},
 		computed: {
 			passwordToggleIcon() {
@@ -357,27 +402,26 @@
 								.dispatch("Users/CREATE_USER", {
 									data,
 								})
-								.then((resp) => {
+								.then(async () => {
 									this.isSigningUp = false;
-									this.$router.push({
-										name: "auth-init",
-									});
 								})
-								.catch((err) => console.log(err));
+								.catch((err) => {
+									console.log(err);
+								});
+
+							this.events.forEach((event) => {
+								window.addEventListener(event, this.runTimer);
+							});
 						})
 						.catch((e) => {
 							this.isSigningUp = false;
 							console.log(e);
 						});
-
-					// this.$toast({
-					// 	component: ToastificationContent,
-					// 	props: {
-					// 		title: `${this.username} is Signed Up`,
-					// 		icon: "checkIcon",
-					// 		variant: "success",
-					// 	},
-					// });
+				});
+			},
+			runTimer() {
+				onAuthStateChanged(authentication, (user) => {
+					this.user = user;
 				});
 			},
 

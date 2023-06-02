@@ -1,4 +1,4 @@
-import { auth } from '@/config/firebase.js';
+import { authentication } from '@/config/firebase.js';
 
 import {
    signInWithEmailAndPassword,
@@ -16,20 +16,26 @@ export default {
    actions: {
       SIGN_UP({}, payload) {
          return new Promise(async (resolve, reject) => {
-            try {
-               let user = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
+            //    try {
+            //       let user = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
 
-               resolve(user);
-            } catch (error) {
-               console.log(error);
-               reject(error);
-            }
+            //       resolve(user);
+            //    } catch (error) {
+            //       console.log(error);
+            //       reject(error);
+            //    }
+
+            createUserWithEmailAndPassword(authentication, payload.email, payload.password)
+               .then(async user => {
+                  resolve(user);
+               })
+               .catch();
          });
       },
       SIGN_IN({}, payload) {
          return new Promise(async (resolve, reject) => {
             try {
-               let user = await signInWithEmailAndPassword(auth, payload.email, payload.password);
+               let user = await signInWithEmailAndPassword(authentication, payload.email, payload.password);
 
                resolve(user);
             } catch (error) {
@@ -41,7 +47,7 @@ export default {
       LOG_OUT({}) {
          return new Promise(async (resolve, reject) => {
             try {
-               let logoutUser = await signOut(auth);
+               let logoutUser = await signOut(authentication);
                console.log(logoutUser);
                resolve(logoutUser);
             } catch (error) {
@@ -54,7 +60,7 @@ export default {
          return new Promise(async (resolve, reject) => {
             try {
                let provider = new GoogleAuthProvider();
-               let response = signInWithPopup(auth, provider);
+               let response = signInWithPopup(authentication, provider);
                resolve(response);
             } catch (err) {
                reject(err);

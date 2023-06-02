@@ -64,7 +64,7 @@
 									<label for="login-password">Password</label>
 									<b-link
 										:to="{
-											name: 'auth-forgot-password-v2',
+											name: 'auth-forgot-password-v1',
 										}"
 									>
 										<small>Forgot Password?</small>
