@@ -2,7 +2,8 @@ import { auth } from '@/config/firebase.js';
 
 import {
    signInWithEmailAndPassword,
-   signInWithEmailLink,
+   signInWithPopup,
+   GoogleAuthProvider,
    createUserWithEmailAndPassword,
    signOut
 } from 'firebase/auth';
@@ -46,6 +47,17 @@ export default {
             } catch (error) {
                console.log(error);
                reject(error);
+            }
+         });
+      },
+      SIGN_IN_WITH_GOOGLE({ commit }) {
+         return new Promise(async (resolve, reject) => {
+            try {
+               let provider = new GoogleAuthProvider();
+               let response = signInWithPopup(auth, provider);
+               resolve(response);
+            } catch (err) {
+               reject(err);
             }
          });
       }

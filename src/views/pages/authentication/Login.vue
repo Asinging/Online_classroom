@@ -150,14 +150,14 @@
 
 					<!-- social buttons -->
 					<div class="auth-footer-btn d-flex justify-content-center">
-						<b-button variant="facebook" href="javascript:void(0)">
-							<feather-icon icon="FacebookIcon" />
-						</b-button>
-						<b-button variant="twitter" href="javascript:void(0)">
-							<feather-icon icon="TwitterIcon" />
-						</b-button>
-						<b-button variant="google" href="javascript:void(0)">
-							<feather-icon icon="MailIcon" />
+						<b-button
+							variant="google"
+							@click="signWithGoogle"
+							block
+							v-b-tooltip.hover.bottom="'Sign In With Google'"
+						>
+							<feather-icon icon="MailIcon" class="mr-25" />
+							<span>Google Sign In</span>
 						</b-button>
 					</div>
 				</b-col>
@@ -257,6 +257,37 @@
 			},
 		},
 		methods: {
+			async signWithGoogle() {
+				try {
+					let response = await this.$store.dispatch(
+						"Auth/SIGN_IN_WITH_GOOGLE"
+					);
+					if (response) {
+						this.$toast({
+							component: ToastificationContent,
+							position: "top-right",
+							props: {
+								title: `All Good `,
+								icon: "CoffeeIcon",
+								variant: "success",
+								text: `You have successfully signed in`,
+							},
+						});
+					}
+				} catch (err) {
+					console.log(err);
+					this.$toast({
+						component: ToastificationContent,
+						position: "top-right",
+						props: {
+							title: `Error`,
+							icon: "AlertTriangleIcon",
+							variant: "danger",
+							text: `Application couldm't sign in`,
+						},
+					});
+				}
+			},
 			toCreateAccount() {
 				this.$router.push({
 					name: "auth-register",
