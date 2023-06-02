@@ -39,22 +39,7 @@ export default [
          redirectIfLoggedIn: true
       }
    },
-   {
-      path: '/pages/authentication/login-v1',
-      name: 'auth-login-v1',
-      component: () => import('@/views/pages/authentication/Login-v1.vue'),
-      meta: {
-         layout: 'full'
-      }
-   },
-   {
-      path: '/pages/authentication/login-v2',
-      name: 'auth-login-v2',
-      component: () => import('@/views/pages/authentication/Login-v2.vue'),
-      meta: {
-         layout: 'full'
-      }
-   },
+
    {
       path: '/register',
       name: 'auth-register',
@@ -84,14 +69,7 @@ export default [
          layout: 'full'
       }
    },
-   {
-      path: '/pages/authentication/reset-password-v2',
-      name: 'auth-reset-password-v2',
-      component: () => import('@/views/pages/authentication/ResetPassword-v2.vue'),
-      meta: {
-         layout: 'full'
-      }
-   },
+
    {
       path: '/pages/miscellaneous/coming-soon',
       name: 'misc-coming-soon',

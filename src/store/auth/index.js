@@ -5,7 +5,8 @@ import {
    signInWithPopup,
    GoogleAuthProvider,
    createUserWithEmailAndPassword,
-   signOut
+   signOut,
+   sendPasswordResetEmail
 } from 'firebase/auth';
 export default {
    namespaced: true,
@@ -14,6 +15,17 @@ export default {
    },
    mutations: {},
    actions: {
+      FORGOT_PASSWORD({}, payload) {
+         return new Promise(async (resolve, reject) => {
+            try {
+               let result = await sendPasswordResetEmail(authentication, payload.userEmail);
+               resolve(result);
+            } catch (err) {
+               reject(err);
+               console.log(err);
+            }
+         });
+      },
       SIGN_UP({}, payload) {
          return new Promise(async (resolve, reject) => {
             //    try {
