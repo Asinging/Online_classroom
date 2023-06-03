@@ -1,9 +1,6 @@
 <template>
 	<!-- Under maintenance-->
 	<div class="misc-wrapper">
-		<b-link class="brand-logo">
-			<vuexy-logo />
-		</b-link>
 		<div class="misc-inner p-2 p-sm-3">
 			<div class="w-100 text-center pb-10">
 				<!-- <h3 class="mb-1">Payment Means</h3> -->
@@ -41,6 +38,17 @@
 						@click="handlePayment('bt')"
 					/>
 				</div>
+				<div class="col col-sm-12 d-flex justify-content-end">
+					<b-button
+						v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+						variant="success"
+						@click="skipButton"
+						v-b-tooltip.hover.bottom="'Skip Payment'"
+					>
+						<!-- <feather-icon icon="MailIcon" class="mr-25" /> -->
+						<span>Skip</span>
+					</b-button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -59,6 +67,7 @@
 		BCardText,
 		BCardTitle,
 		BAvatar,
+		VBTooltip,
 	} from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
 	// import { HollowDotsSpinner } from "epic-spinners";
@@ -67,6 +76,10 @@
 	import Ripple from "vue-ripple-directive";
 
 	export default {
+		directives: {
+			Ripple,
+			"b-tooltip": VBTooltip,
+		},
 		components: {
 			BLink,
 			BFormInput,
@@ -95,6 +108,11 @@
 					return this.downImg;
 				}
 				return this.downImg;
+			},
+		},
+		methods: {
+			skipButton() {
+				this.$router.push("/");
 			},
 		},
 	};
