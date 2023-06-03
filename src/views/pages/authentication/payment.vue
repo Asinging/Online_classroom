@@ -11,9 +11,10 @@
 			<div class="row">
 				<div class="col col-sm-6">
 					<payment-card
-						title="Stripe"
+						title="Flutterwave"
 						text="Pay with Strip"
 						variant="danger"
+						@click="handlePayment('st')"
 					/>
 				</div>
 				<div class="col col-sm-6">
@@ -21,6 +22,7 @@
 						title="Paystack"
 						text="Pay with Pay stack"
 						variant="secondary"
+						@click="handlePayment('ps')"
 					/>
 				</div>
 				<div class="col col-sm-6">
@@ -28,6 +30,7 @@
 						title="Card"
 						text="Pay with Card"
 						variant="info"
+						@click="handlePayment('cc')"
 					/>
 				</div>
 				<div class="col col-sm-6">
@@ -35,6 +38,7 @@
 						title="Bank Transfer"
 						text="Pay with banck transfer"
 						variant="warning"
+						@click="handlePayment('bt')"
 					/>
 				</div>
 			</div>

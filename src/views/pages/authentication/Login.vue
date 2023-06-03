@@ -64,7 +64,7 @@
 									<label for="login-password">Password</label>
 									<b-link
 										:to="{
-											name: 'auth-forgot-password-v1',
+											name: 'auth-forgot-password',
 										}"
 									>
 										<small>Forgot Password?</small>
@@ -196,7 +196,6 @@
 	import { getHomeRouteForLoggedInUser } from "@/auth/utils";
 
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
-	import { onAuthStateChanged } from "firebase/auth";
 
 	export default {
 		directives: {
@@ -316,6 +315,7 @@
 					this.$store
 						.dispatch("Auth/SIGN_IN", payload)
 						.then((resp) => {
+							console.log(resp);
 							this.isLogining = false;
 							if (!resp) {
 								return false;
