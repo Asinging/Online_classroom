@@ -339,11 +339,12 @@
 							});
 						})
 						.catch((err) => {
+							console.log(err.message);
 							this.$toast({
 								component: ToastificationContent,
 								props: {
 									title: "Error",
-									text: `${err?.message}`,
+									text: `${err?.code || err?.message}`,
 									icon: "AlertTriangleIcon",
 									variant: "danger",
 								},

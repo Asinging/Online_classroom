@@ -51,8 +51,7 @@ export default {
 
                resolve(user);
             } catch (error) {
-               console.log(error);
-               reject(error);
+               reject(JSON.parse(JSON.stringify(error)));
             }
          });
       },
