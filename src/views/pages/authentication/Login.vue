@@ -268,7 +268,8 @@
 							"Users/GET_SINGLE_USER_BY_Id",
 							{ id: response.user.uid }
 						);
-
+						console.log(resp2);
+						debugger;
 						setLocalstorage(response.user, resp2.user);
 						this.$toast({
 							component: ToastificationContent,
@@ -331,7 +332,7 @@
 									id: resp.user.uid,
 								})
 								.then((resp2) => {
-									setLocalstorage(resp.user, resp2.user);
+									setLocalstorage(resp.user, resp2);
 								});
 
 							this.$router.push({
