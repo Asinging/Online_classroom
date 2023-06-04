@@ -77,7 +77,7 @@
 </template>
 
 <script>
-	import navMenuItems from "@/navigation/verticals/client";
+	import navMenuItems from "@/navigation/vertical";
 	import VuePerfectScrollbar from "vue-perfect-scrollbar";
 	import { BLink, BImg } from "bootstrap-vue";
 	import { provide, computed, ref } from "@vue/composition-api";
@@ -116,6 +116,7 @@
 
 			// Shadow bottom is UI specific and can be removed by user => It's not in `useVerticalNavMenu`
 			const shallShadowBottom = ref(false);
+			console.log(navMenuItems);
 
 			provide("isMouseHovered", isMouseHovered);
 
@@ -130,7 +131,6 @@
 
 			// App Name
 			const { appName, appLogoImage } = $themeConfig.app;
-			console.log(navMenuItems);
 
 			return {
 				navMenuItems,
