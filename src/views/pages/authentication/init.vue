@@ -88,9 +88,8 @@
 					if (!val) return false;
 
 					this.$store
-						.dispatch("Users/GET_SINGLE_USER", {
-							field: "user_UID",
-							value: val.uid,
+						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+							id: val.uid,
 						})
 						.then((resp) => {
 							clearInterval(this.timer);

@@ -48,14 +48,13 @@ export default {
             try {
                const docSnap = await getDoc(docRef);
                if (docSnap.exists()) {
-                  console.log('Document data:', docSnap.data());
+                  resolve({ ...docSnap.data(), id: docSnap.id });
                }
                else {
                   // docSnap.data() will be undefined in this case
                   console.log('No such document!');
+                  resolve(false);
                }
-
-               resolve({ ...docSnap.data(), id: docSnap.id });
             } catch (err) {
                console.log(err);
                reject(err);

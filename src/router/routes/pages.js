@@ -4,9 +4,9 @@ export default [{
         component: () =>
             import ('@/views/pages/authentication/init.vue'),
         meta: {
-            layout: 'full'
-                // resource: 'Auth',
-                // action: 'read'
+            layout: 'full',
+            resource: 'Auth',
+            action: 'read'
         }
     },
 
@@ -16,9 +16,9 @@ export default [{
         component: () =>
             import ('@/views/pages/authentication/payment.vue'),
         meta: {
-            layout: 'full'
-                // resource: 'Auth',
-                // action: 'read'
+            layout: 'full',
+            resource: 'Auth',
+            action: 'read',
         }
     },
     {
@@ -27,9 +27,9 @@ export default [{
         component: () =>
             import ('@/views/pages/authentication/init.vue'),
         meta: {
-            layout: 'full'
-                // resource: 'Auth',
-                // action: 'read'
+            layout: 'full',
+            resource: 'Auth',
+            action: 'read'
         }
     },
     {
@@ -63,6 +63,7 @@ export default [{
         meta: {
             layout: 'full',
             resource: 'Auth',
+            action: 'read',
             redirectIfLoggedIn: true
         }
     },

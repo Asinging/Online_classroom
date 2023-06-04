@@ -1,13 +1,13 @@
 import { $themeConfig } from '@themeConfig';
-// import adminNavMenuItems from '@/navigation/verticals/admin';
-// import clientNavMenuItems from '@/navigation/verticals/client';
+import adminNavMenuItems from '@/navigation/vertical/admin';
+import clientNavMenuItems from '@/navigation/vertical/client';
 
 export default {
    namespaced: true,
    state: {
-      isVerticalMenuCollapsed: $themeConfig.layout.menu.isCollapsed
-      // adminNavMenuItems: adminNavMenuItems,
-      // clientNavMenuItems: clientNavMenuItems
+      isVerticalMenuCollapsed: $themeConfig.layout.menu.isCollapsed,
+      adminNavMenuItems: adminNavMenuItems,
+      clientNavMenuItems: clientNavMenuItems
    },
    mutations: {
       UPDATE_VERTICAL_MENU_COLLAPSED(state, val) {

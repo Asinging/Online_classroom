@@ -340,7 +340,9 @@
 							});
 						})
 						.catch((err) => {
-							console.log(err.message);
+							console.log(err);
+							debugger;
+
 							this.$toast({
 								component: ToastificationContent,
 								props: {

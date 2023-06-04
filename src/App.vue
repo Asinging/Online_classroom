@@ -45,12 +45,15 @@
 				return this.$store.state.appConfig.layout.type;
 			},
 		},
-		beforeCreate() {
-			localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
+
+		beforeMount() {
 			const isAdminIn = JSON.parse(
 				localStorage.getItem("isAdminIn") || "false"
 			);
 			this.$store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
+		},
+		beforeCreate() {
+			// localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
 
 			// Set colors in theme
 			const colors = [
