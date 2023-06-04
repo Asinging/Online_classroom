@@ -6,8 +6,13 @@ import {
    GoogleAuthProvider,
    createUserWithEmailAndPassword,
    signOut,
-   sendPasswordResetEmail
+   sendPasswordResetEmail,
+   updateProfile,
+   getAuth
 } from 'firebase/auth';
+// const auth = getAuth();
+// console.log(auth);
+// console.log(authentication);
 export default {
    namespaced: true,
    state: {
@@ -28,17 +33,12 @@ export default {
       },
       SIGN_UP({}, payload) {
          return new Promise(async (resolve, reject) => {
-            //    try {
-            //       let user = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
-
-            //       resolve(user);
-            //    } catch (error) {
-            //       console.log(error);
-            //       reject(error);
-            //    }
-
             createUserWithEmailAndPassword(authentication, payload.email, payload.password)
                .then(async user => {
+                  await updateProfile(authentication.currentUser, {
+                     displayName: payload.displayName,
+                     photoURL: 'https://example.com/jane-q-user/profile.jpg'
+                  }).catch();
                   resolve(user);
                })
                .catch();
@@ -60,10 +60,9 @@ export default {
          return new Promise(async (resolve, reject) => {
             try {
                let logoutUser = await signOut(authentication);
-               console.log(logoutUser);
+
                resolve(logoutUser);
             } catch (error) {
-               console.log(error);
                reject(error);
             }
          });

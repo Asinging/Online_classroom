@@ -194,6 +194,7 @@
 	import { togglePasswordVisibility } from "@core/mixins/ui/forms";
 	import store from "@/store/index";
 	import { getHomeRouteForLoggedInUser } from "@/auth/utils";
+	import { setLocalstorage } from "@/helpers/user-helpers";
 
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
@@ -261,7 +262,14 @@
 					let response = await this.$store.dispatch(
 						"Auth/SIGN_IN_WITH_GOOGLE"
 					);
+
 					if (response) {
+						let resp2 = await this.$store.dispatch(
+							"Users/GET_SINGLE_USER_BY_Id",
+							{ id: response.user.uid }
+						);
+
+						setLocalstorage(response.user, resp2.user);
 						this.$toast({
 							component: ToastificationContent,
 							position: "top-right",
@@ -274,7 +282,6 @@
 						});
 					}
 				} catch (err) {
-					console.log(err);
 					this.$toast({
 						component: ToastificationContent,
 						position: "top-right",
@@ -315,11 +322,17 @@
 					this.$store
 						.dispatch("Auth/SIGN_IN", payload)
 						.then((resp) => {
-							console.log(resp);
 							this.isLogining = false;
 							if (!resp) {
 								return false;
 							}
+							this.$store
+								.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+									id: resp.user.uid,
+								})
+								.then((resp2) => {
+									setLocalstorage(resp.user, resp2.user);
+								});
 
 							this.$router.push({
 								name: "auth-init",

@@ -246,9 +246,8 @@
 	import store from "@/store/index";
 	import { serverTimestamp } from "firebase/firestore";
 	import { onAuthStateChanged } from "firebase/auth";
-	import { getAuth, sendEmailVerification } from "firebase/auth";
-	const auth = getAuth();
 
+	import { setLocalstorage } from "@/helpers/user-helpers";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
 	export default {
@@ -375,21 +374,26 @@
 					let payload = {
 						email: this.userEmail,
 						password: this.password,
+						displayName: this.username,
 					};
 					this.isSigningUp = true;
 
 					this.$store
 						.dispatch("Auth/SIGN_UP", payload)
 						.then((resp) => {
+							this.emailVericationSent = true;
+							setLocalstorage(authentication.currentUser, {
+								user_type: 2,
+							});
 							let data = {};
 							data.created_at = serverTimestamp();
-							data.created_by = "student";
+							data.created_by = "admin";
 							data.updated_at = null;
 							data.is_root = false;
 							data.subscribed = false;
 							data.enabled = true;
 							data.status = 1;
-							data.password = this.password;
+
 							data.email = this.userEmail;
 							data.username = this.username;
 							data.f_name = "";
@@ -397,12 +401,16 @@
 							data.user_type = 2;
 
 							data.user_UID = resp?.user.uid;
+							this.userEmail = "";
+							this.userName = "";
+							this.password = "";
 
 							this.$store
 								.dispatch("Users/CREATE_USER", {
+									createUserWithEmail: true,
 									data,
 								})
-								.then(async () => {
+								.then(async (resp2) => {
 									this.isSigningUp = false;
 								})
 								.catch((err) => {

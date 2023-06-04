@@ -4,16 +4,14 @@ import {
    getDocs,
    getDoc,
    addDoc,
+   setDoc,
    collection,
    query,
    orderBy,
    limit,
    where,
-   and,
-   or,
    doc,
-   updateDoc,
-   auth
+   updateDoc
 } from 'firebase/firestore';
 export default {
    namespaced: true,
@@ -49,6 +47,13 @@ export default {
             const docRef = doc(db, 'Users', payload.id);
             try {
                const docSnap = await getDoc(docRef);
+               if (docSnap.exists()) {
+                  console.log('Document data:', docSnap.data());
+               }
+               else {
+                  // docSnap.data() will be undefined in this case
+                  console.log('No such document!');
+               }
 
                resolve({ ...docSnap.data(), id: docSnap.id });
             } catch (err) {
@@ -133,7 +138,13 @@ export default {
       CREATE_USER({ commit }, payload) {
          return new Promise(async (resolve, reject) => {
             try {
-               const docRef = await addDoc(collection(db, 'Users'), payload.data);
+               let docRef = null;
+               if (payload.createUserWithEmail) {
+                  docRef = await setDoc(doc(db, 'Users', `${payload.data.user_UID}`), payload.data);
+               }
+               else {
+                  docRef = await addDoc(collection(db, 'Users'), payload.data);
+               }
                resolve(docRef);
             } catch (err) {
                reject(err);
