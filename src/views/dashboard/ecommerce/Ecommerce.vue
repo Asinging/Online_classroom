@@ -9,7 +9,8 @@
 			</b-col>
 		</b-row>
 		<b-card>
-			<div class="video-container">
+			<Users :isComponent="true" />
+			<!-- <div class="video-container">
 				<iframe
 					width="560"
 					height="315"
@@ -18,7 +19,7 @@
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 					allowfullscreen
 				></iframe>
-			</div>
+			</div> -->
 		</b-card>
 	</section>
 </template>
@@ -29,9 +30,12 @@
 	import { getUserData } from "@/auth/utils";
 	import EcommerceMedal from "./EcommerceMedal.vue";
 	import EcommerceStatistics from "./EcommerceStatistics.vue";
+	import Users from "@/views/apps/user/users-list/UsersList.vue";
+	import { kFormatter } from "@/@core/utils/filter";
 
 	export default {
 		components: {
+			Users,
 			BCard,
 			BRow,
 			BCol,
@@ -100,7 +104,7 @@
 				.dispatch("Counter/COUNTER", {
 					collection: "Users",
 					field: "subscribed",
-					value: false,
+					value: true,
 					mutationName: "mSubscriberCount",
 				})
 				.catch((err) => console.log());
@@ -119,39 +123,47 @@
 				let x = this.$store.getters["Auth/currentUserGetter"];
 				return x;
 			},
-			userCounter() {
-				return this.$store.getters["Counter/userCounterGetter"];
-			},
-			adminCounter() {
-				return this.$store.getters["Counter/adminCounterGetter"];
-			},
-			subscriberCounter() {
-				return this.$store.getters["Counter/subscriberCounterGetter"];
-			},
-			productCounter() {
-				return this.$store.getters["Counter/productCounterGetter"];
-			},
+			// userCounter() {
+			// 	return this.$store.getters["Counter/userCounterGetter"];
+			// },
+			// adminCounter() {
+			// 	return this.$store.getters["Counter/adminCounterGetter"];
+			// },
+			// subscriberCounter() {
+			// 	return this.$store.getters["Counter/subscriberCounterGetter"];
+			// },
+			// productCounter() {
+			// 	return this.$store.getters["Counter/productCounterGetter"];
+			// },
 
 			statisticalData() {
 				return this.statisticsItems.map((item) => {
 					if (item.id === 1) {
-						item.title =
-							this.$store.getters["Counter/adminCounterGetter"];
+						item.title = kFormatter(3893489);
+						this.$store.getters["Counter/adminCounterGetter"] || 0;
 						return item;
 					}
+
 					if (item.id === 2) {
-						item.title =
-							this.$store.getters["Counter/userCounterGetter"];
+						item.title = kFormatter(
+							this.$store.getters["Counter/userCounterGetter"] || 0
+						);
 						return item;
 					}
+
 					if (item.id === 3) {
-						item.title =
-							this.$store.getters["Counter/subscriberCounterGetter"];
+						item.title = kFormatter(
+							this.$store.getters[
+								"Counter/subscriberCounterGetter"
+							] || 0
+						);
 						return item;
 					}
+
 					if (item.id === 4) {
-						item.title =
-							this.$store.getters["Counter/productCounterGetter"];
+						item.title = kFormatter(
+							this.$store.getters["Counter/productCounterGetter"] || 0
+						);
 						return item;
 					}
 					return item;

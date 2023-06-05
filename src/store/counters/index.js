@@ -26,18 +26,19 @@ export default {
     actions: {
         COUNTER({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
-                console.log();
                 try {
-                    // const coll = collection(db, `${payload.collection}`);
-                    const coll = collection(db, 'Users');
-                    // const q = query(coll, where(`${payload.field}`, '==', `${payload.value}`));
-                    const q = query(coll, where('user_type', '==', '2'));
+                    const coll = collection(db, `${payload.collection}`);
+
+                    const q = query(coll, where(payload.field, '==', payload.value));
+
                     const snapshot = await getCountFromServer(q);
                     let count = snapshot.data().count;
-                    console.log('count: ', count);
+
                     commit(`${payload.mutationName}`, count);
+
                     resolve(count);
                 } catch (err) {
+                    console.log(err);
                     reject(err);
                 }
             });

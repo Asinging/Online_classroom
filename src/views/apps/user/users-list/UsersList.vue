@@ -4,10 +4,11 @@
 		action-refresh
 		showLoading
 		@refresh="refreshStop"
-		title="All Users"
+		:title="isComponent ? 'Users' : 'All Users'"
 	>
 		<div>
 			<user-list-add-new
+				v-if="!isComponent"
 				:is-add-new-user-sidebar-active.sync="isAddNewUserSidebarActive"
 				:role-options="roleOptions"
 				@refetch-data="refetchData"
@@ -17,7 +18,7 @@
 			<b-card no-body class="mb-0" title>
 				<div class="m-2">
 					<!-- Table Top -->
-					<b-row>
+					<b-row v-if="!isComponent">
 						<!-- Per Page -->
 						<b-col
 							cols="12"
@@ -205,7 +206,8 @@
 						</b-dropdown>
 					</template>
 				</b-table>
-				<div class="mx-2 mb-2">
+
+				<div class="mx-2 mb-2" v-if="!isComponent">
 					<b-row>
 						<b-col
 							cols="12"
@@ -283,6 +285,13 @@
 	import BCardActions from "@core/components/b-card-actions/BCardActions.vue";
 
 	export default {
+		props: {
+			isComponent: {
+				type: Boolean,
+				required: true,
+				default: false,
+			},
+		},
 		components: {
 			BSpinner,
 			BCardActions,
