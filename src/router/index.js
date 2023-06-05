@@ -11,8 +11,11 @@ import pages from './routes/pages';
 
 import others from './routes/others';
 
+import store from '@/store';
+
 Vue.use(VueRouter);
-let isAdmin = localStorage.getItem('isAdminIn');
+// let isAdmin = JSON.parse(localStorage.getItem('isAdminIn'));
+let isAdmin = store.getters['appConfig/whoIsinGetter'];
 
 const router = new VueRouter({
    mode: 'history',
@@ -24,8 +27,7 @@ const router = new VueRouter({
       {
          path: '/',
          redirect: {
-            name: JSON.parse(isAdmin || 'false') ? 'dashboard-ecommerce' : 'dashboard-analytics'
-            // name: 'dashboard-analytics'
+            name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
          }
       },
       ...apps,

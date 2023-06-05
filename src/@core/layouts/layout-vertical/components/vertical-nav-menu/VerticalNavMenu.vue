@@ -134,11 +134,9 @@
 			const navMenuItems = computed(() => {
 				let isAdminIn = store.getters["appConfig/whoIsinGetter"];
 
-				let x = isAdminIn
+				return isAdminIn
 					? store.getters["verticalMenu/adminAppSideBarMenuListGetter"]
 					: store.getters["verticalMenu/clientAppSideBarMenuListGetter"];
-				debugger;
-				return x;
 			});
 
 			// App Name

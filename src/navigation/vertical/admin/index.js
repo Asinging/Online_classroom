@@ -51,6 +51,6 @@ export default [
       tag: '',
       tagVariant: 'light-warning',
 
-      route: 'courses'
+      route: 'auth-logout'
    }
 ];

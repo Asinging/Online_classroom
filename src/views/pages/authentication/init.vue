@@ -41,9 +41,10 @@
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
 	// import { HollowDotsSpinner } from "epic-spinners";
 	import PulseLoader from "vue-spinner/src/PulseLoader.vue";
-	import store from "@/store/index";
+
 	import { onAuthStateChanged } from "firebase/auth";
 	import { authentication } from "@/config/firebase.js";
+	import store from "@/store";
 
 	export default {
 		components: {
@@ -75,25 +76,28 @@
 			};
 		},
 		watch: {
-			counter(val) {
-				if (val >= 2) {
-					onAuthStateChanged(authentication, (user) => {
-						this.user = user;
-					});
-				}
+			counter: {
+				immediate: true,
+				handler(val) {
+					if (this.counter >= 2) {
+						onAuthStateChanged(authentication, (user, err) => {
+							this.user = user;
+						});
+					}
+				},
 			},
 			user: {
 				deep: true,
+				immediate: false,
 				handler(val) {
 					if (!val) return false;
-
 					this.$store
 						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 							id: val.uid,
 						})
 						.then((resp) => {
-							clearInterval(this.timer);
 							let isAdminIn = resp.user_type < 2 ? true : false;
+
 							this.$store.commit(
 								"appConfig/UPDATE_WHO_IS_IN",
 								isAdminIn
@@ -104,8 +108,25 @@
 								JSON.stringify(isAdminIn)
 							);
 
+							store.commit("appConfig/UPDATE_SKIN", "light");
+							store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
+								backgroundColor: "primary",
+								type: "floating",
+							});
+							store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
+								type: "static",
+							});
+
 							if (resp.user_type < 2) {
-								this.$router.push("/");
+								store.commit("appConfig/UPDATE_SKIN", "semi-dark");
+								store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
+									backgroundColor: "dark",
+									type: "sticky",
+								});
+								store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
+									type: "sticky",
+								});
+								this.$router.push("/admin/dashboard");
 								return true;
 							}
 
@@ -115,7 +136,7 @@
 								});
 								return false;
 							}
-							this.$router.push("/");
+							this.$router.push("/dashboard");
 						})
 						.catch((err) => {
 							console.log(err);
@@ -126,10 +147,17 @@
 
 		mounted() {
 			this.timer = setInterval(() => {
+				if (this.counter > 2) {
+					clearInterval(this.timer);
+					return false;
+				}
 				this.relayMessages =
 					this.messages[this.counter > 2 ? 2 : this.counter];
 				this.counter = this.counter + 1;
-			}, 2000);
+			}, 1500);
+			// setTimeout(() => {
+			// 	this.counter = 2;
+			// }, 3000);
 		},
 
 		computed: {

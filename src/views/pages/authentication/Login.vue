@@ -269,7 +269,6 @@
 							{ id: response.user.uid }
 						);
 						console.log(resp2);
-						debugger;
 						setLocalstorage(response.user, resp2.user);
 						this.$toast({
 							component: ToastificationContent,
@@ -341,8 +340,6 @@
 						})
 						.catch((err) => {
 							console.log(err);
-							debugger;
-
 							this.$toast({
 								component: ToastificationContent,
 								props: {
