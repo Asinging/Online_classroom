@@ -9,18 +9,20 @@ import verticalMenu from './vertical-menu';
 import users from './users';
 import course from './course';
 import auth from './auth';
+import counter from './counters';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-   modules: {
-      app,
-      appConfig,
-      verticalMenu,
-      Users: users,
-      Course: course,
-      Auth: auth,
-      'app-ecommerce': ecommerceStoreModule
-   },
-   strict: process.env.DEV
+    modules: {
+        app,
+        appConfig,
+        verticalMenu,
+        Users: users,
+        Course: course,
+        Auth: auth,
+        Counter: counter,
+        'app-ecommerce': ecommerceStoreModule
+    },
+    strict: process.env.DEV
 });

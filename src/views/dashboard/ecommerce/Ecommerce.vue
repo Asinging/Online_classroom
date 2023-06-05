@@ -2,10 +2,10 @@
 	<section id="dashboard-ecommerce">
 		<b-row class="match-height">
 			<b-col xl="4" md="6">
-				<ecommerce-medal :data="data.congratulations" />
+				<ecommerce-medal :data="currentUser" />
 			</b-col>
 			<b-col xl="8" md="6">
-				<ecommerce-statistics :data="data.statisticsItems" />
+				<ecommerce-statistics :data="statisticalData" />
 			</b-col>
 		</b-row>
 		<b-card>
@@ -41,20 +41,122 @@
 		},
 		data() {
 			return {
-				data: {},
+				statisticsItems: [
+					{
+						id: 1,
+						icon: "UserCheckIcon",
+						color: "light-primary",
+						title: "230k",
+						subtitle: "Admins",
+						customClass: "mb-2 mb-xl-0",
+					},
+					{
+						id: 2,
+						icon: "UsersIcon",
+						color: "light-info",
+						title: "8.549k",
+						subtitle: "Students",
+						customClass: "mb-2 mb-xl-0",
+					},
+					{
+						id: 3,
+						icon: "DollarSignIcon",
+						color: "light-danger",
+						title: "1.423k",
+						subtitle: "Subscribers",
+						customClass: "mb-2 mb-sm-0",
+					},
+					{
+						id: 4,
+						icon: "BoxIcon",
+						color: "light-success",
+						title: "$9745",
+						subtitle: "Contents",
+						customClass: "",
+					},
+				],
 			};
 		},
 		created() {
-			// data
-			this.$http.get("/ecommerce/data").then((response) => {
-				this.data = response.data;
+			this.$store
+				.dispatch("Counter/COUNTER", {
+					collection: "Users",
+					field: "user_type",
+					value: 1,
+					mutationName: "mAdminCount",
+				})
+				.catch((err) => console.log());
 
-				// ? Your API will return name of logged in user or you might just directly get name of logged in user
-				// ? This is just for demo purpose
-				// const userData = getUserData();
-				// this.data.congratulations.name =
-				// userData.fullName.split(" ")[0] || userData.username;
-			});
+			this.$store
+				.dispatch("Counter/COUNTER", {
+					collection: "Users",
+					field: "user_type",
+					value: 2,
+					mutationName: "mUserCount",
+				})
+				.catch((err) => console.log());
+
+			this.$store
+				.dispatch("Counter/COUNTER", {
+					collection: "Users",
+					field: "subscribed",
+					value: false,
+					mutationName: "mSubscriberCount",
+				})
+				.catch((err) => console.log());
+
+			this.$store
+				.dispatch("Counter/COUNTER", {
+					collection: "courses",
+					field: "status",
+					value: 1,
+					mutationName: "mProductCount",
+				})
+				.catch((err) => console.log());
+		},
+		computed: {
+			currentUser() {
+				let x = this.$store.getters["Auth/currentUserGetter"];
+				return x;
+			},
+			userCounter() {
+				return this.$store.getters["Counter/userCounterGetter"];
+			},
+			adminCounter() {
+				return this.$store.getters["Counter/adminCounterGetter"];
+			},
+			subscriberCounter() {
+				return this.$store.getters["Counter/subscriberCounterGetter"];
+			},
+			productCounter() {
+				return this.$store.getters["Counter/productCounterGetter"];
+			},
+
+			statisticalData() {
+				return this.statisticsItems.map((item) => {
+					if (item.id === 1) {
+						item.title =
+							this.$store.getters["Counter/adminCounterGetter"];
+						return item;
+					}
+					if (item.id === 2) {
+						item.title =
+							this.$store.getters["Counter/userCounterGetter"];
+						return item;
+					}
+					if (item.id === 3) {
+						item.title =
+							this.$store.getters["Counter/subscriberCounterGetter"];
+						return item;
+					}
+					if (item.id === 4) {
+						item.title =
+							this.$store.getters["Counter/productCounterGetter"];
+						return item;
+					}
+					return item;
+				});
+			},
 		},
 	};
 </script>

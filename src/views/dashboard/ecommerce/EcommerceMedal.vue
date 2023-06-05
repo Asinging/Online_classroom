@@ -1,8 +1,10 @@
 <template>
 	<b-card v-if="data" class="card-congratulation-medal">
-		<h5>Congratulations 🎉 {{ data.name }}!</h5>
+		<h5 class="text-capitalize">
+			Hello 🎉 {{ `${JSON.stringify(data.username)}` }}!
+		</h5>
 		<b-card-text class="font-small-3">
-			You have won gold medal
+			Have a walk around you statistics
 		</b-card-text>
 		<h3 class="mb-75 mt-2 pt-50">
 			<!-- <b-link>${{ kFormatter(data.saleToday) }}</b-link> -->
@@ -47,7 +49,7 @@
 		methods: {
 			kFormatter,
 			toStudentPortal() {
-				localStorage.setItem("isClientIn", "true");
+				localStorage.setItem("isAdminIn", "false");
 				this.$store.commit("appConfig/UPDATE_WHO_IS_IN", true);
 
 				this.$store.commit("appConfig/UPDATE_SKIN", "light");
