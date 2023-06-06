@@ -61,6 +61,30 @@
 							/>
 						</div>
 					</b-card>
+					<b-card>
+						<div class="d-flex justify-content-between">
+							<div class="">
+								<b-form-checkbox
+									:checked="markAsWatch"
+									:indeterminate="true"
+									@change="selectAllCheckboxUpdate"
+								>
+									Mark as watched
+								</b-form-checkbox>
+							</div>
+							<b-pagination
+								v-model="currentPage"
+								:total-rows="courseModules"
+								:per-page="perPage"
+								first-text="⏮"
+								prev-text="⏪"
+								next-text="⏩"
+								align="left"
+								last-text="⏭"
+								class="mt-2"
+							/>
+						</div>
+					</b-card>
 				</vue-perfect-scrollbar>
 			</div>
 
@@ -87,6 +111,7 @@
 		onBeforeMount,
 	} from "@vue/composition-api";
 	import {
+		BPagination,
 		BSpinner,
 		BEmbed,
 		BFormInput,
@@ -113,6 +138,7 @@
 
 	export default {
 		components: {
+			BPagination,
 			BSpinner,
 			BEmbed,
 			BFormInput,
@@ -157,6 +183,9 @@
 			const { route, router } = useRouter();
 			const courseDisplay = ref(null);
 			const courseModules = ref([]);
+			const markAsWatch = ref(false);
+			const currentPage = ref(1);
+			const perPage = ref(50);
 			const course = ref(null);
 			const courseTitles = [
 				{
@@ -216,6 +245,9 @@
 
 			return {
 				courseTitles,
+				markAsWatch,
+				currentPage,
+				perPage,
 				// UI
 				perfectScrollbarSettings,
 				computeCourseDisplay,

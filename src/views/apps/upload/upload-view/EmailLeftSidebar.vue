@@ -15,12 +15,12 @@
 						<b-list-group class="list-group-labels">
 							<b-list-group-item
 								style="cursor: pointer"
-								v-for="(label, index) in prCcourseTitles"
+								v-for="label in prCcourseTitles"
 								:key="label.title"
 								@click="courseModuleClick(label)"
 							>
 								<!-- @click="$emit('close-left-sidebar')" -->
-								<span> {{ index + 1 }}) </span>
+								<span class="`bullet-primary"> </span>
 								<!-- :class="`bullet-${label.color}`" -->
 								<span class="text-capitalized">{{
 									label.title
