@@ -28,15 +28,30 @@ export default [
          }
       ]
    },
-
    {
       title: 'Upload ',
       icon: 'UploadIcon',
-      tag: '',
+      tag: 'updated',
       tagVariant: 'light-warning',
-
-      route: 'upload-courses'
+      children: [
+         {
+            title: 'List',
+            route: 'course-list',
+            icon: 'TrendingUpIcon'
+         },
+         {
+            title: 'Upload Course',
+            route: { name: 'upload-course' },
+            icon: 'UploadIcon'
+         },
+         {
+            title: 'watch',
+            route: { name: 'watch-course', params: { id: 21 } },
+            icon: 'TvIcon'
+         }
+      ]
    },
+
    {
       title: 'Tickets',
       icon: 'FileIcon',
