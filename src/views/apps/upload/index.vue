@@ -8,8 +8,8 @@
 				>
 					<h4>Cover Image For the courses</h4>
 				</div>
-				<p></p>
-				<p>
+
+				<!-- <p>
 					<b-media class="mb-2">
 						<template #aside>
 							<b-avatar
@@ -49,7 +49,48 @@
 							</b-button>
 						</div>
 					</b-media>
-				</p>
+				</p> -->
+
+				<div class="border rounded p-2">
+					<h4 class="mb-1">Featured Image</h4>
+					<b-media
+						no-body
+						vertical-align="center"
+						class="flex-column flex-md-row"
+					>
+						<b-media-aside>
+							<b-img
+								ref="refPreviewEl"
+								:src="blogEdit.featuredImage"
+								height="110"
+								width="170"
+								class="rounded mr-2 mb-1 mb-md-0"
+							/>
+						</b-media-aside>
+						<b-media-body>
+							<small class="text-muted"
+								>Required image resolution 800x400, image size
+								10mb.</small
+							>
+							<b-card-text class="my-50">
+								<b-link id="blog-image-text">
+									\{{
+										blogFile ? blogFile.name : "banner.jpg"
+									}}
+								</b-link>
+							</b-card-text>
+							<div class="d-inline-block">
+								<b-form-file
+									ref="refInputEl"
+									v-model="blogFile"
+									accept=".jpg, .png, .gif"
+									placeholder="Choose file"
+									@input="inputImageRenderer"
+								/>
+							</div>
+						</b-media-body>
+					</b-media>
+				</div>
 			</app-timeline-item>
 
 			<app-timeline-item
@@ -100,7 +141,7 @@
 									<b-col md="4">
 										<b-form-textarea
 											v-model="
-												items[index].courseDescription
+												items[index].courseDescriptions
 											"
 											rows="2"
 											placeholder="Brief Description "
@@ -119,7 +160,7 @@
 									</b-col>
 
 									<b-col
-										col="12"
+										cols="12"
 										class="mx-1 mb-1 mb-md-3 d-flex justify-content-end"
 									>
 										<b-button
@@ -161,12 +202,12 @@
 				</div>
 			</app-timeline-item>
 		</app-timeline>
-		<b-col col="12" class="mx-1 mb-2 mb-md-5 d-flex justify-content-end">
+		<b-col cols="12" class="mx-1 mb-2 mb-md-5 d-flex justify-content-end">
 			<b-button
 				v-ripple.400="'rgba(234, 84, 85, 0.15)'"
 				variant="success"
 				class="mt-0 text-right d-flex justify-content-end"
-				@click="removeItem(index)"
+				@click="saveRecord"
 			>
 				<feather-icon
 					v-if="!isUploading"
@@ -186,6 +227,8 @@
 		BImg,
 		BAvatar,
 		BMedia,
+		BMediaAside,
+		BMediaBody,
 		BButton,
 		BCollapse,
 		VBToggle,
@@ -195,9 +238,12 @@
 		BBadge,
 		VBTooltip,
 		BCard,
+		BCardText,
 		BForm,
+		BFormFile,
 		BRow,
 		BCol,
+		BLink,
 		BFormGroup,
 		BFormInput,
 		BFormTextarea,
@@ -211,6 +257,7 @@
 	import store from "@/store";
 	import { useToast } from "vue-toastification/composition";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
+	import { getDownloadURL } from "firebase/storage";
 
 	import {
 		ref,
@@ -219,6 +266,7 @@
 		onUnmounted,
 		nextTick,
 	} from "@vue/composition-api";
+	import { serverTimestamp } from "@firebase/firestore";
 
 	export default {
 		mixins: [heightTransition],
@@ -227,8 +275,11 @@
 			AppTimeline,
 			AppTimelineItem,
 			BCard,
+			BCardText,
 			BImg,
 			BMedia,
+			BMediaAside,
+			BMediaBody,
 
 			BAvatar,
 			BButton,
@@ -238,6 +289,8 @@
 			BAvatarGroup,
 			BBadge,
 			BForm,
+			BFormFile,
+			BLink,
 			BRow,
 			BCol,
 			BFormGroup,
@@ -248,12 +301,13 @@
 
 		setup(props) {
 			const toast = useToast();
-			const isUpdateProfilePhoto = ref(false);
-			const isEditingRecord = ref(false);
 
 			const pickingImage = ref(false);
 			const isUploading = ref(false);
 			const nextTodoId = ref(2);
+			const blogEdit = ref({});
+			const blogFile = ref(null);
+			const refPreviewEl = ref(null);
 			const items = ref([
 				{
 					courseTitle: "",
@@ -268,6 +322,7 @@
 			const previewEl = ref(null);
 			const row = ref(null);
 			const form = ref(null);
+			const coverArtUrl = ref(null);
 
 			onBeforeMount(() => {
 				window.addEventListener("resize", initTrHeight());
@@ -298,6 +353,7 @@
 					trSetHeight(form.value.scrollHeight);
 				});
 			};
+
 			const trSetHeight = (val) => {
 				if (val === null) trHeight.value = "auto";
 				else trHeight.value = `${Number(val)}px`;
@@ -307,6 +363,7 @@
 				items.value.push({
 					id: (nextTodoId.value += nextTodoId.value),
 				});
+
 				nextTick(() => {
 					trAddHeight(row.value.offsetHeight);
 				});
@@ -318,37 +375,110 @@
 			};
 
 			const saveRecord = async () => {
-				isEditingRecord.value = true;
-				let userId = router.currentRoute.params.id;
+				let itemFieldIsEmpty = false;
+				items.value.forEach((item) => {
+					Object.values(item).forEach((field) => {
+						if (!field) {
+							itemFieldIsEmpty = true;
+						}
+					});
+				});
+
+				if (itemFieldIsEmpty) {
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Empty Required Field",
+							text: `Please check!, Empty fields`,
+							icon: "AlertTriangleIcon",
+							variant: "warning",
+						},
+					});
+					return false;
+				}
+				isUploading.value = true;
+				let data = Object.assign({}, items.value);
+				let serverItem = items.value.map((item) => {
+					return {
+						status: 1,
+						title: item.courseTitle,
+						description: item.courseDescriptions,
+						video_url: item.videoUrl,
+						duration: 0,
+					};
+				});
+
+				let course = {
+					created_at: serverTimestamp(),
+					cover_photo_url: coverArtUrl.value,
+					title: data[0].courseTitle,
+					description: data[0].courseDescriptions,
+					status: 1,
+					tracks: items.value.length || 1,
+					user_id: store.getters["Users/signInUserId"] || 1,
+					mudules: serverItem,
+				};
+				console.log(course);
+				debugger;
 
 				try {
-					let data = Object.assign({}, computeUserData.value);
+					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
+						course,
+					});
 
-					data.updated_at = serverTimestamp();
+					// let serverItem = items.value.map((item) => {
+					// 	return {
+					// 		status: 1,
+					// 		title: item.courseTitle,
+					// 		description: item.courseDescriptions,
+					// 		video_url: item.videoUrl,
+					// 		course_id: responses.id,
+					// 		duration: 0,
+					// 		created_at: serverTimestamp(),
+					// 	};
+					// });
 
-					let payload = {
-						data,
-						id: userId,
-					};
-					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
-					isEditingRecord.value = false;
+					// let response2 = await store.dispatch(
+					// 	"Course/UPLOAD_VIDEOS_CONTENT",
+					// 	{ array: serverItem }
+					// );
+					if (!responses) {
+						toast({
+							component: ToastificationContent,
+							props: {
+								title: "Uncought Error",
+								text: `The upload could not be completed!`,
+								icon: "AlertTriangleIcon",
+								variant: "danger",
+							},
+						});
+					}
 				} catch (err) {
+					isUploading.value = false;
 					console.error(err);
-					isEditingRecord.value = false;
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Ouch !!",
+							text: `An Error Occured`,
+							icon: "AlertTriangleIcon",
+							variant: "danger",
+						},
+					});
 				}
 			};
 
 			const { inputImageRenderer } = useInputImageRenderer(
 				refInputEl,
-				async (file) => {
-					pickingImage.value = true;
+				async (file, base64) => {
+					refPreviewEl.value.src = base64;
 
-					if (file.size > 6000000) {
+					if (file.size > 10000000) {
 						toast({
 							component: ToastificationContent,
 							props: {
 								title: "Oh no",
-								text: `File size is greater than the required size (Max 6mb)`,
+								text: `File size is greater than the required size (Max 10mb)`,
 								icon: "AlertTriangleIcon",
 								variant: "warning",
 							},
@@ -356,7 +486,7 @@
 						return false;
 					}
 
-					isUploading.value = true;
+					pickingImage.value = true;
 					let payload = {
 						image: file,
 					};
@@ -365,10 +495,12 @@
 							"Course/UPLOAD_COVER_PICTURE",
 							payload
 						);
-						console.log(response);
-						debugger;
+
+						pickingImage.value = false;
+						coverArtUrl.value = await getDownloadURL(response.ref);
 					} catch (err) {
 						console.log(err);
+						pickingImage.value = false;
 						toast({
 							component: ToastificationContent,
 							props: {
@@ -383,6 +515,8 @@
 			);
 
 			return {
+				blogFile,
+				blogEdit,
 				saveRecord,
 				inputImageRenderer,
 				avatarText,
@@ -394,10 +528,10 @@
 				pickingImage,
 
 				isUploading,
-				isUpdateProfilePhoto,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
+				refPreviewEl,
 				previewEl,
 			};
 		},
@@ -409,3 +543,4 @@
 		transition: 0.35s height;
 	}
 </style>
+
