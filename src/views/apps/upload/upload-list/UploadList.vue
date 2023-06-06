@@ -7,18 +7,11 @@
 		title="All Courses"
 	>
 		<div>
-			<!-- <user-list-add-new
-				v-if="!isComponent"
-				:is-add-new-user-sidebar-active.sync="isAddNewUserSidebarActive"
-				:role-options="roleOptions"
-				@refetch-data="refetchData"
-			/> -->
-
 			<!-- Table Container Card -->
 			<b-card no-body class="mb-0" title>
 				<div class="m-2">
 					<!-- Table Top -->
-					<b-row v-if="!isComponent">
+					<b-row>
 						<!-- Per Page -->
 						<b-col
 							cols="12"
@@ -48,21 +41,15 @@
 									class="d-inline-block mr-1"
 									placeholder="Search..."
 								/>
-								<b-button
-									variant="primary"
-									@click="isAddNewUserSidebarActive = true"
-								>
-									<span class="text-nowrap">Add User</span>
-								</b-button>
 							</div>
 						</b-col>
 					</b-row>
 				</div>
 
 				<b-table
-					ref="refUserListTable"
+					ref="refCourseListTable"
 					class="position-relative"
-					:items="computeUsers"
+					:items="computeCourses"
 					:fields="tableColumns"
 					primary-key="id"
 					:sort-by.sync="sortBy"
@@ -85,23 +72,15 @@
 						</div>
 					</template>
 
-					<!-- Column: Name -->
-					<template #cell(f_name)="data">
+					<!-- Column: Title -->
+					<template #cell(title)="data">
 						<b-media vertical-align="center">
 							<template #aside>
 								<b-avatar
 									size="32"
-									:src="data.item.avatar"
-									:text="avatarText(data.item.f_name)"
-									:variant="`light-${resolveUserRoleVariant(
-										data.item.user_type == 1
-											? 'admin'
-											: 'student'
-									)}`"
-									:to="{
-										name: 'apps-users-view',
-										params: { id: data.item.id },
-									}"
+									:src="data.item.cover_photo_url"
+									:text="avatarText(data.item.title)"
+									variant="secondary"
 								/>
 							</template>
 							<b-link
@@ -111,103 +90,82 @@
 								}"
 								class="font-weight-bold d-block text-nowrap text-capitalize"
 							>
-								{{ data.item.f_name }}
+								{{ data.item.title }}
 							</b-link>
-							<small class="text-muted text-lighten-blue"
-								>@{{ data.item.username }}</small
-							>
 						</b-media>
 					</template>
 
-					<!-- Column: Role -->
-					<template #cell(user_type)="data">
+					<!-- Column: Module -->
+					<template #cell(modules)="data">
 						<div class="text-nowrap">
 							<feather-icon
-								:icon="resolveUserRoleIcon(data.item.user_type)"
+								icon="BoxIcon"
 								size="18"
-								class="mr-50"
-								:class="`text-${resolveUserRoleVariant(
-									data.item.user_type == 1
-										? 'admin'
-										: 'student'
-								)}`"
+								class="mr-50 text-info"
 							/>
 							<span class="align-text-top text-capitalize">{{
-								data.item.user_type == 1 ? "Admin" : "Student"
+								data.item.tracks + " " + "Tracks"
 							}}</span>
 						</div>
 					</template>
-					<!-- Column: Role -->
-					<template #cell(subscribed)="data">
+					<template #cell(created_at)="data">
 						<div class="text-nowrap">
 							<span class="align-text-top text-capitalize">{{
-								data.item.subscribed == true
-									? "Subscribed"
-									: "Not subscribed"
+								data.item.created_at
 							}}</span>
 						</div>
 					</template>
 
-					<!-- Column: Status -->
-					<template #cell(enabled)="data">
-						<b-badge
-							pill
-							:variant="`light-${resolveUserStatusVariant(
-								data.item.enabled
-							)}`"
-							class="text-capitalize"
-						>
-							{{
-								data.item.enabled == true
-									? "active"
-									: "disabled"
-							}}
-						</b-badge>
-					</template>
-
-					<!-- Column: Actions -->
 					<template #cell(actions)="data">
-						<b-dropdown
-							variant="link"
-							no-caret
-							:right="$store.state.appConfig.isRTL"
-						>
-							<template #button-content>
-								<feather-icon
-									icon="MoreVerticalIcon"
-									size="16"
-									class="align-middle text-body"
-								/>
-							</template>
-							<b-dropdown-item
-								:to="{
-									name: 'apps-users-view',
-									params: { id: data.item.id },
-								}"
-							>
-								<feather-icon icon="FileTextIcon" />
-								<span class="align-middle ml-50">Details</span>
-							</b-dropdown-item>
+						<div class="text-nowrap">
+							<feather-icon
+								:id="`invoice-row-${data.item.id}-send-icon`"
+								icon="EditIcon"
+								class="cursor-pointer text-primary"
+								v-b-tooltip.hover
+								size="16"
+								title="Edit Course"
+								@click="
+									editCourse(
+										data.item.id,
+										'apps-invoice-edit'
+									)
+								"
+							/>
+							<b-tooltip
+								title="Edit Course"
+								:target="`invoice-row-${data.item.id}-preview-icon`"
+							/>
 
-							<b-dropdown-item
-								:to="{
-									name: 'apps-users-edit',
-									params: { id: data.item.id },
-								}"
-							>
-								<feather-icon icon="EditIcon" />
-								<span class="align-middle ml-50">Edit</span>
-							</b-dropdown-item>
-
-							<b-dropdown-item @click="deleteUser(data.item.id)">
-								<feather-icon icon="TrashIcon" />
-								<span class="align-middle ml-50">Delete</span>
-							</b-dropdown-item>
-						</b-dropdown>
+							<feather-icon
+								v-b-tooltip.hover
+								:id="`invoice-row-${data.item.id}-preview-icon`"
+								icon="EyeIcon"
+								size="16"
+								class="mx-1 text-success cursor-pointer"
+								@click="viewCourse(data.item.id)"
+							/>
+							<b-tooltip
+								title="View Course"
+								:target="`invoice-row-${data.item.id}-preview-icon`"
+							/>
+							<feather-icon
+								v-b-tooltip.hover
+								:id="`invoice-row-${data.item.id}-preview-icon`"
+								icon="TrashIcon"
+								size="16"
+								class="mx-1 text-danger cursor-pointer"
+								@click="printInvoice(data.item.id)"
+							/>
+							<b-tooltip
+								title="Print Invoice"
+								:target="`invoice-row-${data.item.id}-preview-icon`"
+							/>
+						</div>
 					</template>
 				</b-table>
 
-				<div class="mx-2 mb-2" v-if="!isComponent">
+				<div class="mx-2 mb-2">
 					<b-row>
 						<b-col
 							cols="12"
@@ -228,7 +186,7 @@
 						>
 							<b-pagination
 								v-model="currentPage"
-								:total-rows="totalUsers"
+								:total-rows="totalCourses"
 								:per-page="perPage"
 								first-number
 								last-number
@@ -273,23 +231,21 @@
 		BDropdown,
 		BDropdownItem,
 		BPagination,
+		VBTooltip,
 	} from "bootstrap-vue";
 	import vSelect from "vue-select";
 	import store from "@/store";
 	import { ref, onUnmounted } from "@vue/composition-api";
 	import { avatarText } from "@core/utils/filter";
 	// import UsersListFilters from "./UsersListFilters.vue";
-	import useUsersList from "./useUsersList";
+
+	import useCoursesList from "./useCoursesList";
 
 	import BCardActions from "@core/components/b-card-actions/BCardActions.vue";
 
 	export default {
-		props: {
-			isComponent: {
-				type: Boolean,
-				required: true,
-				default: false,
-			},
+		directives: {
+			"b-tooltip": VBTooltip,
 		},
 		components: {
 			BSpinner,
@@ -316,85 +272,66 @@
 		setup() {
 			const {
 				refreshCard,
-				isAddNewUserSidebarActive,
+
 				tableColumns,
 				perPage,
 				currentPage,
-				totalUsers,
+				totalCourses,
 				dataMeta,
 				perPageOptions,
 				searchQuery,
 				sortBy,
 				isSortDirDesc,
-				refUserListTable,
+				refCourseListTable,
 				isBusy,
 				showLoading,
 				// ************** WATCHERS *********
-				computeUsers,
+				computeCourses,
 				// ****************  FXN *****
 				refreshStop,
 
-				changeContactType,
 				avatarClick,
 				detailsClick,
 				editClick,
 				deleteClick,
-				fetchUsers,
+				fetchCourses,
 				refetchData,
 
-				resolveUserRoleVariant,
-				resolveUserRoleIcon,
-				resolveUserStatusVariant,
 				deleteUser,
-
-				// Extra Filters
-				roleFilter,
-				planFilter,
-				statusFilter,
-				roleOptions,
-			} = useUsersList();
+			} = useCoursesList();
 
 			return {
 				// Sidebar
 				refreshCard,
-				isAddNewUserSidebarActive,
 
 				tableColumns,
 				perPage,
 				currentPage,
-				totalUsers,
+				totalCourses,
 				dataMeta,
 				perPageOptions,
 				searchQuery,
 				sortBy,
 				isSortDirDesc,
-				refUserListTable,
-				roleOptions,
+				refCourseListTable,
 
-				// Extra Filters
-				roleFilter,
-				planFilter,
-				statusFilter,
 				isBusy,
 				showLoading,
 				// ************** WATCHERS *********
-				computeUsers,
+				computeCourses,
 
 				// ******* FXN *******
 				refreshStop,
-				changeContactType,
+
 				avatarClick,
 				detailsClick,
 				editClick,
 				deleteClick,
 				refetchData,
-				fetchUsers,
+				fetchCourses,
 				deleteUser,
 				// Filter
 				avatarText,
-				resolveUserRoleVariant,
-				resolveUserRoleIcon,
-				resolveUserStatusVariant,
 			};
 		},
 	};

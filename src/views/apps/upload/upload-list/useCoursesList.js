@@ -10,92 +10,72 @@ import { paginateCounteFromOne, countFromOne } from '@/helpers/number-helpers/nu
 import { paginate } from '@/helpers/pagination-helpers/generalPagination';
 import router from '@/router';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 import { useRoute } from 'vue-router';
 
-export default function useUsersList() {
+export default function useCoursesList() {
    // Use toast
    const toast = useToast();
    const showLoading = ref(true);
 
    const responseObject = ref(null);
 
-   const refUserListTable = ref(null);
+   const refCourseListTable = ref(null);
    const refreshCard = ref(null);
-   const navUserDiff = ref(0);
 
    // Table Handlers
    const tableColumns = [
       { key: 'count', label: 'S/N', sortable: true },
-      { key: 'f_name', formatter: title, label: 'Full Name', sortable: true },
-      { key: 'email', sortable: true },
-      { key: 'user_type', label: 'User type', sortable: true },
-      {
-         key: 'subscribed',
-         label: 'Subscribed',
+      { key: 'title', formatter: title, label: 'Title' },
+      { key: 'modules', label: 'Modules', sortable: true },
+      { key: 'created_at', label: 'Date Created', sortable: true },
 
-         sortable: true
-      },
-      { key: 'enabled', label: 'Status', sortable: true },
       { key: 'actions' }
    ];
    const perPage = ref(50);
-   const totalUsers = ref(0);
+   const totalCourses = ref(0);
    const currentPage = ref(1);
    const perPageOptions = [ 50, 75, 100 ];
    const searchQuery = ref('');
    const sortBy = ref('id');
    const isSortDirDesc = ref(true);
    const isSortDirAsc = ref(true);
-   const roleFilter = ref(null);
-   const planFilter = ref(null);
-   const statusFilter = ref(null);
-   const companyContactType = ref(null);
-   const isAddNewUserSidebarActive = ref(false);
 
    const isBusy = ref(true);
-   const countries = ref([]);
-   const contactType = { name: 'Customers', value: 1 };
-   const returnSearchedUser = ref([]);
 
-   const roleOptions = [ { label: 'Admin', value: 1 }, { label: 'Student', value: 2 } ];
-
-   const statusOptions = [
-      { label: 'Pending', value: 2 },
-      { label: 'Active', value: 1 },
-      { label: 'Inactive', value: 0 }
-   ];
+   const returnSearchedCourses = ref([]);
 
    onBeforeMount(() => {
-      fetchUsers();
+      fetchCourses();
    });
 
    //*************************************************************** */
    // ********************** COMPUTED ********************************//
    const dataMeta = computed(() => {
-      const localItemsCount = refUserListTable.value ? refUserListTable.value.localItems.length : 0;
+      const localItemsCount = refCourseListTable.value ? refCourseListTable.value.localItems.length : 0;
 
       return {
          from: perPage.value * (currentPage.value - 1) + (localItemsCount ? 1 : 0),
          to: perPage.value * (currentPage.value - 1) + localItemsCount,
-         of: totalUsers.value
+         of: totalCourses.value
       };
    });
 
-   const computeUsers = computed(() => {
-      let getUsersObj = store.getters['Users/allUserGetter'];
-      let users = searchQuery.value ? returnSearchedUser.value : getUsersObj;
+   const computeCourses = computed(() => {
+      let getCoursesObj = store.getters['Course/allCourseGetter'];
+      let course = searchQuery.value ? returnSearchedCourses.value : getCoursesObj;
 
-      responseObject.value = getUsersObj;
-      // totalUsers.value = users.length;
+      if (!course) return [];
+      course = course.map(item => {
+         item.created_at = `${moment(item.created_at ? item.created_at.toDate() : Date.now()).format(
+            'MMMM Do YYYY, h:mm:ss a'
+         )}`;
+         return item;
+      });
+      responseObject.value = getCoursesObj;
 
-      // let payload = {
-      //     data: paginate(users, currentPage.value, perPage.value),
-      //     perPage: perPage.value,
-      //     currentPage: currentPage.value
-      // };
-      // return paginateCounteFromOne(payload);
-      return countFromOne(users);
+      return countFromOne(course);
    });
 
    //*************************************************************** */
@@ -108,7 +88,7 @@ export default function useUsersList() {
       searchQuery,
       async val => {
          if (!val) {
-            returnSearchedUser.value = [];
+            returnSearchedCourses.value = [];
             return false;
          }
          isBusy.value = true;
@@ -116,8 +96,8 @@ export default function useUsersList() {
             searchString: val.toLocaleLowerCase()
          };
          try {
-            let response = await store.dispatch('Users/SEARCH_USERS', payload);
-            returnSearchedUser.value = response;
+            let response = await store.dispatch('Course/SEARCH_COURSES', payload);
+            returnSearchedCourses.value = response;
             isBusy.value = false;
          } catch (err) {
             isBusy.value = false;
@@ -130,10 +110,10 @@ export default function useUsersList() {
 
    //*************************************************************** */
    // ********************** FUNCTIONS (MEHTODS) ********************************//
-   const deleteUser = userId => {
+   const deleteUser = courseId => {
       new Swal({
          title: ' 😕 Carefull! ',
-         text: `You are about to delete this user permanently`,
+         text: `You are about to delete this course permanently`,
          icon: 'info',
 
          showCancelButton: true,
@@ -156,8 +136,8 @@ export default function useUsersList() {
                   },
                   id: userId
                };
-               let doc = await store.dispatch('Users/UPDATE_SINGLE_USER', payload);
-               fetchUsers();
+               let doc = await store.dispatch('Course/UPDATE_SINGLE_USER', payload);
+               fetchCourses();
                new Swal('Good job!', 'User successfully deleted!', 'success');
             } catch (err) {
                console.error(err);
@@ -166,15 +146,15 @@ export default function useUsersList() {
       });
    };
 
-   const fetchUsers = async (page, pageNumber) => {
+   const fetchCourses = async (page, pageNumber) => {
       let payload = {
          page,
          pageNumber
       };
       try {
-         let resp = await store.dispatch('Users/GET_USERS', payload);
+         let resp = await store.dispatch('Course/GET_COURSES', payload);
          isBusy.value = false;
-         totalUsers.value = resp.length;
+         totalCourses.value = resp.length;
          refreshCard.value.showLoading = false;
       } catch (err) {
          isBusy.value = false;
@@ -187,10 +167,10 @@ export default function useUsersList() {
          return false;
       }
       refreshCard.value.showLoading = true;
-      refUserListTable.value.refresh();
-      totalUsers.value = 0;
+      refCourseListTable.value.refresh();
+      totalCourses.value = 0;
 
-      fetchUsers();
+      fetchCourses();
    };
 
    const avatarClick = val => {
@@ -222,60 +202,34 @@ export default function useUsersList() {
    };
 
    const refetchData = ([ currentPageValue, perPageValue, responseObjectValue ]) => {
-      refUserListTable.value.refresh();
+      refCourseListTable.value.refresh();
    };
 
    // *===============================================---*
    // *--------- UI ---------------------------------------*
    // *===============================================---*
 
-   const resolveUserRoleVariant = role => {
-      if (role === 'student') return 'primary';
-      if (role === 'admin') return 'danger';
-      return 'primary';
-   };
-
-   const resolveUserRoleIcon = role => {
-      if (role === 2) return 'BookmarkIcon'; // for admin
-      if (role === 1) return 'SettingsIcon'; // for student
-
-      return 'BookmarkIcon';
-   };
-
-   const resolveUserStatusVariant = status => {
-      if (status === true) return 'success';
-      if (status === false) return 'danger';
-      return 'primary';
-   };
-
    return {
       refreshCard,
       showLoading,
-      countries,
-      navUserDiff,
-      isBusy,
-      contactType,
-      isAddNewUserSidebarActive,
-      roleOptions,
 
-      statusOptions,
+      isBusy,
 
       tableColumns,
       perPage,
       currentPage,
-      totalUsers,
+      totalCourses,
       dataMeta,
       perPageOptions,
       searchQuery,
       sortBy,
       isSortDirDesc,
       isSortDirAsc,
-      refUserListTable,
-      companyContactType,
+      refCourseListTable,
 
       // *** computed ****//
 
-      computeUsers,
+      computeCourses,
 
       // *** Fxn****//
       refreshStop,
@@ -285,17 +239,9 @@ export default function useUsersList() {
       editClick,
       deleteClick,
 
-      fetchUsers,
+      fetchCourses,
 
-      resolveUserRoleVariant,
-      resolveUserRoleIcon,
-      resolveUserStatusVariant,
       refetchData,
-      deleteUser,
-
-      // Extra Filters
-      roleFilter,
-      planFilter,
-      statusFilter
+      deleteUser
    };
 }
