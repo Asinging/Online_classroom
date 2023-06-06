@@ -1,8 +1,12 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
 	<div style="height: inherit">
-		<div v-if="!computeCourseDisplay">
-			<b-spinner label="Loading..." class="mr-25" large />
+		<div
+			v-if="!computeCourseDisplay"
+			class="text-center d-flex justify-content-center align-items-center"
+			style="height: 100%"
+		>
+			<b-spinner size="xl" class="text-center text-primary" />
 		</div>
 		<div v-else>
 			<div
@@ -63,9 +67,9 @@
 			<portal to="content-renderer-sidebar-left">
 				<email-left-sidebar
 					:class="{ show: mqShallShowLeftSidebar }"
-					@close-left-sidebar="mqShallShowLeftSidebar = false"
 					:courseTitles="courseModules"
 				/>
+				<!-- @close-left-sidebar="mqShallShowLeftSidebar = false" -->
 			</portal>
 		</div>
 	</div>
@@ -105,6 +109,7 @@
 	import { useResponsiveAppLeftSidebarVisibility } from "@core/comp-functions/ui/app";
 	import EmailLeftSidebar from "./EmailLeftSidebar.vue";
 	import { checkIframe } from "@/helpers/iframe-helpers";
+	import EventBus from "@/helpers/eventBus";
 
 	export default {
 		components: {
@@ -129,6 +134,24 @@
 
 			// App SFC
 			EmailLeftSidebar,
+		},
+		created() {
+			EventBus.$on("courseModuleClick", this.courseModuleClick);
+			EventBus.$on("close-left-sidebar", this.closeLeftSidebar());
+		},
+		beforeDestroy() {
+			localStorage.removeItem("courseDisplay");
+			EventBus.$off();
+		},
+		methods: {
+			courseModuleClick(item) {
+				debugger;
+				if (!item) return false;
+
+				this.courseDisplay = item;
+				localStorage.getItem("courseDisplay", JSON.stringify(item));
+			},
+			closeLeftSidebar(item) {},
 		},
 		setup() {
 			const { route, router } = useRouter();
@@ -170,6 +193,7 @@
 
 			onBeforeMount(async () => {
 				let courseId = route.value.params.id;
+				let storage = localStorage.getItem("courseDisplay");
 
 				try {
 					let response = await store.dispatch(
@@ -179,7 +203,9 @@
 						}
 					);
 					if (response) {
-						courseDisplay.value = response.mudules[0];
+						courseDisplay.value = storage
+							? JSON.parse(storage)
+							: response.mudules[0];
 						courseModules.value = response.mudules;
 						course.value = response;
 					}
@@ -194,6 +220,7 @@
 				perfectScrollbarSettings,
 				computeCourseDisplay,
 				courseModules,
+				courseDisplay,
 
 				// Left Sidebar Responsiveness
 				mqShallShowLeftSidebar,
@@ -212,13 +239,5 @@
 		height: 100vh;
 		overflow: hidden;
 		position: relative;
-	}
-
-	iframe {
-		position: absolute;
-		top: -10%;
-		width: 100vw;
-		height: 117vh;
-		pointer-events: none;
 	}
 </style>

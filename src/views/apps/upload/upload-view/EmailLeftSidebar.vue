@@ -14,17 +14,17 @@
 
 						<b-list-group class="list-group-labels">
 							<b-list-group-item
-								v-for="label in prCcourseTitles"
+								style="cursor: pointer"
+								v-for="(label, index) in prCcourseTitles"
 								:key="label.title"
-								:active="'text-success'"
-								@click="$emit('close-left-sidebar')"
+								@click="courseModuleClick(label)"
 							>
-								<span
-									class="bullet bullet-sm mr-1"
-									:class="`bullet-success`"
-								/>
+								<!-- @click="$emit('close-left-sidebar')" -->
+								<span> {{ index + 1 }}) </span>
 								<!-- :class="`bullet-${label.color}`" -->
-								<span>{{ label.title }}</span>
+								<span class="text-capitalized">{{
+									label.title
+								}}</span>
 							</b-list-group-item>
 						</b-list-group>
 					</vue-perfect-scrollbar>
@@ -39,6 +39,7 @@
 	import { BButton, BListGroup, BListGroupItem, BBadge } from "bootstrap-vue";
 	import { isDynamicRouteActive } from "@core/utils/utils";
 	import Ripple from "vue-ripple-directive";
+	import EventBus from "@/helpers/eventBus";
 
 	export default {
 		props: {
@@ -67,11 +68,16 @@
 				maxScrollbarLength: 60,
 			};
 			const prCcourseTitles = props.courseTitles;
+			const courseModuleClick = (item) => {
+				EventBus.$emit("close-left-sidebar", item);
+				EventBus.$emit("courseModuleClick", item);
+			};
 
 			return {
 				// UI
 				perfectScrollbarSettings,
 				prCcourseTitles,
+				courseModuleClick,
 			};
 		},
 	};

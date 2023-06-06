@@ -1,8 +1,9 @@
 export const checkIframe = item => {
-   if (!item) return false;
+   debugger;
+   if (!item || !item.video_url) return false;
    let str = item;
    let arr = str.video_url.toString().trim().split(' ');
-   debugger;
+
    if (arr.length < 2) {
       return item;
    }

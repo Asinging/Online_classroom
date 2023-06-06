@@ -29,6 +29,7 @@ Vue.use(ModalPlugin);
 
 // Composition API
 Vue.use(VueCompositionAPI);
+// Import mitt
 
 // Feather font icon - For form-wizard
 // * Shall remove it if not using font-icons of feather-icons - For form-wizard
@@ -43,8 +44,9 @@ require('@/assets/scss/style.scss');
 Vue.config.productionTip = false;
 
 new Vue({
-    router,
-    store,
-    i18n,
-    render: h => h(App)
+   router,
+   store,
+   i18n,
+
+   render: h => h(App)
 }).$mount('#app');
