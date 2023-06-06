@@ -1,7 +1,7 @@
 import { storage, db } from '@/config/firebase.js';
 
 import { ref, uploadBytes } from 'firebase/storage';
-import { writeBatch, addDoc, collection, query, limit, where, orderBy, getDocs } from 'firebase/firestore';
+import { writeBatch, addDoc, doc, getDoc, collection, query, limit, where, orderBy, getDocs } from 'firebase/firestore';
 const batch = writeBatch(db);
 
 import { v4 } from 'uuid';
@@ -64,6 +64,25 @@ export default {
                commit('mAllCourses', filteredUserObject);
 
                resolve(filteredUserObject);
+            } catch (err) {
+               console.log(err);
+               reject(err);
+            }
+         });
+      },
+      GET_SINGLE_COURSE_BY_Id({ commit }, payload) {
+         return new Promise(async (resolve, reject) => {
+            const docRef = doc(db, 'courses', payload.id);
+            try {
+               const docSnap = await getDoc(docRef);
+               if (docSnap.exists()) {
+                  resolve({ ...docSnap.data(), id: docSnap.id });
+               }
+               else {
+                  // docSnap.data() will be undefined in this case
+                  console.log('No such document!');
+                  resolve(false);
+               }
             } catch (err) {
                console.log(err);
                reject(err);

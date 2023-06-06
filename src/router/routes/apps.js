@@ -51,13 +51,13 @@ export default [
       }
    },
    {
-      path: '/admin/view-course',
+      path: '/admin/view-course/:id',
       name: 'view-course',
       component: () => import('@/views/apps/upload/upload-view/Index.vue'),
       meta: {
          contentRenderer: 'sidebar-left',
          contentClass: 'email-application',
-         navActiveLink: 'apps-email',
+         // navActiveLink: 'apps-email',
          resource: 'Auth'
       }
    },
