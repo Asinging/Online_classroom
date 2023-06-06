@@ -51,20 +51,14 @@ export default [
       }
    },
    {
-      path: '/admin/watch-course',
-      name: 'watch-course',
-      component: () => import('@/views/apps/upload/upload-watch/Index.vue'),
+      path: '/admin/view-course',
+      name: 'view-course',
+      component: () => import('@/views/apps/upload/upload-view/Index.vue'),
       meta: {
-         resource: 'Auth',
-         pageTitle: 'Course',
-         breadcrumb: [
-            {
-               text: 'Watch'
-            },
-            {
-               text: 'course'
-            }
-         ]
+         contentRenderer: 'sidebar-left',
+         contentClass: 'email-application',
+         navActiveLink: 'apps-email',
+         resource: 'Auth'
       }
    },
    //    {

@@ -110,41 +110,6 @@ export default function useCoursesList() {
 
    //*************************************************************** */
    // ********************** FUNCTIONS (MEHTODS) ********************************//
-   const deleteUser = courseId => {
-      new Swal({
-         title: ' 😕 Carefull! ',
-         text: `You are about to delete this course permanently`,
-         icon: 'info',
-
-         showCancelButton: true,
-         confirmButtonText: 'Yes',
-         showClass: {
-            popup: 'animate__animated animate__bounceIn'
-         },
-         customClass: {
-            confirmButton: 'btn btn-primary',
-            cancelButton: 'btn btn-outline-danger ml-1'
-         },
-         buttonsStyling: false
-      }).then(async result => {
-         if (result.value) {
-            try {
-               let payload = {
-                  signInUser: localStorage.getItem('signInUser'),
-                  data: {
-                     status: 0
-                  },
-                  id: userId
-               };
-               let doc = await store.dispatch('Course/UPDATE_SINGLE_USER', payload);
-               fetchCourses();
-               new Swal('Good job!', 'User successfully deleted!', 'success');
-            } catch (err) {
-               console.error(err);
-            }
-         }
-      });
-   };
 
    const fetchCourses = async (page, pageNumber) => {
       let payload = {
@@ -180,24 +145,44 @@ export default function useCoursesList() {
       });
    };
 
-   const detailsClick = val => {
+   const viewCourse = val => {
       router.push({
-         name: navUserDiff.value === 2 ? 'apps-contact-view' : 'apps-users-view',
+         name: 'view-course',
          params: { id: val.item.id }
       });
    };
-
-   const editClick = val => {
+   const editCourse = val => {
       router.push({
-         name: navUserDiff.value === 2 ? 'apps-contact-edit' : 'apps-users-edit',
+         name: 'edit-course',
          params: { id: val.item.id }
       });
    };
+   const deleteCourse = courseId => {
+      new Swal({
+         title: ' 😕 Carefull! ',
+         text: `You are about to delete this course permanently`,
+         icon: 'info',
 
-   const deleteClick = val => {
-      router.push({
-         name: navUserDiff.value === 2 ? 'apps-contact-view' : 'apps-users-view',
-         params: { id: val.item.id }
+         showCancelButton: true,
+         confirmButtonText: 'Yes',
+         showClass: {
+            popup: 'animate__animated animate__bounceIn'
+         },
+         customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-outline-danger ml-1'
+         },
+         buttonsStyling: false
+      }).then(async result => {
+         if (result.value) {
+            try {
+               let response = await store.dispatch('Course/DELETE_COURSER');
+               if (!response) return false;
+               new Swal('Good job!', 'User successfully deleted!', 'success');
+            } catch (err) {
+               console.error(err);
+            }
+         }
       });
    };
 
@@ -233,15 +218,13 @@ export default function useCoursesList() {
 
       // *** Fxn****//
       refreshStop,
-
+      deleteCourse,
+      editCourse,
+      viewCourse,
       avatarClick,
-      detailsClick,
-      editClick,
-      deleteClick,
 
       fetchCourses,
 
-      refetchData,
-      deleteUser
+      refetchData
    };
 }

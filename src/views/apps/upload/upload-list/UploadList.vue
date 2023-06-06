@@ -85,7 +85,7 @@
 							</template>
 							<b-link
 								:to="{
-									name: 'apps-users-view',
+									name: 'view-course',
 									params: { id: data.item.id },
 								}"
 								class="font-weight-bold d-block text-nowrap text-capitalize"
@@ -132,35 +132,34 @@
 									)
 								"
 							/>
-							<b-tooltip
+							<!-- <b-tooltip
 								title="Edit Course"
 								:target="`invoice-row-${data.item.id}-preview-icon`"
-							/>
+							/> -->
 
 							<feather-icon
 								v-b-tooltip.hover
 								:id="`invoice-row-${data.item.id}-preview-icon`"
 								icon="EyeIcon"
 								size="16"
-								class="mx-1 text-success cursor-pointer"
+								title="Watch Course"
+								class="text-success cursor-pointer mx-25"
 								@click="viewCourse(data.item.id)"
 							/>
-							<b-tooltip
-								title="View Course"
-								:target="`invoice-row-${data.item.id}-preview-icon`"
-							/>
+
 							<feather-icon
 								v-b-tooltip.hover
 								:id="`invoice-row-${data.item.id}-preview-icon`"
 								icon="TrashIcon"
+								title="Delete Course"
 								size="16"
-								class="mx-1 text-danger cursor-pointer"
-								@click="printInvoice(data.item.id)"
+								class="text-danger cursor-pointer"
+								@click="deleteCourse(data.item.id)"
 							/>
-							<b-tooltip
+							<!-- <b-tooltip
 								title="Print Invoice"
 								:target="`invoice-row-${data.item.id}-preview-icon`"
-							/>
+							/> -->
 						</div>
 					</template>
 				</b-table>
@@ -291,13 +290,11 @@
 				refreshStop,
 
 				avatarClick,
-				detailsClick,
-				editClick,
-				deleteClick,
+				deleteCourse,
+				editCourse,
+				viewCourse,
 				fetchCourses,
 				refetchData,
-
-				deleteUser,
 			} = useCoursesList();
 
 			return {
@@ -324,12 +321,12 @@
 				refreshStop,
 
 				avatarClick,
-				detailsClick,
-				editClick,
-				deleteClick,
+				deleteCourse,
+				editCourse,
+				viewCourse,
 				refetchData,
 				fetchCourses,
-				deleteUser,
+
 				// Filter
 				avatarText,
 			};

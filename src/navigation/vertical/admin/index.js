@@ -46,7 +46,7 @@ export default [
          },
          {
             title: 'watch',
-            route: { name: 'watch-course', params: { id: 21 } },
+            route: { name: 'view-course', params: { id: 21 } },
             icon: 'TvIcon'
          }
       ]
