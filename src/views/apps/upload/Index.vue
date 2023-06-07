@@ -62,10 +62,11 @@
 				<div class="mb-1 mb-sm-0">
 					<h4>Course Propertise</h4>
 					<p class="text-primary">
-						Go to the YouTube video or playlist you want to embed.
+						Go to the YouTube video or playlist you want to add.
 						From the list of Share options, click Embed. From the
 						box that appears, copy the HTML code. Paste the code
-						into the Below marked for youtube video
+						into the Below marked for youtube video. Or Just Copy
+						the link from the Url bar and paste!!
 					</p>
 					<div>
 						<div class="pl-3 mb-1">
@@ -119,7 +120,7 @@
 
 									<b-col
 										cols="12"
-										class="mx-1 mb-1 mb-md-3 d-flex justify-content-end"
+										class="mx-1 mb-1 mb-md-3 mt-sm-25 mt-md-0 d-flex justify-content-end"
 									>
 										<b-button
 											v-ripple.400="
@@ -127,7 +128,7 @@
 											"
 											variant="primary"
 											@click="repeateAgain"
-											class="sm mr-2"
+											class="sm mr-25"
 											size="sm"
 											v-if="items.length === index + 1"
 										>
@@ -142,13 +143,13 @@
 												'rgba(234, 84, 85, 0.15)'
 											"
 											variant="outline-danger"
-											class="mt-0 text-right d-flex justify-content-end"
+											class="mt-0 text-right d-flex justify-content-end mr-2"
 											@click="removeItem(index)"
 											size="sm"
 										>
 											<feather-icon
 												icon="XIcon"
-												class="mr-25"
+												class=""
 											/>
 											<span>Delete</span>
 										</b-button>
@@ -166,6 +167,7 @@
 				variant="success"
 				class="mt-0 text-right d-flex justify-content-end"
 				@click="saveRecord"
+				:disabled="isUploading"
 			>
 				<feather-icon
 					v-if="!isUploading"
@@ -298,14 +300,16 @@
 						}
 					);
 
-					if (response) {
-						let obj = {
-							courseTitle: response.title,
-							courseDescriptions: response.description,
-							videoUrl: response.video_url,
+					if (!response || !response.mudules) return false;
+
+					let courseModules = response.mudules.map((item) => {
+						return {
+							courseTitle: item.title,
+							courseDescriptions: item.description,
+							videoUrl: item.video_url,
 						};
-						items.value = [obj];
-					}
+					});
+					items.value = [...courseModules];
 				} catch (err) {
 					console.log(err);
 				}
@@ -354,6 +358,16 @@
 
 			const removeItem = (index) => {
 				items.value.splice(index, 1);
+
+				toast({
+					component: ToastificationContent,
+					props: {
+						title: "Good",
+						text: `A course Module has been removed`,
+						icon: "CheckIcon",
+						variant: "success",
+					},
+				});
 				trTrimHeight(row.value.offsetHeight);
 			};
 
@@ -379,7 +393,7 @@
 					});
 					return false;
 				}
-				isUploading.value = true;
+
 				let data = Object.assign({}, items.value);
 				let serverItem = items.value.map((item) => {
 					return {
@@ -416,11 +430,12 @@
 							console.log(err);
 						});
 				}
-
+				isUploading.value = true;
 				try {
 					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
 						course,
 					});
+					isUploading.value = false;
 
 					// let serverItem = items.value.map((item) => {
 					// 	return {
@@ -449,6 +464,15 @@
 							},
 						});
 					}
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Good Job!",
+							text: `Upload successfull done"`,
+							icon: "CheckIcon",
+							variant: "success",
+						},
+					});
 				} catch (err) {
 					isUploading.value = false;
 					console.error(err);
