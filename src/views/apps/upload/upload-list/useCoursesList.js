@@ -170,7 +170,7 @@ export default function useCoursesList() {
             showCancelButton: true,
             confirmButtonText: 'Yes',
             showClass: {
-                popup: 'animate__animated animate__bounceIn'
+                popup: 'animate__animated animate__flipInX'
             },
             customClass: {
                 confirmButton: 'btn btn-primary',
