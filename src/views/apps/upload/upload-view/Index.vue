@@ -1,12 +1,38 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
 	<div style="height: inherit">
-		<div
+		<!-- <div
 			v-if="!computeCourseDisplay"
 			class="text-center d-flex justify-content-center align-items-center"
 			style="height: 100%"
 		>
 			<b-spinner size="xl" class="text-center text-primary" />
+		</div> -->
+		<div
+			v-if="!computeCourseDisplay"
+			class="text-center d-flex justify-content-center align-items-center"
+			style="height: 100%"
+		>
+			<b-alert variant="danger" v-if="isServerResponse" show>
+				<h4 class="alert-heading">Error fetching Video Data</h4>
+				<div class="alert-body">
+					No Video found with this data. please Check
+					<b-link
+						class="alert-link"
+						:to="{
+							name: 'course-list',
+						}"
+					>
+						Video List
+					</b-link>
+				</div>
+			</b-alert>
+			<div v-else>
+				<b-spinner
+					size="xl"
+					class="text-center text-primary"
+				></b-spinner>
+			</div>
 		</div>
 		<div v-else>
 			<div
@@ -110,6 +136,8 @@
 		onBeforeMount,
 	} from "@vue/composition-api";
 	import {
+		BAlert,
+		BLink,
 		BPagination,
 		BSpinner,
 		BEmbed,
@@ -137,6 +165,8 @@
 
 	export default {
 		components: {
+			BAlert,
+			BLink,
 			BPagination,
 			BSpinner,
 			BEmbed,
@@ -185,6 +215,7 @@
 			const currentPage = ref(1);
 			const perPage = ref(50);
 			const course = ref(null);
+			const isServerResponse = ref(false);
 			const courseTitles = [
 				{
 					title: "Personal",
@@ -234,6 +265,7 @@
 							id: courseId,
 						}
 					);
+					isServerResponse.value = true;
 					if (response) {
 						courseDisplay.value = storage
 							? JSON.parse(storage)
@@ -242,6 +274,7 @@
 						course.value = response;
 					}
 				} catch (err) {
+					isServerResponse.value = true;
 					console.log(err);
 				}
 			});
@@ -254,7 +287,9 @@
 				};
 				store.dispatch("Course/UPDATE_SINGLE_COURSE", payload);
 			});
+
 			return {
+				isServerResponse,
 				courseTitles,
 				markAsWatch,
 				currentPage,
