@@ -10,19 +10,14 @@
 		</div> -->
 		<div
 			v-if="!computeCourseDisplay"
-			class="text-center d-flex justify-content-center align-items-center"
+			class="text-center d-flex justify-content-center align-items-center align-content-center"
 			style="height: 100%"
 		>
 			<b-alert variant="danger" v-if="isServerResponse" show>
 				<h4 class="alert-heading">Error fetching Video Data</h4>
 				<div class="alert-body">
 					No Video found with this data. please Check
-					<b-link
-						class="alert-link"
-						:to="{
-							name: 'course-list',
-						}"
-					>
+					<b-link class="alert-link" @click="courseList">
 						Video List
 					</b-link>
 				</div>
@@ -114,7 +109,7 @@
 			</div>
 
 			<portal to="content-renderer-sidebar-left">
-				<email-left-sidebar
+				<module-side-bar-title
 					:class="{ show: mqShallShowLeftSidebar }"
 					:courseTitles="courseModules"
 				/>
@@ -158,9 +153,10 @@
 
 	import { useRouter } from "@core/utils/utils";
 	import { useResponsiveAppLeftSidebarVisibility } from "@core/comp-functions/ui/app";
-	import EmailLeftSidebar from "./EmailLeftSidebar.vue";
+	import ModuleSideBarTitle from "./moduleSideBarTitle.vue";
 	import { checkIframe } from "@/helpers/iframe-helpers";
 	import EventBus from "@/helpers/eventBus";
+	import router from "@/router";
 
 	export default {
 		components: {
@@ -187,7 +183,7 @@
 			VuePerfectScrollbar,
 
 			// App SFC
-			EmailLeftSidebar,
+			ModuleSideBarTitle,
 		},
 		created() {
 			EventBus.$on("courseModuleClick", this.courseModuleClick);
@@ -238,6 +234,15 @@
 
 			const perfectScrollbarSettings = {
 				maxScrollbarLength: 150,
+			};
+
+			const courseList = () => {
+				let isAdmin = JSON.parse(
+					localStorage.getItem("isAdminIn") || "false"
+				);
+				router.push({
+					name: isAdmin ? "course-list" : "courses-card",
+				});
 			};
 			const computeCourseDisplay = computed(() => {
 				if (!courseDisplay.value) return null;
@@ -301,6 +306,7 @@
 				courseModules,
 				courseDisplay,
 				courseModulesTotal,
+				courseList,
 
 				// Left Sidebar Responsiveness
 				mqShallShowLeftSidebar,

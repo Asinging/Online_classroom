@@ -1,30 +1,37 @@
 <template>
 	<div>
-		<!-- search input -->
-		<section id="knowledge-base-search">
-			<b-card-body class="card-body d-flex justify-content-between">
-				<h2 class="text-primary">Recommended contents for you</h2>
+		<b-overlay
+			:show="!isServerResponse"
+			spinner-variant="primary"
+			spinner-type="grow"
+			spinner-large
+			rounded="lg"
+		>
+			<!-- search input -->
+			<section id="knowledge-base-search">
+				<b-card-body class="card-body d-flex justify-content-between">
+					<h2 class="text-primary">Recommended contents for you</h2>
 
-				<b-form class="kb-search-input d-flex justify-content-end">
-					<b-input-group class="input-group-merge">
-						<b-input-group-prepend is-text>
-							<feather-icon icon="SearchIcon" />
-						</b-input-group-prepend>
-						<b-form-input
-							id="searchbar"
-							v-model="knowledgeBaseSearchQuery"
-							placeholder="Ask a question...."
-						/>
-					</b-input-group>
-				</b-form>
-				<!-- form -->
-			</b-card-body>
-		</section>
-		<!--/ search input -->
+					<b-form class="kb-search-input d-flex justify-content-end">
+						<b-input-group class="input-group-merge">
+							<b-input-group-prepend is-text>
+								<feather-icon icon="SearchIcon" />
+							</b-input-group-prepend>
+							<b-form-input
+								id="searchbar"
+								v-model="knowledgeBaseSearchQuery"
+								placeholder="Ask a question...."
+							/>
+						</b-input-group>
+					</b-form>
+					<!-- form -->
+				</b-card-body>
+			</section>
+			<!--/ search input -->
 
-		<section id="knowledge-base-content">
-			<!-- content -->
-			<b-row class="kb-search-content-info match-height">
+			<section id="knowledge-base-content">
+				<!-- content -->
+				<!-- <b-row class="kb-search-content-info match-height">
 				<b-col
 					v-for="item in filteredKB"
 					:key="item.id"
@@ -57,13 +64,51 @@
 				>
 					<h4 class="mt-4">Search result not found!!</h4>
 				</b-col>
-			</b-row>
-		</section>
+			</b-row> -->
+
+				<b-row class="kb-search-content-info match-height">
+					<b-col
+						v-for="item in computeCourses"
+						:key="item.id"
+						md="4"
+						sm="6"
+						class="kb-search-content"
+					>
+						<b-card
+							img-height="250"
+							class="text-center cursor-pointer"
+							:img-src="item.cover_photo_url"
+							:img-alt="item.title.slice(5)"
+							img-top
+							@click="
+								$router.push({
+									name: 'view-course',
+									params: { id: item.id },
+								})
+							"
+						>
+							<h4>{{ item.title }}</h4>
+							<b-card-text class="mt-1">
+								{{ item.description.slice(0, 80) }}
+							</b-card-text>
+						</b-card>
+					</b-col>
+					<b-col
+						v-show="!computeCourses.length"
+						cols="12"
+						class="text-center"
+					>
+						<h4 class="mt-4">Search result not found!!</h4>
+					</b-col>
+				</b-row>
+			</section>
+		</b-overlay>
 	</div>
 </template>
 
 <script>
 	import {
+		BOverlay,
 		BRow,
 		BCol,
 		BCard,
@@ -77,6 +122,7 @@
 
 	export default {
 		components: {
+			BOverlay,
 			BRow,
 			BCol,
 			BCard,
@@ -90,7 +136,9 @@
 		data() {
 			return {
 				knowledgeBaseSearchQuery: "",
+				returnSearchedCourses: [],
 				kb: [],
+				isServerResponse: false,
 			};
 		},
 		computed: {
@@ -107,10 +155,27 @@
 							.includes(knowledgeBaseSearchQueryLower)
 				);
 			},
+
+			computeCourses() {
+				let getCoursesObj = this.$store.getters["Course/allCourseGetter"];
+				let course = this.knowledgeBaseSearchQuery
+					? this.returnSearchedCourses.value
+					: getCoursesObj;
+
+				if (!course) return [];
+				return course;
+			},
 		},
 		created() {
 			this.$http.get("/kb/data/knowledge_base").then((res) => {
 				this.kb = res.data;
+			});
+			let payload = {
+				page: 1,
+				pageNumber: 1,
+			};
+			this.$store.dispatch("Course/GET_COURSES", payload).then((resp) => {
+				this.isServerResponse = true;
 			});
 		},
 	};

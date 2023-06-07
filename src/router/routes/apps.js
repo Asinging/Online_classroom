@@ -68,9 +68,21 @@ export default [{
     },
     {
         path: '/admin/view-course/:id',
+        name: 'app-view-course',
+        component: () =>
+            import ('@/views/apps/upload/upload-view/admin/Index.vue'),
+        meta: {
+            contentRenderer: 'sidebar-left',
+            contentClass: 'email-application',
+            // navActiveLink: 'apps-email',
+            resource: 'Auth'
+        }
+    },
+    {
+        path: '/view-course/:id',
         name: 'view-course',
         component: () =>
-            import ('@/views/apps/upload/upload-view/Index.vue'),
+            import ('@/views/apps/upload/upload-view/client/Index.vue'),
         meta: {
             contentRenderer: 'sidebar-left',
             contentClass: 'email-application',

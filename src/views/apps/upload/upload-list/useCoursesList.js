@@ -12,8 +12,6 @@ import router from '@/router';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
-import { useRoute } from 'vue-router';
-
 export default function useCoursesList() {
     // Use toast
     const toast = useToast();
@@ -147,14 +145,12 @@ export default function useCoursesList() {
     };
 
     const viewCourse = val => {
-        debugger;
         router.push({
-            name: 'view-course',
+            name: 'app-view-course',
             params: { id: val.item.id }
         });
     };
     const editCourse = val => {
-        debugger;
         router.push({
             name: 'upload-course',
             params: { newUpload: false, edit: true, id: val.id }

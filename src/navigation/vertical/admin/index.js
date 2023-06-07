@@ -43,7 +43,7 @@ export default [{
             },
             {
                 title: 'watch',
-                route: { name: 'view-course', params: { id: 21 } },
+                route: { name: 'app-view-course', params: { id: 21 } },
                 icon: 'VideoIcon'
             }
         ]
