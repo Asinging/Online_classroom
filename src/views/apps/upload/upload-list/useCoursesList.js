@@ -68,9 +68,7 @@ export default function useCoursesList() {
 
         if (!course) return [];
         course = course.map(item => {
-            item.created_at = `${moment(item.created_at ? item.created_at.toDate() : Date.now()).format(
-            'MMMM Do YYYY, h:mm:ss a'
-         )}`;
+            item.created_at = `${moment(formatDate(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}`;
             return item;
         });
         responseObject.value = getCoursesObj;
@@ -109,6 +107,10 @@ export default function useCoursesList() {
 
     //*************************************************************** */
     // ********************** FUNCTIONS (MEHTODS) ********************************//
+    const formatDate = item => {
+        if (!item) return Date().now();
+        return item.toDate ? item.toDate() : item;
+    };
 
     const fetchCourses = async(page, pageNumber) => {
         let payload = {
