@@ -125,9 +125,7 @@
 								v-b-tooltip.hover
 								size="16"
 								title="Edit Course"
-								@click="
-									editCourse(data.item)
-								"
+								@click="editCourse(data.item)"
 							/>
 							<!-- <b-tooltip
 								title="Edit Course"
@@ -281,6 +279,7 @@
 				refCourseListTable,
 				isBusy,
 				showLoading,
+				isSortDirAsc,
 				// ************** WATCHERS *********
 				computeCourses,
 				// ****************  FXN *****
@@ -308,6 +307,7 @@
 				sortBy,
 				isSortDirDesc,
 				refCourseListTable,
+				isSortDirAsc,
 
 				isBusy,
 				showLoading,
