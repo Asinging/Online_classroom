@@ -160,10 +160,11 @@ export default function useCoursesList() {
             params: { newUpload: false, edit: true, id: val.id }
         });
     };
-    const deleteCourse = courseId => {
+    const deleteCourse = item => {
+        let courseId = item.id;
         new Swal({
             title: ' 😕 Carefull! ',
-            text: `You are about to delete this course permanently`,
+            html: `You are about to delete <strong>[${item.title}]</strong> course permanently`,
             icon: 'info',
 
             showCancelButton: true,
@@ -179,9 +180,18 @@ export default function useCoursesList() {
         }).then(async result => {
             if (result.value) {
                 try {
-                    let response = await store.dispatch('Course/DELETE_COURSER');
+                    let payload = {
+                        id: courseId,
+                        data: {
+                            status: 0
+                        }
+                    };
+
+                    let response = store.dispatch('Course/UPDATE_SINGLE_COURSE', payload);
+
                     if (!response) return false;
-                    new Swal('Good job!', 'User successfully deleted!', 'success');
+                    fetchCourses();
+                    new Swal('Good job!', 'Course successfully deleted!', 'success');
                 } catch (err) {
                     console.error(err);
                 }

@@ -27,8 +27,8 @@
 						</b-media-aside>
 						<b-media-body>
 							<small class="text-muted"
-								>Required image resolution 800x400, image size
-								10mb.</small
+								>Recommended image resolution 800x400, max-image
+								size 2mb.</small
 							>
 							<b-card-text class="my-50">
 								<b-link id="blog-image-text">
