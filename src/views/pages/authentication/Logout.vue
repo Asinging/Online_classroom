@@ -4,7 +4,7 @@
 		<div class="misc-inner p-2 p-sm-3">
 			<div class="w-100 text-center">
 				<h2 class="mb-1">LOGGED OUT !🔻</h2>
-				<p class="mb-2">Bye!. Do have a great day ahead from Jiffye</p>
+				<p class="mb-2">Bye!. Do have a great day ahead from O.C</p>
 				<p class="">
 					<b-button
 						variant="primary"
