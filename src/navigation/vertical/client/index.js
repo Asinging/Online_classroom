@@ -4,7 +4,7 @@ export default [{
     {
         title: 'Dashboards',
         icon: 'HomeIcon',
-        tag: 'new',
+        tag: 'updated',
         tagVariant: 'light-warning',
 
         route: 'dashboard-analytics'
@@ -12,18 +12,18 @@ export default [{
     {
         title: 'Courses',
         icon: 'BookIcon',
-        tag: '',
+        tag: 'new',
         tagVariant: 'light-warning',
 
-        route: 'courses'
+        route: 'courses-card'
     },
 
     {
         title: 'Raise Ticket',
-        icon: 'ListIcon',
+        icon: 'ChevronsUpIcon',
         tag: '',
 
-        route: 'app-ticket'
+        route: 'app-raise-ticket'
     },
     {
         title: 'Logout',

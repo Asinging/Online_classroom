@@ -2,40 +2,23 @@
 	<div>
 		<!-- search input -->
 		<section id="knowledge-base-search">
-			<b-card
-				no-body
-				class="knowledge-base-bg text-center"
-				:style="{
-					backgroundImage: `url(${require('@/assets/images/banner/banner.png')})`,
-				}"
-			>
-				<b-card-body class="card-body">
-					<h2 class="text-primary">
-						Dedicated Source Used on Website
-					</h2>
-					<b-card-text class="mb-2">
-						<span>Popular searches: </span>
-						<span class="font-weight-bolder"
-							>Sales automation, Email marketing</span
-						>
-					</b-card-text>
+			<b-card-body class="card-body d-flex justify-content-between">
+				<h2 class="text-primary">Recommended contents for you</h2>
 
-					<!-- form -->
-					<b-form class="kb-search-input">
-						<b-input-group class="input-group-merge">
-							<b-input-group-prepend is-text>
-								<feather-icon icon="SearchIcon" />
-							</b-input-group-prepend>
-							<b-form-input
-								id="searchbar"
-								v-model="knowledgeBaseSearchQuery"
-								placeholder="Ask a question...."
-							/>
-						</b-input-group>
-					</b-form>
-					<!-- form -->
-				</b-card-body>
-			</b-card>
+				<b-form class="kb-search-input d-flex justify-content-end">
+					<b-input-group class="input-group-merge">
+						<b-input-group-prepend is-text>
+							<feather-icon icon="SearchIcon" />
+						</b-input-group-prepend>
+						<b-form-input
+							id="searchbar"
+							v-model="knowledgeBaseSearchQuery"
+							placeholder="Ask a question...."
+						/>
+					</b-input-group>
+				</b-form>
+				<!-- form -->
+			</b-card-body>
 		</section>
 		<!--/ search input -->
 

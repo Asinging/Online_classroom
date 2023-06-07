@@ -16,6 +16,23 @@ export default [{
         }
     },
     {
+        path: '/app/raise/ticket',
+        name: 'app-raise-ticket',
+        component: () =>
+            import ('@/views/apps/tickets/create-ticket/Index.vue'),
+        meta: {
+            resource: 'Auth',
+            pageTitle: 'Tickets',
+            breadcrumb: [{
+                    text: 'Raise'
+                },
+                {
+                    text: 'Issues'
+                }
+            ]
+        }
+    },
+    {
         path: '/admin/upload-course/:newUpload/edit/:edit/:id',
         name: 'upload-course',
         component: () =>
@@ -61,23 +78,23 @@ export default [{
             resource: 'Auth'
         }
     },
-    //    {
-    //       path: '/all/courses',
-    //       name: 'courses',
-    //       component: () => import('@/views/apps/upload/upload-list/UploadList'),
-    //       meta: {
-    //          resource: 'Auth',
-    //          pageTitle: 'Courses',
-    //          breadcrumb: [
-    //             {
-    //                text: 'All'
-    //             },
-    //             {
-    //                text: 'Course'
-    //             }
-    //          ]
-    //       }
-    //    },
+    {
+        path: '/all/courses',
+        name: 'courses-card',
+        component: () =>
+            import ('@/views/apps/upload/upload-card'),
+        meta: {
+            resource: 'Auth',
+            pageTitle: 'Courses',
+            breadcrumb: [{
+                    text: 'All'
+                },
+                {
+                    text: 'Course'
+                }
+            ]
+        }
+    },
     // *===============================================---*
     // *--------- EMAIL & IT'S FILTERS N LABELS -------------------------------*
     // *===============================================---*
