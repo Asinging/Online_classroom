@@ -19,7 +19,7 @@
 							</b-input-group-prepend>
 							<b-form-input
 								id="searchbar"
-								v-model="knowledgeBaseSearchQuery"
+								v-model="searchQuery"
 								placeholder="Ask a question...."
 							/>
 						</b-input-group>
@@ -135,35 +135,54 @@
 		},
 		data() {
 			return {
-				knowledgeBaseSearchQuery: "",
+				searchQuery: "",
 				returnSearchedCourses: [],
 				kb: [],
 				isServerResponse: false,
 			};
 		},
-		computed: {
-			filteredKB() {
-				const knowledgeBaseSearchQueryLower =
-					this.knowledgeBaseSearchQuery.toLowerCase();
-				return this.kb.filter(
-					(item) =>
-						item.title
-							.toLowerCase()
-							.includes(knowledgeBaseSearchQueryLower) ||
-						item.desc
-							.toLowerCase()
-							.includes(knowledgeBaseSearchQueryLower)
-				);
+		watch: {
+			searchQuery: {
+				immediate: false,
+				async handler(val) {
+					if (!val) {
+						this.returnSearchedCourses = [];
+						return false;
+					}
+
+					let payload = {
+						searchString: val.toLocaleLowerCase(),
+					};
+					try {
+						let response = await this.$store.dispatch(
+							"Course/SEARCH_COURSES",
+							payload
+						);
+						debugger;
+						console.log(response);
+						this.returnSearchedCourses = [...response];
+					} catch (err) {}
+				},
 			},
+		},
+		computed: {
+			// filteredKB() {
+			// 	const searchQueryLower = this.searchQuery.toLowerCase();
+			// 	return this.kb.filter(
+			// 		(item) =>
+			// 			item.title.toLowerCase().includes(searchQueryLower) ||
+			// 			item.desc.toLowerCase().includes(searchQueryLower)
+			// 	);
+			// },
 
 			computeCourses() {
 				let getCoursesObj = this.$store.getters["Course/allCourseGetter"];
-				let course = this.knowledgeBaseSearchQuery
-					? this.returnSearchedCourses.value
+				let course = this.searchQuery
+					? this.returnSearchedCourses
 					: getCoursesObj;
 
 				if (!course) return [];
-				return course;
+				return course.slice(0, 20);
 			},
 		},
 		created() {
