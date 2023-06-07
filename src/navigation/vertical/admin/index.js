@@ -38,7 +38,7 @@ export default [{
             },
             {
                 title: 'Upload Course',
-                route: { name: 'upload-course' },
+                route: { name: 'upload-course', params: { newUpload: true, edit: false, id: 1 } },
                 icon: 'UploadIcon'
             },
             {

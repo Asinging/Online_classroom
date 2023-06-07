@@ -126,7 +126,7 @@
 								size="16"
 								title="Edit Course"
 								@click="
-									editCourse(data.item, 'apps-invoice-edit')
+									editCourse(data.item)
 								"
 							/>
 							<!-- <b-tooltip

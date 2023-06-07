@@ -1,7 +1,19 @@
 import { storage, db } from '@/config/firebase.js';
 
 import { ref, uploadBytes } from 'firebase/storage';
-import { writeBatch, addDoc, doc, getDoc, collection, query, limit, where, orderBy, getDocs } from 'firebase/firestore';
+import {
+    writeBatch,
+    addDoc,
+    doc,
+    getDoc,
+    collection,
+    query,
+    limit,
+    where,
+    orderBy,
+    getDocs,
+    updateDoc
+} from 'firebase/firestore';
 const batch = writeBatch(db);
 
 import { v4 } from 'uuid';
@@ -76,7 +88,6 @@ export default {
                 const docRef = doc(db, 'courses', payload.id);
                 try {
                     const docSnap = updateDoc(docRef, payload.data);
-
                     resolve(docSnap);
                 } catch (err) {
                     console.log(err);

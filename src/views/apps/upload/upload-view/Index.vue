@@ -127,7 +127,6 @@
 <script>
 	import store from "@/store";
 
-	import router from "@/router";
 	import {
 		ref,
 		onUnmounted,
@@ -208,7 +207,7 @@
 			closeLeftSidebar(item) {},
 		},
 		setup() {
-			const { route, router } = useRouter();
+			const { route } = useRouter();
 			const courseDisplay = ref(null);
 			const courseModules = ref([]);
 			const markAsWatch = ref(false);
@@ -285,7 +284,9 @@
 						watched: val,
 					},
 				};
-				store.dispatch("Course/UPDATE_SINGLE_COURSE", payload);
+				store
+					.dispatch("Course/UPDATE_SINGLE_COURSE", payload)
+					.catch((err) => {});
 			});
 
 			return {

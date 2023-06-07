@@ -152,9 +152,10 @@ export default function useCoursesList() {
         });
     };
     const editCourse = val => {
+        debugger;
         router.push({
-            name: 'edit-course',
-            params: { id: val.item.id }
+            name: 'upload-course',
+            params: { newUpload: false, edit: true, id: val.id }
         });
     };
     const deleteCourse = courseId => {

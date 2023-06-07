@@ -9,48 +9,6 @@
 					<h4>Cover Image For the courses</h4>
 				</div>
 
-				<!-- <p>
-					<b-media class="mb-2">
-						<template #aside>
-							<b-avatar
-								ref="previewEl"
-								:text="avatarText('I M G')"
-								variant="secondary"
-								size="100px"
-								rounded
-							/>
-						</template>
-
-						<div class="d-flex flex-wrap align-end">
-							<b-button
-								variant="primary"
-								@click="$refs.refInputEl.click()"
-							>
-								<input
-									ref="refInputEl"
-									type="file"
-									class="d-none"
-									@input="inputImageRenderer"
-								/>
-								<feather-icon
-									v-if="!pickingImage"
-									icon="PlusIcon"
-									class="mr-25"
-								/>
-
-								<b-spinner v-else class="mr-25" small />
-								<span class="d-none d-sm-inline"
-									>Pick Image</span
-								>
-								<feather-icon
-									icon="EditIcon"
-									class="d-inline d-sm-none"
-								/>
-							</b-button>
-						</div>
-					</b-media>
-				</p> -->
-
 				<div class="border rounded p-2">
 					<h4 class="mb-1">Featured Image</h4>
 					<b-media
@@ -258,6 +216,7 @@
 	import { useToast } from "vue-toastification/composition";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 	import { getDownloadURL } from "firebase/storage";
+	import { useRouter } from "@core/utils/utils";
 
 	import {
 		ref,
@@ -301,6 +260,7 @@
 
 		setup(props) {
 			const toast = useToast();
+			const { route } = useRouter();
 
 			const pickingImage = ref(false);
 			const isUploading = ref(false);
@@ -311,7 +271,7 @@
 			const items = ref([
 				{
 					courseTitle: "",
-					courseDescriptions: "designer",
+					courseDescriptions: "",
 					videoUrl: "",
 				},
 			]);
@@ -324,8 +284,31 @@
 			const form = ref(null);
 			const coverArtUrl = ref(null);
 
-			onBeforeMount(() => {
+			onBeforeMount(async () => {
 				window.addEventListener("resize", initTrHeight());
+				let courseId;
+				if (JSON.parse(route.value.params.edit)) {
+					courseId = route.value.params.id;
+				}
+				try {
+					let response = await store.dispatch(
+						"Course/GET_SINGLE_COURSE_BY_Id",
+						{
+							id: courseId,
+						}
+					);
+
+					if (response) {
+						let obj = {
+							courseTitle: response.title,
+							courseDescriptions: response.description,
+							videoUrl: response.video_url,
+						};
+						items.value = [obj];
+					}
+				} catch (err) {
+					console.log(err);
+				}
 			});
 			onMounted(() => {
 				initTrHeight();
@@ -418,8 +401,21 @@
 					user_id: store.getters["Users/signInUserId"] || 1,
 					mudules: serverItem,
 				};
-				console.log(course);
-				debugger;
+
+				// check if this is a edit operation
+				if (JSON.parse(route.value.params.edit)) {
+					let payload = {
+						id: route.value.params.id,
+						data: {
+							status: 0,
+						},
+					};
+					store
+						.dispatch("Course/UPDATE_SINGLE_COURSE", payload)
+						.catch((err) => {
+							console.log(err);
+						});
+				}
 
 				try {
 					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
