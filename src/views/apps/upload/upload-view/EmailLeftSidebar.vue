@@ -12,19 +12,34 @@
 							Course Module
 						</h6>
 
-						<b-list-group class="list-group-labels">
+						<b-list-group class="list-group-labels cursor-pointer">
 							<b-list-group-item
+								v-ripple.400="'rgba(113, 102, 240, 0.15)'"
 								style="cursor: pointer"
 								v-for="label in prCcourseTitles"
 								:key="label.title"
+								:id="label.video_url"
 								@click="courseModuleClick(label)"
 							>
 								<!-- @click="$emit('close-left-sidebar')" -->
 								<span class="`bullet-primary"> </span>
 								<!-- :class="`bullet-${label.color}`" -->
+								<!-- v-b-tooltip.hover
+								:title="lable.title" -->
 								<span class="text-capitalized">{{
-									label.title
+									label.title.length > 30
+										? label.title.slice(0, 27) + " ..."
+										: label.title
 								}}</span>
+
+								<b-tooltip
+									:target="label.video_url"
+									placement="bottom"
+									triggers="hover"
+									variant="primary"
+								>
+									{{ label.title }}
+								</b-tooltip>
 							</b-list-group-item>
 						</b-list-group>
 					</vue-perfect-scrollbar>
@@ -36,7 +51,14 @@
 
 <script>
 	import VuePerfectScrollbar from "vue-perfect-scrollbar";
-	import { BButton, BListGroup, BListGroupItem, BBadge } from "bootstrap-vue";
+	import {
+		BButton,
+		BListGroup,
+		BListGroupItem,
+		BBadge,
+		VBTooltip,
+		BTooltip,
+	} from "bootstrap-vue";
 	import { isDynamicRouteActive } from "@core/utils/utils";
 	import Ripple from "vue-ripple-directive";
 	import EventBus from "@/helpers/eventBus";
@@ -51,9 +73,11 @@
 		},
 		directives: {
 			Ripple,
+			"b-tooltip": VBTooltip,
 		},
 		components: {
 			// BSV
+			BTooltip,
 			BButton,
 			BListGroup,
 			BListGroupItem,

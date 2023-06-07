@@ -45,14 +45,17 @@
 					:settings="perfectScrollbarSettings"
 					class="email-user-list scroll-area"
 				>
-					<b-card>
+					<b-card class="container">
 						<div
+							id="iframeContainer"
 							v-if="computeCourseDisplay.isIframe"
-							height="100"
-							class="video-container d-flex justify-content-center align-center"
-							v-html="computeCourseDisplay.video_url"
-						></div>
-						<div v-else>
+						>
+							<div
+								class="video-container d-flex justify-content-center align-center iframe"
+								v-html="computeCourseDisplay.video_url"
+							></div>
+						</div>
+						<div v-else class="iframe">
 							<b-embed
 								type="iframe"
 								aspect="16by9"
@@ -60,29 +63,25 @@
 								allowfullscreen
 							/>
 						</div>
-					</b-card>
-					<b-card>
-						<div class="d-flex justify-content-between">
-							<div class="">
-								<b-form-checkbox
-									:checked="markAsWatch"
-									:indeterminate="true"
-									@change="selectAllCheckboxUpdate"
-								>
+						<div class="d-flex justify-content-between controls">
+							<div class="d-flex justify-content-start">
+								<b-form-checkbox :checked="markAsWatch">
 									Mark as watched
 								</b-form-checkbox>
 							</div>
-							<b-pagination
-								v-model="currentPage"
-								:total-rows="courseModules"
-								:per-page="perPage"
-								first-text="⏮"
-								prev-text="⏪"
-								next-text="⏩"
-								align="left"
-								last-text="⏭"
-								class="mt-2"
-							/>
+							<!-- <div class="d-flex justify-content-end">
+								<b-pagination
+									v-model="currentPage"
+									:total-rows="courseModulesTotal"
+									:per-page="perPage"
+									first-text="⏮"
+									prev-text="⏪"
+									next-text="⏩"
+									align="left"
+									last-text="⏭"
+									class="mt-2"
+								/>
+							</div> -->
 						</div>
 					</b-card>
 				</vue-perfect-scrollbar>
@@ -171,7 +170,6 @@
 		},
 		methods: {
 			courseModuleClick(item) {
-				debugger;
 				if (!item) return false;
 
 				this.courseDisplay = item;
@@ -216,6 +214,11 @@
 				return checkIframe(courseDisplay.value);
 			});
 
+			const courseModulesTotal = computed(() => {
+				if (!courseDisplay.value) return 0;
+				return courseDisplay.value.length;
+			});
+
 			// Left Sidebar Responsiveness
 			const { mqShallShowLeftSidebar } =
 				useResponsiveAppLeftSidebarVisibility();
@@ -242,7 +245,15 @@
 					console.log(err);
 				}
 			});
-
+			watch(markAsWatch, (val) => {
+				let payload = {
+					id: route.value.params.id,
+					data: {
+						watched: val,
+					},
+				};
+				store.dispatch("Course/UPDATE_SINGLE_COURSE", payload);
+			});
 			return {
 				courseTitles,
 				markAsWatch,
@@ -253,6 +264,7 @@
 				computeCourseDisplay,
 				courseModules,
 				courseDisplay,
+				courseModulesTotal,
 
 				// Left Sidebar Responsiveness
 				mqShallShowLeftSidebar,
@@ -267,9 +279,15 @@
 <style lang="scss">
 	@import "~@core/scss/base/pages/app-email.scss";
 	.video-container {
-		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
 		position: relative;
+	}
+	#iframeContainer {
+		height: 300px; /* Adjust the height as needed */
+	}
+
+	#iframeContainer .iframe {
+		height: 100%;
 	}
 </style>

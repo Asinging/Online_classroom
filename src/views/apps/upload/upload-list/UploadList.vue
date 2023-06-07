@@ -126,10 +126,7 @@
 								size="16"
 								title="Edit Course"
 								@click="
-									editCourse(
-										data.item.id,
-										'apps-invoice-edit'
-									)
+									editCourse(data.item, 'apps-invoice-edit')
 								"
 							/>
 							<!-- <b-tooltip
@@ -144,7 +141,7 @@
 								size="16"
 								title="Watch Course"
 								class="text-success cursor-pointer mx-25"
-								@click="viewCourse(data.item.id)"
+								@click="viewCourse(data.item)"
 							/>
 
 							<feather-icon
@@ -154,7 +151,7 @@
 								title="Delete Course"
 								size="16"
 								class="text-danger cursor-pointer"
-								@click="deleteCourse(data.item.id)"
+								@click="deleteCourse(data.item)"
 							/>
 							<!-- <b-tooltip
 								title="Print Invoice"
