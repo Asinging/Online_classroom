@@ -82,6 +82,32 @@ export default {
                 }
             });
         },
+        SEARCH_COURSES({ commit }, payload) {
+            // ;
+            return new Promise(async(resolve, reject) => {
+                const listOfUsers = collection(db, 'courses');
+
+                try {
+                    const q = query(
+                        listOfUsers,
+                        limit(50),
+                        orderBy('title', 'asc'),
+                        orderBy('created_at', 'desc'),
+                        where('status', '==', 1),
+                        where('is_root', '==', false),
+                        where('title', '>=', payload.searchString),
+                        where('title', '<', payload.searchString + '\uf8ff')
+                    );
+                    let fetcheData = await getDocs(q);
+                    let filteredUserObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
+
+                    resolve(filteredUserObject);
+                } catch (err) {
+                    console.log(err);
+                    reject(err);
+                }
+            });
+        },
         // UPDATE_COURSE
         UPDATE_SINGLE_COURSE({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
