@@ -43,6 +43,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
     const isLoggedIn = isUserLoggedIn();
+    if (to.path === '/') {
+        let isAdmin = store.getters['appConfig/whoIsinGetter'];
+        next({
+            name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
+        });
+    }
 
     // if (!canNavigate(to)) {
     //    // Redirect to login if not logged in
