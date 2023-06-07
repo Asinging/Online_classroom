@@ -40,6 +40,7 @@
 								class="d-block d-xl-none"
 								@click="toggleVerticalMenuActive"
 							/>
+							<!-- :icon="collapseTogglerIconFeather" -->
 							<feather-icon
 								:icon="collapseTogglerIconFeather"
 								size="20"
@@ -126,7 +127,7 @@
 			};
 
 			const collapseTogglerIconFeather = computed(() => {
-				collapseTogglerIcon.value === "unpinned"
+				return collapseTogglerIcon.value === "unpinned"
 					? "CircleIcon"
 					: "DiscIcon";
 			});
