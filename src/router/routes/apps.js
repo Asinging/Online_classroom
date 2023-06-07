@@ -1,8 +1,8 @@
 export default [{
-        path: '/all/tickets',
-        name: 'app-ticket',
+        path: '/admin/all/tickets',
+        name: 'app-tickets',
         component: () =>
-            import ('@/views/apps/upload/Index.vue'),
+            import ('@/views/apps/tickets/Index.vue'),
         meta: {
             resource: 'Auth',
             pageTitle: 'Tickets',

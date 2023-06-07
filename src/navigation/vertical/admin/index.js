@@ -55,7 +55,7 @@ export default [{
         tag: '',
         tagVariant: 'light-warning',
 
-        route: 'courses'
+        route: 'app-tickets'
     },
     {
         title: 'Logout',
