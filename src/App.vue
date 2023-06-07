@@ -111,8 +111,11 @@
 				timeout: 3000,
 				transition: "Vue-Toastification__fade",
 			});
-
+			let isAdminIn = JSON.parse(
+				localStorage.getItem("isAdminIn") || "false"
+			);
 			// Set Window Width in store
+			store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
 			store.commit("app/UPDATE_WINDOW_WIDTH", window.innerWidth);
 			const { width: windowWidth } = useWindowSize();
 			watch(windowWidth, (val) => {

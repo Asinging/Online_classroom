@@ -9,13 +9,13 @@
 		<h3 class="mb-75 mt-2 pt-50">
 			<!-- <b-link>${{ kFormatter(data.saleToday) }}</b-link> -->
 		</h3>
-		<b-button
+		<!-- <b-button
 			v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 			variant="primary"
 			@click="toStudentPortal"
 		>
 			Student's Portal
-		</b-button>
+		</b-button> -->
 		<b-img
 			:src="require('@/assets/images/illustration/badge.svg')"
 			class="congratulation-medal"
