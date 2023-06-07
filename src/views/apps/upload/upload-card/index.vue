@@ -9,10 +9,14 @@
 		>
 			<!-- search input -->
 			<section id="knowledge-base-search">
-				<b-card-body class="card-body d-flex justify-content-between">
+				<b-card-body
+					class="card-body d-md-flex justify-content-between"
+				>
 					<h2 class="text-primary">Recommended contents for you</h2>
 
-					<b-form class="kb-search-input d-flex justify-content-end">
+					<b-form
+						class="kb-search-input d-flex justify-content-end mr-0 pr-0"
+					>
 						<b-input-group class="input-group-merge">
 							<b-input-group-prepend is-text>
 								<feather-icon icon="SearchIcon" />
@@ -119,6 +123,7 @@
 		BCardText,
 		BInputGroupPrepend,
 	} from "bootstrap-vue";
+	import { getRandomFromArray } from "@core/utils/utils";
 
 	export default {
 		components: {
@@ -139,6 +144,14 @@
 				returnSearchedCourses: [],
 				kb: [],
 				isServerResponse: false,
+				defaultImg: [
+					require("@/assets/images/illustration/sales.svg"),
+					require("@/assets/images/illustration/marketing.svg"),
+					require("@/assets/images/illustration/api.svg"),
+					require("@/assets/images/illustration/personalization.svg"),
+					require("@/assets/images/illustration/email.svg"),
+					require("@/assets/images/illustration/demand.svg"),
+				],
 			};
 		},
 		watch: {
@@ -158,8 +171,7 @@
 							"Course/SEARCH_COURSES",
 							payload
 						);
-						debugger;
-						console.log(response);
+
 						this.returnSearchedCourses = [...response];
 					} catch (err) {}
 				},
@@ -182,7 +194,13 @@
 					: getCoursesObj;
 
 				if (!course) return [];
-				return course.slice(0, 20);
+				return course.map((item) => {
+					if (!item.cover_photo_url) {
+						let arr = this.defaultImg;
+						item.cover_photo_url = getRandomFromArray(arr);
+					}
+					return item;
+				});
 			},
 		},
 		created() {
