@@ -1,5 +1,6 @@
 import { db } from '@/config/firebase.js';
-
+import { v4 } from 'uuid';
+import { ref, uploadBytes } from 'firebase/storage';
 import {
     getDocs,
     getDoc,
@@ -17,16 +18,16 @@ export default {
     namespaced: true,
     state: {
         users: [],
-        signInUser: null
+        signInUser: null,
+        singleUser: null
     },
     mutations: {
         mAllUser(state, val) {
             state.users = val;
+        },
+        mSingleUserById(state, payload) {
+            state.singleUser = payload;
         }
-        // mSignInUser(state) {
-
-        //     state.signInUser = `${auth?.currentUser?.uuid}`
-        // }
     },
     actions: {
         UPDATE_SINGLE_USER({ commit }, payload) {
@@ -49,6 +50,7 @@ export default {
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         resolve({...docSnap.data(), id: docSnap.id });
+                        commit('mSingleUserById', {...docSnap.data(), id: docSnap.id });
                     } else {
                         // docSnap.data() will be undefined in this case
                         console.log('No such document!');
@@ -147,6 +149,18 @@ export default {
                     reject(err);
                 }
             });
+        },
+        USER_PROFILE_UPLOAD({ commit }, payload) {
+            return new Promise(async(resolve, reject) => {
+                try {
+                    const storageRef = ref(storage, `course/coverArt/${payload.image.name + v4()}`);
+                    let response = await uploadBytes(storageRef, payload.image);
+
+                    resolve(response);
+                } catch (err) {
+                    reject(err);
+                }
+            });
         }
     },
     getters: {
@@ -155,6 +169,9 @@ export default {
         },
         getSignInUser(state) {
             return state.signInUser;
+        },
+        singleUserGetter(state) {
+            return state.singleUser;
         }
     }
 };

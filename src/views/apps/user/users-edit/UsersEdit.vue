@@ -69,9 +69,12 @@
 			onBeforeMount(async () => {
 				let id = router.currentRoute.params.id;
 				try {
-					let response = await store.dispatch("Users/GET_SINGLE_USER", {
-						id,
-					});
+					let response = await store.dispatch(
+						"Users/GET_SINGLE_USER_BY_Id",
+						{
+							id,
+						}
+					);
 
 					if (!response) {
 						userDataNotFound.value = true;

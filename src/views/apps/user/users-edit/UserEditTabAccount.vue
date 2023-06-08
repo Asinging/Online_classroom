@@ -1,12 +1,16 @@
 <template>
-	<div>
+	<div v-if="computeUserData">
 		<!-- Media -->
 		<b-media class="mb-2">
 			<template #aside>
 				<b-avatar
-					ref="previewEl"
+					ref="refPreviewEl"
 					:src="computeUserData.avatar"
-					:text="avatarText(computeUserData.f_name)"
+					:text="
+						avatarText(
+							computeUserData.f_name || computeUserData.username
+						)
+					"
 					:variant="`light-${resolveUserRoleVariant(
 						computeUserData.user_type
 					)}`"
@@ -15,22 +19,44 @@
 				/>
 			</template>
 			<h4 class="mb-1 text-capitalize">
-				{{ computeUserData.f_name }}
+				{{ computeUserData.f_name || computeUserData.username }}
 			</h4>
 			<div class="d-flex flex-wrap">
-				<b-button variant="primary" @click="$refs.refInputEl.click()">
+				<b-button
+					variant="primary"
+					@click="$refs.refInputEl.click()"
+					title="Update Photo"
+				>
 					<input
 						ref="refInputEl"
 						type="file"
 						class="d-none"
 						@input="inputImageRenderer"
+						:disabled="isUpdateProfilePhoto"
 					/>
-					<span class="d-none d-sm-inline">Update</span>
-					<feather-icon icon="EditIcon" class="d-inline d-sm-none" />
+
+					<span class="d-none d-sm-inline mr-sm-25">Update</span>
+					<span class="d-inline">
+						<span v-if="!isUpdateProfilePhoto">
+							<feather-icon icon="EditIcon" class="d-inline" />
+						</span>
+						<span v-else><b-spinner class="mr-25" small /></span>
+					</span>
 				</b-button>
-				<b-button variant="outline-secondary" class="ml-1">
-					<span class="d-none d-sm-inline">Remove</span>
-					<feather-icon icon="TrashIcon" class="d-inline d-sm-none" />
+				<b-button
+					variant="outline-secondary"
+					class="ml-1"
+					@click="removeProfilePhoto"
+					:disabled="!computeUserData.avatar"
+					title="Remove Photo"
+				>
+					<span class="mr-1 d-none d-sm-inline mr-sm-25">Remove</span>
+					<span class="d-inline">
+						<span v-if="!isRemovingProfilePhoto"
+							><feather-icon icon="XIcon"
+						/></span>
+						<span v-else><b-spinner class="mr-25" small /></span>
+					</span>
 				</b-button>
 			</div>
 		</b-media>
@@ -50,7 +76,7 @@
 
 				<!-- Field: Full Name -->
 				<b-col cols="12" md="4">
-					<b-form-group label="Name" label-for="full-name">
+					<b-form-group label="Fullname" label-for="full-name">
 						<b-form-input
 							id="full-name"
 							v-model="computeUserData.f_name"
@@ -65,6 +91,7 @@
 							id="email"
 							v-model="computeUserData.email"
 							type="email"
+							disabled
 						/>
 					</b-form-group>
 				</b-col>
@@ -161,6 +188,7 @@
 	import { serverTimestamp } from "firebase/firestore";
 	import router from "@/router";
 	import store from "@/store";
+	import { getDownloadURL } from "firebase/storage";
 
 	export default {
 		components: {
@@ -180,12 +208,6 @@
 			BFormCheckbox,
 			vSelect,
 		},
-		props: {
-			userData: {
-				type: Object,
-				required: true,
-			},
-		},
 
 		setup(props) {
 			const { resolveUserRoleVariant } = useUsersList();
@@ -193,6 +215,7 @@
 			const isUpdateProfilePhoto = ref(false);
 			const isEditingRecord = ref(false);
 			const isResetRecord = ref(false);
+			const coverArtUrl = ref(false);
 
 			const roleOptions = [
 				{ label: "Admin", value: 1 },
@@ -207,11 +230,22 @@
 
 			// ? Demo Purpose => Update image on click of update
 			const refInputEl = ref(null);
-			const previewEl = ref(null);
+			const refPreviewEl = ref(null);
+			const userData = ref(null);
 
 			const computeUserData = computed(() => {
-				let obj = Object.assign({}, props.userData);
-				return obj;
+				let x = store.getters["Users/singleUserGetter"];
+				if (!x) return false;
+				if (x.enabled == 1) {
+					x.enabled = { label: "Active", value: 1 };
+					return x;
+				}
+				if (x.enabled == 0) {
+					x.enabled = { label: "Inactive", value: 0 };
+					return x;
+				}
+				x.enabled = { label: "Pending", value: 2 };
+				return x;
 			});
 
 			const resetField = () => {
@@ -278,11 +312,12 @@
 
 			const { inputImageRenderer } = useInputImageRenderer(
 				refInputEl,
-				(file) => {
-					let channelId = store.getters["User/channelIdGetter"];
+				async (file, base64) => {
+					refPreviewEl.value.src = base64;
+
 					let userId = router.currentRoute.params.id;
 
-					props.computeUserData.avatar = "";
+					computeUserData.value.avatar = "";
 
 					if (file.size > 6000000) {
 						toast({
@@ -298,18 +333,15 @@
 					}
 
 					isUpdateProfilePhoto.value = true;
-					let query = new FormData();
-					query.append("image", file);
-					query.append("user_id", userId);
-					query.append("channel_id", channelId);
-					// eslint-disable-next-line no-param-reassign
+
 					store
-						.dispatch("User/USER_PROFILE_UPLOAD", { query })
+						.dispatch("Users/USER_PROFILE_UPLOAD", { image: file })
 						.then((resp) => {
 							isUpdateProfilePhoto.value = false;
 							if (!resp) {
 								return false;
 							}
+							coverArtUrl.value = getDownloadURL(resp.ref);
 							toast({
 								component: ToastificationContent,
 								props: {
@@ -320,7 +352,7 @@
 								},
 							});
 
-							store.dispatch("User/GET_SINGLE_USER", {
+							store.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 								id: userId,
 							});
 						})
@@ -357,7 +389,7 @@
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
-				previewEl,
+				refPreviewEl,
 			};
 		},
 	};
