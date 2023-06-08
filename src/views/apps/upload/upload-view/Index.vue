@@ -22,11 +22,12 @@
 					</b-link>
 				</div>
 			</b-alert>
-			<div v-else>
-				<b-spinner
-					size="xl"
-					class="text-center text-primary"
-				></b-spinner>
+			<div
+				v-else
+				class="text-center d-flex justify-content-center align-items-center"
+				style="height: 100%"
+			>
+				<b-spinner size="xl" class="text-center text-primary" />
 			</div>
 		</div>
 		<div v-else>

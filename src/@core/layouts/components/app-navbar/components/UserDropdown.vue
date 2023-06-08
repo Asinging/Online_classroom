@@ -29,7 +29,7 @@
 		</template>
 
 		<b-dropdown-item
-			:to="{ name: 'pages-profile' }"
+			@click="viewProfile"
 			link-class="d-flex align-items-center"
 		>
 			<feather-icon size="16" icon="UserIcon" class="mr-50" />
@@ -73,6 +73,17 @@
 			},
 		},
 		methods: {
+			viewProfile() {
+				let isAdmin = this.$store.getters["appConfig/whoIsinGetter"];
+				let id = this.$store.getters["Auth/currentUserGetter"].id;
+				debugger;
+				this.$router.push({
+					name: isAdmin ? "apps-users-view" : "users-view",
+					params: {
+						id: id,
+					},
+				});
+			},
 			logout() {
 				// Remove userData from localStorage
 				// ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token

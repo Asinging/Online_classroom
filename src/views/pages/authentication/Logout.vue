@@ -42,7 +42,13 @@
 			};
 		},
 		mounted() {
-			this.$store.dispatch("Auth/LOGOUT");
+			this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
+
+			// Remove userData from localStorage
+			localStorage.removeItem("userData");
+
+			// Reset ability
+			this.$ability.update(initialAbility);
 		},
 
 		computed: {
