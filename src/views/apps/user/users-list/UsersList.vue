@@ -204,7 +204,7 @@
 								<span class="align-middle ml-50">Edit</span>
 							</b-dropdown-item>
 
-							<b-dropdown-item @click="deleteUser(data.item.id)">
+							<b-dropdown-item @click="deleteUser(data.item)">
 								<feather-icon icon="TrashIcon" />
 								<span class="align-middle ml-50">Delete</span>
 							</b-dropdown-item>

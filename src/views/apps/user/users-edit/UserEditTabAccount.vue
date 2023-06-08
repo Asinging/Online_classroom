@@ -139,7 +139,7 @@
 			class="mb-1 mb-sm-0 mr-0 mr-sm-1"
 			:block="$store.getters['app/currentBreakPoint'] === 'xs'"
 			@click="saveRecord"
-			:disabled="isEditingRecord"
+			:disabled="isEditingRecord || isUpdateProfilePhoto"
 		>
 			<span class="mr-1">Save Changes</span>
 			<span>
@@ -342,7 +342,7 @@
 						data,
 						id: userId,
 					};
-					debugger;
+
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
 					store
