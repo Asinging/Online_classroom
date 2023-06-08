@@ -54,24 +54,19 @@
 								:dir="
 									$store.state.appConfig.isRTL ? 'rtl' : 'ltr'
 								"
-								multiple
 								:options="categoryOption"
 							/>
 						</b-form-group>
 					</b-col>
 					<b-col md="6">
-						<b-form-group
-							label="Slug"
-							label-for="blog-edit-slug"
-							class="mb-2"
+						<label for="tags-basic"
+							>Type a new tag and press enter</label
 						>
-							<b-form-input
-								id="ticket-email"
-								v-model="tag"
-								name="email"
-								placeholder="Phone, accessories"
-							/>
-						</b-form-group> </b-col
+						<b-form-tags
+							v-model="tag"
+							input-id="tags-basic"
+							class="mb-2"
+						/> </b-col
 					><b-col md="6">
 						<b-form-group
 							label="Email"
@@ -112,7 +107,7 @@
 							<span class="pr-25 pt-25">Send </span>
 							<span>
 								<span v-if="!isSending"
-									><feather-icon icon="PlusIcon" size="16"
+									><feather-icon icon="SaveIcon" size="16"
 								/></span>
 								<span v-else
 									><b-spinner small class=""></b-spinner
@@ -146,6 +141,7 @@
 		BLink,
 		BButton,
 		BSpinner,
+		BFormTags,
 	} from "bootstrap-vue";
 	import vSelect from "vue-select";
 	import { quillEditor } from "vue-quill-editor";
@@ -179,6 +175,7 @@
 			vSelect,
 			quillEditor,
 			BSpinner,
+			BFormTags,
 		},
 		directives: {
 			Ripple,
@@ -197,8 +194,13 @@
 			const email = ref("");
 			const body = ref("");
 			const tag = ref("");
-			const categorySelected = ref([]);
-			const categoryOption = ["Fashion", "Food", "Gaming", "Quote", "Video"];
+			const categorySelected = ref(null);
+			const categoryOption = [
+				"Payment",
+				"Confirmation",
+				"App Usablility",
+				"Others",
+			];
 			const toast = useToast();
 
 			const currentUser = computed(() => {
@@ -210,7 +212,7 @@
 					!subject.value ||
 					!body.value ||
 					!email.value ||
-					!categorySelected.value.length
+					!categorySelected.value
 				) {
 					toast({
 						component: ToastificationContent,
@@ -223,6 +225,7 @@
 					});
 					return false;
 				}
+
 				let data = {
 					create_at: serverTimestamp(),
 					status: 1,
@@ -230,15 +233,35 @@
 					tag: tag.value,
 					category: categorySelected.value,
 					email: email.value,
+					user_id: currentUser.value.id,
 				};
-				let payload = {
-					userId: currentUser.value.id,
-					data: data,
-				};
+
 				isSending.value = true;
-				setTimeout(() => {
-					isSending.value = false;
-				}, 3000);
+				store
+					.dispatch("Ticket/CREATE_TICKET", { data })
+					.then((resp) => {
+						debugger;
+						isSending.value = false;
+						if (!resp) return false;
+						subject.value = "";
+						email.value = "";
+						categorySelected.value = "";
+						tag.value = "";
+						body.value = "";
+						toast({
+							component: ToastificationContent,
+							props: {
+								title: "All Good",
+								text: `Ticket created successfully! Issues will be addresss accordingly`,
+								icon: "CheckIcon",
+								variant: "success",
+							},
+						});
+					})
+					.catch((err) => {
+						isSending.value = false;
+						console.log(err);
+					});
 			};
 			return {
 				isSending,

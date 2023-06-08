@@ -10,6 +10,7 @@ import users from './users';
 import course from './course';
 import auth from './auth';
 import counter from './counters';
+import ticket from './tickets';
 
 Vue.use(Vuex);
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
         Users: users,
         Course: course,
         Auth: auth,
+        Ticket: ticket,
         Counter: counter,
         'app-ecommerce': ecommerceStoreModule
     },
