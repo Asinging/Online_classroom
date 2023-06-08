@@ -176,7 +176,20 @@ export default [{
         path: '/admin/apps/users/view/:id',
         name: 'apps-users-view',
         component: () =>
-            import ('@/views/apps/user/users-view/UsersView.vue'),
+            import ('@/views/apps/user/users-view/admin/Index.vue'),
+
+        meta: {
+            pageTitle: 'User Overview',
+            breadcrumb: [{
+                text: 'User'
+            }]
+        }
+    },
+    {
+        path: '/users/view/:id',
+        name: 'users-view',
+        component: () =>
+            import ('@/views/apps/user/users-view/client/Index.vue'),
 
         meta: {
             pageTitle: 'User Overview',
@@ -189,7 +202,19 @@ export default [{
         path: '/admin/apps/users/edit/:id',
         name: 'apps-users-edit',
         component: () =>
-            import ('@/views/apps/user/users-edit/UsersEdit.vue'),
+            import ('@/views/apps/user/users-edit/admin/Index.vue'),
+        meta: {
+            pageTitle: 'Edit User',
+            breadcrumb: [{
+                text: 'User'
+            }]
+        }
+    },
+    {
+        path: '/users/edit/:id',
+        name: 'users-edit',
+        component: () =>
+            import ('@/views/apps/user/users-edit/client/Index.vue'),
         meta: {
             pageTitle: 'Edit User',
             breadcrumb: [{

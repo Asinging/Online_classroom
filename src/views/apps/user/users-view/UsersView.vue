@@ -40,7 +40,6 @@
 	import router from "@/router";
 	import { ref, onUnmounted, onBeforeMount } from "@vue/composition-api";
 	import { BRow, BCol, BAlert, BLink, BSpinner } from "bootstrap-vue";
-	import InvoiceList from "@/views/apps/invoice/invoice-list/InvoiceList.vue";
 
 	import UserViewUserInfoCard from "./UserViewUserInfoCard.vue";
 
@@ -54,8 +53,6 @@
 
 			// Local Components
 			UserViewUserInfoCard,
-
-			InvoiceList,
 		},
 		setup() {
 			const userData = ref(null);
@@ -64,9 +61,13 @@
 			onBeforeMount(async () => {
 				let id = router.currentRoute.params.id;
 				try {
-					let response = await store.dispatch("Users/GET_SINGLE_USER", {
-						id,
-					});
+					let response = await store.dispatch(
+						"Users/GET_SINGLE_USER_BY_Id",
+						{
+							id,
+						}
+					);
+					debugger;
 					console.log(response);
 					if (!response) {
 						userDataNotFound.value = true;

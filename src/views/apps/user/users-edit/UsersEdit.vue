@@ -84,8 +84,11 @@
 			});
 
 			const listClick = () => {
+				let isAdmin = JSON.parse(
+					localStorage.getItem("isAdminIn") || "false"
+				);
 				router.push({
-					name: "apps-users-list",
+					name: isAdmin ? "apps-users-list" : "/dashboard-analytics",
 				});
 			};
 

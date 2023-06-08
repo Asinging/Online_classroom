@@ -10,8 +10,8 @@
 				<!-- User Avatar & Action Buttons -->
 				<div class="d-flex justify-content-start">
 					<b-avatar
-						:src="userData.avatar"
-						:text="avatarText(userData.f_name)"
+						:src="userData.cover_photo_url"
+						:text="avatarText(userData.f_name || userData.username)"
 						:variant="`light-${resolveUserRoleVariant(
 							userData.user_type == 1 ? 'admin' : 'student'
 						)}`"
@@ -21,19 +21,16 @@
 					<div class="d-flex flex-column ml-1">
 						<div class="mb-1">
 							<h4 class="mb-0 text-capitalize">
-								{{ userData.f_name }}
+								{{ userData.f_name || userData.username }}
 							</h4>
 							<span class="card-text">{{ userData.email }}</span>
 						</div>
 						<div class="d-flex flex-wrap">
 							<b-button
-								:to="{
-									name: 'apps-users-edit',
-									params: { id: userData.id },
-								}"
+								@click="toUserEdit(userData)"
 								variant="primary"
 							>
-								Edit
+								Update Profile
 							</b-button>
 							<b-button variant="outline-danger" class="ml-1">
 								Delete
@@ -66,7 +63,7 @@
 							<feather-icon icon="UserIcon" class="mr-75" />
 							<span class="font-weight-bold">Username</span>
 						</th>
-						<td class="pb-50">
+						<td class="pb-50 text-capitalize">
 							{{ userData.username }}
 						</td>
 					</tr>
@@ -91,16 +88,24 @@
 				</table>
 			</b-col>
 		</b-row>
+		<b-card-text
+			v-if="!userData.subscribed"
+			class="text-danger text-center h3 d-flex justify-content-center"
+		>
+			Subscribe to the platform to enjoy the full benefits</b-card-text
+		>
 	</b-card>
 </template>
 
 <script>
-	import { BCard, BButton, BAvatar, BRow, BCol } from "bootstrap-vue";
+	import { BCard, BButton, BAvatar, BRow, BCol, BCardText } from "bootstrap-vue";
 	import { avatarText } from "@core/utils/filter";
 	import useUsersList from "../users-list/useUsersList";
+	import router from "@/router";
 
 	export default {
 		components: {
+			BCardText,
 			BCard,
 			BButton,
 			BRow,
@@ -115,7 +120,17 @@
 		},
 		setup() {
 			const { resolveUserRoleVariant } = useUsersList();
+			const toUserEdit = (userData) => {
+				let isAdmin = JSON.parse(
+					localStorage.getItem("isAdminIn") || "false"
+				);
+				router.push({
+					name: isAdmin ? "apps-users-edit" : "users-edit",
+					params: { id: userData.id },
+				});
+			};
 			return {
+				toUserEdit,
 				avatarText,
 				resolveUserRoleVariant,
 			};

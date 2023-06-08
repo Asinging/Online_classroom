@@ -48,12 +48,12 @@
 									class="d-inline-block mr-1"
 									placeholder="Search..."
 								/>
-								<b-button
+								<!-- <b-button
 									variant="primary"
 									@click="isAddNewUserSidebarActive = true"
 								>
 									<span class="text-nowrap">Add User</span>
-								</b-button>
+								</b-button> -->
 							</div>
 						</b-col>
 					</b-row>
@@ -81,7 +81,7 @@
 							></b-spinner>
 						</div>
 						<div v-else class="text-center text-primary">
-							No rows to displayd!
+							No rows to display!
 						</div>
 					</template>
 
@@ -92,7 +92,12 @@
 								<b-avatar
 									size="32"
 									:src="data.item.avatar"
-									:text="avatarText(data.item.f_name)"
+									:text="
+										avatarText(
+											data.item.f_name ||
+												data.item.username
+										)
+									"
 									:variant="`light-${resolveUserRoleVariant(
 										data.item.user_type == 1
 											? 'admin'
@@ -111,7 +116,7 @@
 								}"
 								class="font-weight-bold d-block text-nowrap text-capitalize"
 							>
-								{{ data.item.f_name }}
+								{{ data.item.f_name || data.item.username }}
 							</b-link>
 							<small class="text-muted text-lighten-blue"
 								>@{{ data.item.username }}</small
@@ -280,7 +285,7 @@
 	import { avatarText } from "@core/utils/filter";
 	import UsersListFilters from "./UsersListFilters.vue";
 	import useUsersList from "./useUsersList";
-	import userStoreModule from "../userStoreModule";
+
 	import UserListAddNew from "./UserListAddNew.vue";
 	import BCardActions from "@core/components/b-card-actions/BCardActions.vue";
 
@@ -288,7 +293,7 @@
 		props: {
 			isComponent: {
 				type: Boolean,
-				required: true,
+
 				default: false,
 			},
 		},
