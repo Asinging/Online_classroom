@@ -268,7 +268,7 @@
 							"Users/GET_SINGLE_USER_BY_Id",
 							{ id: response.user.uid }
 						);
-						console.log(resp2);
+
 						setLocalstorage(response.user, resp2.user);
 						this.$toast({
 							component: ToastificationContent,
@@ -339,6 +339,7 @@
 							});
 						})
 						.catch((err) => {
+							debugger;
 							console.log(err);
 							this.$toast({
 								component: ToastificationContent,

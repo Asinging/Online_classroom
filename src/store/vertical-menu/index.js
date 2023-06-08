@@ -17,26 +17,28 @@ export default {
     actions: {},
     getters: {
         adminAppSideBarMenuListGetter(state, getters, rootState, rootGetters) {
+            let currentUserId = rootGetters['Auth/currentUserGetter'].id;
             return state.adminNavMenuItems.map(item => {
                 if (item.key === 'user') {
                     item.children.map(element => {
                         if (element.key === 'userView') {
-                            element.route.params.id = rootGetters['Auth/currentUserGetter'].id;
+                            element.route.params.id = currentUserId;
 
                             return element;
                         }
                         if (element.key === 'userEdit') {
-                            element.route.params.id = rootGetters['Auth/currentUserGetter'].id;
+                            element.route.params.id = currentUserId;
                             return element;
                         }
                     });
                 }
+                return item;
             });
         },
         clientAppSideBarMenuListGetter(state) {
             return state.clientNavMenuItems.map(item => {
                 if (item.title === 'Courses') {
-                    item.tag = '10' + ' ' + item.tag;
+                    item.tag = '2' + ' ' + item.tag;
                 }
                 return item;
             });

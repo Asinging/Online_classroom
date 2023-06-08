@@ -41,20 +41,25 @@ export default {
                     .then(async user => {
                         await updateProfile(authentication.currentUser, {
                             displayName: payload.displayName,
-                            photoURL: 'https://example.com/jane-q-user/profile.jpg'
+                            avatar: 'https://example.com/jane-q-user/profile.jpg'
                         }).catch();
                         resolve(user);
                     })
                     .catch();
             });
         },
-        SIGN_IN({}, payload) {
+        SIGN_IN({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
                 try {
                     let user = await signInWithEmailAndPassword(authentication, payload.email, payload.password);
 
-                    resolve(user);
+                    if (user.user) {
+                        commit('mCurrentUser', user.user);
+                        return resolve(user);
+                    }
+                    resolve(false);
                 } catch (error) {
+                    debugger;
                     reject(JSON.parse(JSON.stringify(error)));
                 }
             });

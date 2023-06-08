@@ -7,7 +7,8 @@
 		<template #button-content>
 			<div class="d-sm-flex d-none user-nav">
 				<p class="user-name font-weight-bolder mb-0">
-					{{ currentUser.f_name }}
+					<small></small>
+					{{ currentUser.fullName }}
 				</p>
 				<span class="user-status">{{ currentUser.role }}</span>
 			</div>
@@ -19,11 +20,11 @@
 				class="badge-minimal"
 				badge-variant="success"
 			>
-				<feather-icon
-					v-if="currentUser.f_name"
+				<!-- <feather-icon
+					v-if="currentUser.fullName"
 					icon="UserIcon"
 					size="22"
-				/>
+				/> -->
 			</b-avatar>
 		</template>
 
@@ -62,14 +63,14 @@
 		},
 		data() {
 			return {
-				userData: JSON.parse(localStorage.getItem("userData") || "{}"),
+				currentUser: JSON.parse(localStorage.getItem("userData") || "{}"),
 				avatarText,
 			};
 		},
 		computed: {
-			currentUser() {
-				return this.$store.getters["Auth/currentUserGetter"];
-			},
+			// currentUser() {
+			// 	return this.$store.getters["Auth/currentUserGetter"];
+			// },
 		},
 		methods: {
 			logout() {

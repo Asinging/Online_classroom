@@ -7,9 +7,9 @@ import { computed } from '@vue/composition-api';
  * @param {Object} item nav menu item
  */
 export const resolveVerticalNavMenuItemComponent = item => {
-   if (item.header) return 'vertical-nav-menu-header';
-   if (item.children) return 'vertical-nav-menu-group';
-   return 'vertical-nav-menu-link';
+    if (item.header) return 'vertical-nav-menu-header';
+    if (item.children) return 'vertical-nav-menu-group';
+    return 'vertical-nav-menu-link';
 };
 
 /**
@@ -17,8 +17,8 @@ export const resolveVerticalNavMenuItemComponent = item => {
  * @param {Object} item nav menu item
  */
 export const resolveHorizontalNavMenuItemComponent = item => {
-   if (item.children) return 'horizontal-nav-menu-group';
-   return 'horizontal-nav-menu-link';
+    if (item.children) return 'horizontal-nav-menu-group';
+    return 'horizontal-nav-menu-link';
 };
 
 /**
@@ -28,11 +28,11 @@ export const resolveHorizontalNavMenuItemComponent = item => {
  * @param {Object, String} link navigation link object/string
  */
 export const resolveNavDataRouteName = link => {
-   if (isObject(link.route)) {
-      const { route } = router.resolve(link.route);
-      return route.name;
-   }
-   return link.route;
+    if (isObject(link.route)) {
+        const { route } = router.resolve(link.route);
+        return route.name;
+    }
+    return link.route;
 };
 
 /**
@@ -40,17 +40,17 @@ export const resolveNavDataRouteName = link => {
  * @param {Object} link nav-link object
  */
 export const isNavLinkActive = link => {
-   // Matched routes array of current route
-   const matchedRoutes = router.currentRoute.matched;
+    // Matched routes array of current route
+    const matchedRoutes = router.currentRoute.matched;
 
-   // Check if provided route matches route's matched route
-   const resolveRoutedName = resolveNavDataRouteName(link);
+    // Check if provided route matches route's matched route
+    const resolveRoutedName = resolveNavDataRouteName(link);
 
-   if (!resolveRoutedName) return false;
+    if (!resolveRoutedName) return false;
 
-   return matchedRoutes.some(
-      route => route.name === resolveRoutedName || route.meta.navActiveLink === resolveRoutedName
-   );
+    return matchedRoutes.some(
+        route => route.name === resolveRoutedName || route.meta.navActiveLink === resolveRoutedName
+    );
 };
 
 /**
@@ -58,18 +58,18 @@ export const isNavLinkActive = link => {
  * @param {Array} children Group children
  */
 export const isNavGroupActive = children => {
-   // Matched routes array of current route
-   const matchedRoutes = router.currentRoute.matched;
+    // Matched routes array of current route
+    const matchedRoutes = router.currentRoute.matched;
 
-   return children.some(child => {
-      // If child have children => It's group => Go deeper(recursive)
-      if (child.children) {
-         return isNavGroupActive(child.children);
-      }
+    return children.some(child => {
+        // If child have children => It's group => Go deeper(recursive)
+        if (child.children) {
+            return isNavGroupActive(child.children);
+        }
 
-      // else it's link => Check for matched Route
-      return isNavLinkActive(child, matchedRoutes);
-   });
+        // else it's link => Check for matched Route
+        return isNavLinkActive(child, matchedRoutes);
+    });
 };
 
 /**

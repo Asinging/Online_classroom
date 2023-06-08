@@ -1,6 +1,7 @@
-import { storage, db } from '@/config/firebase.js';
+import { storage, db, authentication } from '@/config/firebase.js';
 import { v4 } from 'uuid';
 import { ref, uploadBytes, deleteObject } from 'firebase/storage';
+import { setLocalstorage } from '@/helpers/user-helpers';
 
 import {
     getDocs,
@@ -63,16 +64,22 @@ export default {
                 const docRef = doc(db, 'Users', payload.id);
                 try {
                     const docSnap = await getDoc(docRef);
+
                     if (docSnap.exists()) {
-                        resolve({...docSnap.data(), id: docSnap.id });
+                        if (docSnap.id === authentication.currentUser.uid) {
+                            let obj = docSnap.data();
+
+                            let localData = setLocalstorage(authentication.currentUser, obj);
+                            debugger;
+                            commit('mCurrentUser', localData, { root: true });
+                        }
                         commit('mSingleUserById', {...docSnap.data(), id: docSnap.id });
+
+                        resolve({...docSnap.data(), id: docSnap.id });
                     } else {
-                        // docSnap.data() will be undefined in this case
-                        console.log('No such document!');
                         resolve(false);
                     }
                 } catch (err) {
-                    console.log(err);
                     reject(err);
                 }
             });
@@ -92,7 +99,6 @@ export default {
                     }
                     resolve([]);
                 } catch (err) {
-                    console.log(err);
                     reject(err);
                 }
             });
