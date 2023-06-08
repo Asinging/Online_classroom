@@ -63,14 +63,14 @@
 		},
 		data() {
 			return {
-				currentUser: JSON.parse(localStorage.getItem("userData") || "{}"),
+				// currentUser: JSON.parse(localStorage.getItem("userData") || "{}"),
 				avatarText,
 			};
 		},
 		computed: {
-			// currentUser() {
-			// 	return this.$store.getters["Auth/currentUserGetter"];
-			// },
+			currentUser() {
+				return this.$store.getters["Auth/currentUserGetter"];
+			},
 		},
 		methods: {
 			logout() {

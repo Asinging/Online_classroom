@@ -68,10 +68,9 @@ export default {
                     if (docSnap.exists()) {
                         if (docSnap.id === authentication.currentUser.uid) {
                             let obj = docSnap.data();
-
                             let localData = setLocalstorage(authentication.currentUser, obj);
-                            debugger;
-                            commit('mCurrentUser', localData, { root: true });
+
+                            commit('Auth/mCurrentUser', localData, { root: true });
                         }
                         commit('mSingleUserById', {...docSnap.data(), id: docSnap.id });
 
