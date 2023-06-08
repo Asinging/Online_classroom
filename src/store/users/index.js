@@ -1,6 +1,7 @@
-import { db } from '@/config/firebase.js';
+import { storage, db } from '@/config/firebase.js';
 import { v4 } from 'uuid';
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes, deleteObject } from 'firebase/storage';
+
 import {
     getDocs,
     getDoc,
@@ -14,6 +15,7 @@ import {
     doc,
     updateDoc
 } from 'firebase/firestore';
+
 export default {
     namespaced: true,
     state: {
@@ -30,6 +32,20 @@ export default {
         }
     },
     actions: {
+        DELETE_PROFILE_UPLOAD({}, payload) {
+            return new Promise((resolve, reject) => {
+                let objectRef = ref(storage, payload.path);
+                deleteObject(objectRef)
+                    .then(resp => {
+                        console.log(resp);
+                        resolve(resp);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        reject(err);
+                    });
+            });
+        },
         UPDATE_SINGLE_USER({ commit }, payload) {
             return new Promise(async(resolve, reject) => {
                 const docRef = doc(db, 'Users', payload.id);

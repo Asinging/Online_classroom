@@ -18,14 +18,19 @@
 					rounded
 				/>
 			</template>
-			<h4 class="mb-1 text-capitalize">
+			<h4 class="text-capitalize">
 				{{ computeUserData.f_name || computeUserData.username }}
 			</h4>
+			<small class="text-muted text-italic"
+				>(Recommended image resolution 800x400, max-image size
+				2mb.)</small
+			>
 			<div class="d-flex flex-wrap">
 				<b-button
 					variant="primary"
 					@click="$refs.refInputEl.click()"
 					title="Update Photo"
+					:disabled="isUpdateProfilePhoto"
 				>
 					<input
 						ref="refInputEl"
@@ -76,7 +81,7 @@
 
 				<!-- Field: Full Name -->
 				<b-col cols="12" md="4">
-					<b-form-group label="Fullname" label-for="full-name">
+					<b-form-group label="Full Name" label-for="full-name">
 						<b-form-input
 							id="full-name"
 							v-model="computeUserData.f_name"
@@ -111,7 +116,7 @@
 				</b-col>
 
 				<!-- Field: Role -->
-				<b-col cols="12" md="4">
+				<b-col cols="12" md="4" v-if="isAdmin">
 					<b-form-group label="User Role" label-for="user-role">
 						<v-select
 							v-model="computeUserData.user_type"
@@ -130,7 +135,7 @@
 
 		<!-- Action Buttons -->
 		<b-button
-			variant="primary"
+			variant="success"
 			class="mb-1 mb-sm-0 mr-0 mr-sm-1"
 			:block="$store.getters['app/currentBreakPoint'] === 'xs'"
 			@click="saveRecord"
@@ -145,7 +150,7 @@
 			</span>
 		</b-button>
 
-		<b-button
+		<!-- <b-button
 			variant="outline-secondary"
 			type="reset"
 			:block="$store.getters['app/currentBreakPoint'] === 'xs'"
@@ -159,7 +164,7 @@
 				/></span>
 				<span v-else><b-spinner class="mr-25" small /></span>
 			</span>
-		</b-button>
+		</b-button> -->
 	</div>
 </template>
 
@@ -189,6 +194,8 @@
 	import router from "@/router";
 	import store from "@/store";
 	import { getDownloadURL } from "firebase/storage";
+	import { useToast } from "vue-toastification/composition";
+	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
 	export default {
 		components: {
@@ -209,13 +216,14 @@
 			vSelect,
 		},
 
-		setup(props) {
+		setup() {
+			const toast = useToast();
 			const { resolveUserRoleVariant } = useUsersList();
 			const isRemovingProfilePhoto = ref(false);
 			const isUpdateProfilePhoto = ref(false);
 			const isEditingRecord = ref(false);
 			const isResetRecord = ref(false);
-			const coverArtUrl = ref(false);
+			const coverArtUrl = ref(null);
 
 			const roleOptions = [
 				{ label: "Admin", value: 1 },
@@ -232,6 +240,10 @@
 			const refInputEl = ref(null);
 			const refPreviewEl = ref(null);
 			const userData = ref(null);
+
+			const isAdmin = computed(() => {
+				return store.getters["appConfig/whoIsinGetter"];
+			});
 
 			const computeUserData = computed(() => {
 				let x = store.getters["Users/singleUserGetter"];
@@ -253,12 +265,11 @@
 					isResetRecord.value = true;
 					setTimeout(() => {
 						let obj = {};
-						// Object.entries(props.computeUserData).forEach((item) => {
-						// 	obj[item[0]] = "";
-						// });
-						// computeUserData = obj;
-
-						this.$toast({
+						Object.entries(computeUserData).forEach((item) => {
+							obj[item[0]] = "";
+						});
+						isResetRecord.value = false;
+						toast({
 							component: ToastificationContent,
 							props: {
 								title: "Cool",
@@ -272,10 +283,22 @@
 				}
 			};
 
-			const removeProfilePhoto = function () {
+			const removeProfilePhoto = async () => {
 				isRemovingProfilePhoto.value = true;
-				setTimeout(() => {
+				let userId = router.currentRoute.params.id;
+
+				try {
+					let payload = {
+						data: {
+							avatar: "",
+							updated_at: serverTimestamp(),
+						},
+						id: userId,
+					};
+
+					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isRemovingProfilePhoto.value = false;
+
 					toast({
 						component: ToastificationContent,
 						props: {
@@ -285,8 +308,24 @@
 							variant: "success",
 						},
 					});
-					props.computeUserData.avatar = "";
-				}, 1000);
+
+					store
+						.dispatch("Users/DELETE_PROFILE_UPLOAD", {
+							path: coverArtUrl.value,
+						})
+
+						.catch((err) => {
+							console.log(err);
+						});
+					store
+						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+							id: userId,
+						})
+						.catch((err) => {});
+				} catch (err) {
+					console.error(err);
+					isRemovingProfilePhoto.value = false;
+				}
 			};
 
 			const saveRecord = async () => {
@@ -295,15 +334,31 @@
 
 				try {
 					let data = Object.assign({}, computeUserData.value);
-
+					data.enabled = data.enabled.value;
 					data.updated_at = serverTimestamp();
+					data.avatar = coverArtUrl.value;
 
 					let payload = {
 						data,
 						id: userId,
 					};
+					debugger;
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
+					store
+						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+							id: router.currentRoute.params.id,
+						})
+						.catch((err) => {});
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "All Good",
+							text: `Profile  Successfully updated`,
+							icon: "CheckIcon",
+							variant: "success",
+						},
+					});
 				} catch (err) {
 					console.error(err);
 					isEditingRecord.value = false;
@@ -313,13 +368,13 @@
 			const { inputImageRenderer } = useInputImageRenderer(
 				refInputEl,
 				async (file, base64) => {
-					refPreviewEl.value.src = base64;
+					// refPreviewEl.value.src = base64;
 
 					let userId = router.currentRoute.params.id;
 
-					computeUserData.value.avatar = "";
+					// computeUserData.value.avatar = base64;
 
-					if (file.size > 6000000) {
+					if (file.size > 2000000) {
 						toast({
 							component: ToastificationContent,
 							props: {
@@ -341,16 +396,23 @@
 							if (!resp) {
 								return false;
 							}
-							coverArtUrl.value = getDownloadURL(resp.ref);
-							toast({
-								component: ToastificationContent,
-								props: {
-									title: "All Good",
-									text: `Profile photo Successfully uploaded`,
-									icon: "CheckIcon",
-									variant: "success",
-								},
-							});
+
+							if (coverArtUrl.value) {
+								store
+									.dispatch("Users/DELETE_PROFILE_UPLOAD", {
+										path: coverArtUrl.value,
+									})
+
+									.catch((err) => {
+										console.log(err);
+									});
+							}
+
+							getDownloadURL(resp.ref)
+								.then((resp) => {
+									coverArtUrl.value = resp;
+								})
+								.catch();
 
 							store.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 								id: userId,
@@ -373,6 +435,7 @@
 			);
 
 			return {
+				isAdmin,
 				saveRecord,
 				inputImageRenderer,
 				avatarText,
