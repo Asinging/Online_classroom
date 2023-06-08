@@ -247,6 +247,7 @@
 
 			const computeUserData = computed(() => {
 				let x = store.getters["Users/singleUserGetter"];
+				coverArtUrl.value = x.avatar;
 				if (!x) return false;
 				if (x.enabled == 1) {
 					x.enabled = { label: "Active", value: 1 };
@@ -396,6 +397,15 @@
 							if (!resp) {
 								return false;
 							}
+							toast({
+								component: ToastificationContent,
+								props: {
+									title: "All Good",
+									text: `Avatar successfully selected`,
+									icon: "CheckIcon",
+									variant: "info",
+								},
+							});
 
 							if (coverArtUrl.value) {
 								store
