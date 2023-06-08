@@ -16,8 +16,22 @@ export default {
     },
     actions: {},
     getters: {
-        adminAppSideBarMenuListGetter(state) {
-            return state.adminNavMenuItems;
+        adminAppSideBarMenuListGetter(state, getters, rootState, rootGetters) {
+            return state.adminNavMenuItems.map(item => {
+                if (item.key === 'user') {
+                    item.children.map(element => {
+                        if (element.key === 'userView') {
+                            element.route.params.id = rootGetters['Auth/currentUserGetter'].id;
+
+                            return element;
+                        }
+                        if (element.key === 'userEdit') {
+                            element.route.params.id = rootGetters['Auth/currentUserGetter'].id;
+                            return element;
+                        }
+                    });
+                }
+            });
         },
         clientAppSideBarMenuListGetter(state) {
             return state.clientNavMenuItems.map(item => {

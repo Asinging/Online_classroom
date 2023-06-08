@@ -12,7 +12,7 @@
 		<!-- Left Col -->
 
 		<b-navbar-nav class="nav align-items-center ml-auto">
-			<notification-dropdown />
+			<!-- <notification-dropdown /> -->
 			<user-dropdown />
 		</b-navbar-nav>
 	</div>

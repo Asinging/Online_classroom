@@ -7,20 +7,20 @@
 		<template #button-content>
 			<div class="d-sm-flex d-none user-nav">
 				<p class="user-name font-weight-bolder mb-0">
-					{{ userData.fullName || userData.username }}
+					{{ currentUser.f_name }}
 				</p>
-				<span class="user-status">{{ userData.role }}</span>
+				<span class="user-status">{{ currentUser.role }}</span>
 			</div>
 			<b-avatar
 				size="40"
-				:src="userData.avatar"
+				:src="currentUser.avatar"
 				variant="light-primary"
 				badge
 				class="badge-minimal"
 				badge-variant="success"
 			>
 				<feather-icon
-					v-if="userData.fullName"
+					v-if="currentUser.f_name"
 					icon="UserIcon"
 					size="22"
 				/>
@@ -65,6 +65,11 @@
 				userData: JSON.parse(localStorage.getItem("userData") || "{}"),
 				avatarText,
 			};
+		},
+		computed: {
+			currentUser() {
+				return this.$store.getters["Auth/currentUserGetter"];
+			},
 		},
 		methods: {
 			logout() {
