@@ -67,7 +67,6 @@
 							id,
 						}
 					);
-					debugger;
 					console.log(response);
 					if (!response) {
 						userDataNotFound.value = true;

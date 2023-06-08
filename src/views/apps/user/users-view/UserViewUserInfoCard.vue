@@ -10,7 +10,7 @@
 				<!-- User Avatar & Action Buttons -->
 				<div class="d-flex justify-content-start">
 					<b-avatar
-						:src="userData.cover_photo_url"
+						:src="userData.avatar"
 						:text="avatarText(userData.f_name || userData.username)"
 						:variant="`light-${resolveUserRoleVariant(
 							userData.user_type == 1 ? 'admin' : 'student'
@@ -32,8 +32,24 @@
 							>
 								Update Profile
 							</b-button>
-							<b-button variant="outline-danger" class="ml-1">
-								Delete
+							<b-button
+								v-if="isAdmin"
+								variant="outline-danger"
+								class="ml-1"
+								@click="deleteUser(userData)"
+								:disabled="isDeletingUser"
+							>
+								<span class="mr-1 d-none d-sm-inline mr-sm-25"
+									>Delete</span
+								>
+								<span class="d-inline">
+									<span v-if="!isDeletingUser"
+										><feather-icon icon="TrashIcon"
+									/></span>
+									<span v-else
+										><b-spinner class="mr-25" small
+									/></span>
+								</span>
 							</b-button>
 						</div>
 					</div>
@@ -98,13 +114,25 @@
 </template>
 
 <script>
-	import { BCard, BButton, BAvatar, BRow, BCol, BCardText } from "bootstrap-vue";
+	import {
+		BCard,
+		BButton,
+		BAvatar,
+		BRow,
+		BCol,
+		BCardText,
+		BSpinner,
+	} from "bootstrap-vue";
 	import { avatarText } from "@core/utils/filter";
 	import useUsersList from "../users-list/useUsersList";
 	import router from "@/router";
+	import Swal from "sweetalert2";
+	import { ref, computed } from "@vue/composition-api";
+	import store from "@/store";
 
 	export default {
 		components: {
+			BSpinner,
 			BCardText,
 			BCard,
 			BButton,
@@ -120,6 +148,8 @@
 		},
 		setup() {
 			const { resolveUserRoleVariant } = useUsersList();
+			const isDeletingUser = ref(false);
+
 			const toUserEdit = (userData) => {
 				let isAdmin = JSON.parse(
 					localStorage.getItem("isAdminIn") || "false"
@@ -129,7 +159,55 @@
 					params: { id: userData.id },
 				});
 			};
+
+			const isAdmin = computed(() => {
+				return store.getters["appConfig/whoIsinGetter"];
+			});
+
+			const deleteUser = (user) => {
+				new Swal({
+					title: " 😕 Hey Carefull! ",
+					text: `You are about to delete this user permanently`,
+					icon: "info",
+
+					showCancelButton: true,
+					confirmButtonText: "Yes",
+					showClass: {
+						popup: "animate__animated animate__flipInX",
+					},
+					customClass: {
+						confirmButton: "btn btn-primary",
+						cancelButton: "btn btn-outline-danger ml-1",
+					},
+					buttonsStyling: false,
+				}).then((result) => {
+					if (result.value) {
+						let payload = {
+							data: {
+								status: 0,
+							},
+							id: user.id,
+						};
+						store
+							.dispatch("Users/UPDATE_SINGLE_USER", payload)
+							.then((resp) => {
+								new Swal(
+									"Good job!",
+									"User successfully deleted!",
+									"success"
+								);
+								let id = router.currentRoute.params.id;
+								store.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+									id,
+								});
+							});
+					}
+				});
+			};
 			return {
+				isDeletingUser,
+				isAdmin,
+				deleteUser,
 				toUserEdit,
 				avatarText,
 				resolveUserRoleVariant,
