@@ -20,6 +20,7 @@ export default {
     },
     mutations: {
         mCurrentUser(state, payload) {
+            debugger;
             state.currentUser = payload;
         }
     },
@@ -53,11 +54,7 @@ export default {
                 try {
                     let user = await signInWithEmailAndPassword(authentication, payload.email, payload.password);
 
-                    if (user.user) {
-                        commit('mCurrentUser', user.user);
-                        return resolve(user);
-                    }
-                    resolve(false);
+                    return resolve(user);
                 } catch (error) {
                     debugger;
                     reject(JSON.parse(JSON.stringify(error)));
@@ -80,6 +77,9 @@ export default {
                 try {
                     let provider = new GoogleAuthProvider();
                     let response = signInWithPopup(authentication, provider);
+
+                    // dispatch('Users/GET_SINGLE_USER_BY_Id', { id: response.id });
+
                     resolve(response);
                 } catch (err) {
                     reject(err);

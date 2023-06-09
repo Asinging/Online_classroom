@@ -8,9 +8,11 @@
 			<div class="d-sm-flex d-none user-nav">
 				<p class="user-name font-weight-bolder mb-0">
 					<small></small>
-					{{ currentUser.fullName }}
+					{{ currentUser.fullName || "Full Name" }}
 				</p>
-				<span class="user-status">{{ currentUser.role }}</span>
+				<span class="user-status">{{
+					currentUser.role || "role"
+				}}</span>
 			</div>
 			<b-avatar
 				size="40"

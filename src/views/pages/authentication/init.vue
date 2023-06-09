@@ -44,6 +44,7 @@
 
 	import { onAuthStateChanged } from "firebase/auth";
 	import { authentication } from "@/config/firebase.js";
+	import { setLocalstorage } from "@/helpers/user-helpers";
 	import store from "@/store";
 
 	export default {
@@ -96,7 +97,13 @@
 							id: val.uid,
 						})
 						.then((resp) => {
-							store.commit("Auth/mCurrentUser", resp || null);
+							let formObject = setLocalstorage(
+								authentication.currentUser,
+								resp
+							);
+
+							this.$store.commit("Auth/mCurrentUser", formObject);
+
 							let isAdminIn = resp.user_type < 2 ? true : false;
 
 							this.$store.commit(

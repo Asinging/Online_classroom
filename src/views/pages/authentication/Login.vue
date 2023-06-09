@@ -269,7 +269,8 @@
 							{ id: response.user.uid }
 						);
 
-						setLocalstorage(response.user, resp2.user);
+						let formObject = setLocalstorage(response.user, resp2.user);
+						this.$store.commit("Auth/mCurrentUser", formObject);
 						this.$toast({
 							component: ToastificationContent,
 							position: "top-right",
@@ -331,7 +332,15 @@
 									id: resp.user.uid,
 								})
 								.then((resp2) => {
-									setLocalstorage(resp.user, resp2);
+									let formObject = setLocalstorage(
+										resp.user,
+										resp2
+									);
+
+									this.$store.commit(
+										"Auth/mCurrentUser",
+										formObject
+									);
 								});
 
 							this.$router.push({
@@ -339,8 +348,6 @@
 							});
 						})
 						.catch((err) => {
-							debugger;
-							console.log(err);
 							this.$toast({
 								component: ToastificationContent,
 								props: {

@@ -382,9 +382,15 @@
 						.dispatch("Auth/SIGN_UP", payload)
 						.then((resp) => {
 							this.emailVericationSent = true;
-							setLocalstorage(authentication.currentUser, {
-								user_type: 2,
-							});
+
+							let formObject = setLocalstorage(
+								authentication.currentUser,
+								{
+									user_type: 2,
+								}
+							);
+
+							this.$store.commit("Auth/mCurrentUser", formObject);
 							let data = {};
 							data.created_at = serverTimestamp();
 							data.created_by = "admin";
