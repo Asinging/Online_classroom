@@ -28,7 +28,6 @@ export default {
             return new Promise(async(resolve, reject) => {
                 try {
                     let result = await sendPasswordResetEmail(authentication, payload.userEmail);
-                    debugger;
                     resolve(result);
                 } catch (err) {
                     reject(err);
@@ -56,7 +55,6 @@ export default {
 
                     return resolve(user);
                 } catch (error) {
-                    debugger;
                     reject(JSON.parse(JSON.stringify(error)));
                 }
             });
