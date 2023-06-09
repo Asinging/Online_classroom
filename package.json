@@ -32,6 +32,7 @@
         "core-js": "3.8.1",
         "echarts": "4.8.0",
         "firebase": "^9.22.0",
+        "flutterwave-vue-v3": "1.0.9",
         "jsonwebtoken": "8.5.1",
         "leaflet": "1.6.0",
         "mitt": "^3.0.0",

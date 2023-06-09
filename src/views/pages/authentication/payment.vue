@@ -26,6 +26,7 @@
 
 				<div class="col col-sm-4">
 					<payment-card
+						v-b-modal.modal-transfer
 						title="Bank Transfer"
 						text="Pay with transfer"
 						variant="warning"
@@ -44,6 +45,7 @@
 					</b-button>
 				</div>
 			</div>
+
 			<b-modal
 				id="modal-scrollable"
 				scrollable
@@ -96,6 +98,85 @@
 					</b-form>
 				</validation-observer>
 			</b-modal>
+
+			<b-modal
+				id="modal-transfer"
+				cancel-variant="outline-secondary"
+				title="Submit Your Details"
+				ok-title="Submit"
+				@ok="handleOk"
+			>
+				<div class="alert alert-success pa-2 my-2 text-center">
+					Payment using transfers may take a while before
+					confirmation, please bear with us as we resolve this issues
+				</div>
+				<validation-observer ref="transfersCash">
+					<b-form>
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Email"
+								rules="required|email"
+							>
+								<b-form-input
+									v-model="email"
+									:state="errors.length > 0 ? false : null"
+									type="email"
+									placeholder="Your Email"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Phone"
+								rules="required"
+							>
+								<b-form-input
+									v-model="phone"
+									:state="errors.length > 0 ? false : null"
+									placeholder="Your Phone Number"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Transaction Reference"
+								rules="required"
+							>
+								<b-form-input
+									v-model="transRef"
+									:state="errors.length > 0 ? false : null"
+									placeholder="Paste Transaction Refs"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+						<b-input-group
+							prepend="$"
+							append=".00"
+							class="input-group-merge"
+						>
+							<b-form-input
+								v-model="amount"
+								placeholder="100"
+								disabled
+							/>
+						</b-input-group>
+					</b-form>
+				</validation-observer>
+			</b-modal>
 		</div>
 	</div>
 	<!-- / Under maintenance-->
@@ -103,6 +184,7 @@
 
 <script>
 	/* eslint-disable global-require */
+	// import Flutterwave from  'flutterwave-vue-v3'
 	import {
 		BLink,
 		BFormInput,
@@ -127,7 +209,7 @@
 	import PaymentCard from "@/views/components/paymentCard.vue";
 	import Ripple from "vue-ripple-directive";
 	import paystack from "vue-paystack";
-
+	// import {FlutterwavePayButton} from "flutterwave-vue-v3"
 	import { ValidationProvider, ValidationObserver } from "vee-validate";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
@@ -140,6 +222,7 @@
 			"b-modal": VBModal,
 		},
 		components: {
+			// FlutterwavePayButton,
 			ToastificationContent,
 			BLink,
 			BFormInput,
@@ -171,6 +254,9 @@
 				email: "",
 				amount: 1000,
 				PUBLIC_KEY: "pk_test_c610dd4b558b5813504dab0bf26eee446c7c5b29",
+				transRef: "",
+				phone: "",
+				nameState: null,
 			};
 		},
 
@@ -202,6 +288,37 @@
 			},
 		},
 		methods: {
+			checkFormValidity() {
+				const valid = this.$refs.form.checkValidity();
+				this.nameState = valid;
+				return valid;
+			},
+			handleOk(bvModalEvt) {
+				this.$refs.transfersCash.validate().then((success) => {
+					if (!success) {
+						this.$toast({
+							component: ToastificationContent,
+							props: {
+								title: "Oops",
+								text: `Some required field are empty. please check!`,
+								icon: "AlertTriangleIcon",
+								variant: "danger",
+							},
+						});
+						return false;
+					}
+
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "All Sent",
+							text: `Transaction Details succefully submitted`,
+							icon: "CheckIcon",
+							variant: "Success",
+						},
+					});
+				});
+			},
 			skipButton() {
 				this.$router.push("/");
 			},
@@ -247,9 +364,8 @@
 						.cath((err) => {
 							console.log(err);
 						});
+					this.email = "";
 					return false;
-				}
-				if (val.status) {
 				}
 			},
 
