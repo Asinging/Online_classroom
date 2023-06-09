@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { ToastPlugin, ModalPlugin } from 'bootstrap-vue';
 import VueCompositionAPI from '@vue/composition-api';
+import Flutterwave from 'flutterwave-vue-v3';
+Vue.use(Flutterwave, { publicKey: 'FLWPUBK-e3c0e42eb9cc810e941700e39ced392c-X' });
 
 import i18n from '@/libs/i18n';
 import router from './router';

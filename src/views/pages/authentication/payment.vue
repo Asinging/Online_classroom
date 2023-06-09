@@ -8,6 +8,7 @@
 			<div class="row">
 				<div class="col col-sm-4">
 					<payment-card
+						v-b-modal.modal-flutterwave
 						title="Flutterwave"
 						text="Pay with Stripe"
 						variant="danger"
@@ -47,8 +48,92 @@
 			</div>
 
 			<b-modal
+				ref="modalFlutterWave"
+				id="modal-flutterwave"
+				cancel-variant="outline-secondary"
+				title="Pay Using flutter wave"
+				ok-title="Submit"
+			>
+				<template slot="modal-ok">
+					<flutterwave-pay-button
+						v-bind="paymentData"
+						variant="primary"
+						class="btn btn-primary btn-sm"
+					>
+						Click To Pay
+					</flutterwave-pay-button>
+				</template>
+
+				<validation-observer ref="payWithFlutterwave">
+					<b-form>
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Full Name"
+								rules="required"
+							>
+								<b-form-input
+									v-model="fulName"
+									:state="errors.length > 0 ? false : null"
+									placeholder="Agba John Doe"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Email"
+								rules="required|email"
+							>
+								<b-form-input
+									v-model="email"
+									:state="errors.length > 0 ? false : null"
+									type="email"
+									placeholder="Your Email"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Phone"
+								rules="required"
+							>
+								<b-form-input
+									v-model="phone"
+									:state="errors.length > 0 ? false : null"
+									placeholder="Your Phone Number"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+
+						<b-input-group
+							prepend="$"
+							append=".00"
+							class="input-group-merge mb-1"
+						>
+							<b-form-input
+								v-model="amount"
+								placeholder="100"
+								disabled
+							/>
+						</b-input-group>
+					</b-form>
+				</validation-observer>
+			</b-modal>
+
+			<b-modal
 				id="modal-scrollable"
-				scrollable
 				title="Pay with PayStack"
 				cancel-variant="outline-secondary"
 			>
@@ -219,7 +304,7 @@
 
 <script>
 	/* eslint-disable global-require */
-	// import Flutterwave from  'flutterwave-vue-v3'
+	import { FlutterwavePayButton } from "flutterwave-vue-v3";
 	import {
 		BSpinner,
 		BFormTextarea,
@@ -259,7 +344,7 @@
 			"b-modal": VBModal,
 		},
 		components: {
-			// FlutterwavePayButton,
+			FlutterwavePayButton,
 			BSpinner,
 			BFormTextarea,
 			ToastificationContent,
@@ -289,7 +374,7 @@
 			return {
 				downImg: require("@/assets/images/pages/under-maintenance.svg"),
 				required,
-
+				fulName: "",
 				email: "",
 				amount: 1000,
 				PUBLIC_KEY: "pk_test_c610dd4b558b5813504dab0bf26eee446c7c5b29",
@@ -298,6 +383,29 @@
 				nameState: null,
 				isSendingTransfer: false,
 				body: "",
+				paymentData: {
+					tx_ref: this.generateReference(),
+					amount: 10,
+					currency: "NGN",
+					payment_options: "card,ussd",
+					redirect_url: "",
+					meta: {
+						counsumer_id: "7898",
+						consumer_mac: "kjs9s8ss7dd",
+					},
+					customer: {
+						name: "Demo Customer  Name",
+						email: "customer@mail.com",
+						phone_number: "0818450***44",
+					},
+					customizations: {
+						title: "Customization Title",
+						description: "Customization Description",
+						logo: "https://flutterwave.com/images/logo-colored.svg",
+					},
+					callback: this.makePaymentCallback,
+					onclose: this.closedPaymentModal,
+				},
 			};
 		},
 
@@ -329,6 +437,60 @@
 			},
 		},
 		methods: {
+			makePaymentCallback(response) {
+				if (!val) {
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "Error",
+							text: `An Error has occurred`,
+							icon: "AlertTriangleIcon",
+							variant: "danger",
+						},
+					});
+					return false;
+				}
+				if (val.staus === "success") {
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "All Good",
+							text: `Payment successfull`,
+							icon: "CheckIcon",
+							variant: "success",
+						},
+					});
+					let transactions = {
+						transRef: val.trxref,
+						transId: val.trans,
+					};
+
+					let payload = {
+						id: this.currenUserId,
+						data: {
+							transaction: transactions,
+							subscribed: true,
+						},
+					};
+					this.store
+						.dispatch("Users/UPDATE_SINGLE_USER", payload)
+						.then((resp) => {
+							this.$router.push("/");
+						})
+						.cath((err) => {
+							console.log(err);
+						});
+					this.email = "";
+					return false;
+				}
+			},
+			closedPaymentModal() {
+				console.log("payment is closed");
+			},
+			generateReference() {
+				let date = new Date();
+				return date.getTime().toString();
+			},
 			payWithTransfer() {
 				this.$refs.transfersCash.validate().then((success) => {
 					if (!success) {
@@ -374,6 +536,7 @@
 									variant: "success",
 								},
 							});
+							this.$router.push("/");
 						})
 						.catch((err) => {
 							this.isSendingTransfer = false;
@@ -398,6 +561,7 @@
 			skipButton() {
 				this.$router.push("/");
 			},
+
 			processPayment(val) {
 				if (!val) {
 					this.$toast({
@@ -409,6 +573,7 @@
 							variant: "danger",
 						},
 					});
+					return false;
 				}
 				if (val.staus === "success") {
 					this.$toast({
@@ -456,15 +621,6 @@
 					},
 				});
 				return false;
-			},
-
-			validationForm() {
-				this.$refs.simpleRules.validate().then((success) => {
-					if (success) {
-						// eslint-disable-next-line
-						alert("form submitted!");
-					}
-				});
 			},
 		},
 	};
