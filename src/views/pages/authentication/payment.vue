@@ -6,38 +6,33 @@
 				<!-- <h3 class="mb-1">Payment Means</h3> -->
 			</div>
 			<div class="row">
-				<div class="col col-sm-6">
+				<div class="col col-sm-4">
 					<payment-card
 						title="Flutterwave"
-						text="Pay with Strip"
+						text="Pay with Stripe"
 						variant="danger"
 						@click="handlePayment('st')"
 					/>
 				</div>
-				<div class="col col-sm-6">
+				<div class="col col-sm-4">
 					<payment-card
+						v-b-modal.modal-scrollable
 						title="Paystack"
-						text="Pay with Pay stack"
+						text="Pay in Paystack"
 						variant="secondary"
 						@click="handlePayment('ps')"
 					/>
 				</div>
-				<div class="col col-sm-6">
-					<payment-card
-						title="Card"
-						text="Pay with Card"
-						variant="info"
-						@click="handlePayment('cc')"
-					/>
-				</div>
-				<div class="col col-sm-6">
+
+				<div class="col col-sm-4">
 					<payment-card
 						title="Bank Transfer"
-						text="Pay with banck transfer"
+						text="Pay with transfer"
 						variant="warning"
 						@click="handlePayment('bt')"
 					/>
 				</div>
+
 				<div class="col col-sm-12 d-flex justify-content-end">
 					<b-button
 						v-ripple.400="'rgba(255, 255, 255, 0.15)'"
@@ -45,11 +40,62 @@
 						@click="skipButton"
 						v-b-tooltip.hover.bottom="'Skip Payment'"
 					>
-						<!-- <feather-icon icon="MailIcon" class="mr-25" /> -->
 						<span>Skip</span>
 					</b-button>
 				</div>
 			</div>
+			<b-modal
+				id="modal-scrollable"
+				scrollable
+				title="Pay with PayStack"
+				cancel-variant="outline-secondary"
+			>
+				<template slot="modal-ok">
+					<paystack
+						class="btn btn-primary btn-sm"
+						:amount="amount * 100"
+						:email="email"
+						:paystackkey="PUBLIC_KEY"
+						:reference="reference"
+						:callback="processPayment"
+						:close="closePayment"
+					>
+					</paystack>
+				</template>
+				<validation-observer ref="simpleRules">
+					<b-form>
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Email"
+								rules="required|email"
+							>
+								<b-form-input
+									v-model="email"
+									:state="errors.length > 0 ? false : null"
+									type="email"
+									placeholder="Your Email"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
+
+						<b-input-group
+							prepend="$"
+							append=".00"
+							class="input-group-merge"
+						>
+							<b-form-input
+								v-model="amount"
+								placeholder="100"
+								disabled
+							/>
+						</b-input-group>
+					</b-form>
+				</validation-observer>
+			</b-modal>
 		</div>
 	</div>
 	<!-- / Under maintenance-->
@@ -68,21 +114,36 @@
 		BCardTitle,
 		BAvatar,
 		VBTooltip,
+		BModal,
+		VBModal,
+		BFormGroup,
+		BInputGroup,
+		BRow,
+		BCol,
 	} from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
 	// import { HollowDotsSpinner } from "epic-spinners";
 	import store from "@/store/index";
 	import PaymentCard from "@/views/components/paymentCard.vue";
 	import Ripple from "vue-ripple-directive";
+	import paystack from "vue-paystack";
+
+	import { ValidationProvider, ValidationObserver } from "vee-validate";
+	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
+
+	import { required, email } from "@validations";
 
 	export default {
 		directives: {
 			Ripple,
 			"b-tooltip": VBTooltip,
+			"b-modal": VBModal,
 		},
 		components: {
+			ToastificationContent,
 			BLink,
 			BFormInput,
+			BInputGroup,
 			BButton,
 			BForm,
 			BImg,
@@ -91,12 +152,25 @@
 			BCardTitle,
 			BAvatar,
 			PaymentCard,
-
+			BModal,
 			VuexyLogo,
+			BModal,
+			BFormGroup,
+
+			BRow,
+			BCol,
+			ValidationProvider,
+			ValidationObserver,
+			paystack,
 		},
 		data() {
 			return {
 				downImg: require("@/assets/images/pages/under-maintenance.svg"),
+				required,
+
+				email: "",
+				amount: 1000,
+				PUBLIC_KEY: "pk_test_c610dd4b558b5813504dab0bf26eee446c7c5b29",
 			};
 		},
 
@@ -109,10 +183,96 @@
 				}
 				return this.downImg;
 			},
+
+			currenUserId() {
+				return this.$store.getters["Auth/currentUserGetter"].id;
+			},
+
+			reference() {
+				let text = "";
+				let possible =
+					"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+				for (let i = 0; i < 10; i++)
+					text += possible.charAt(
+						Math.floor(Math.random() * possible.length)
+					);
+
+				return text;
+			},
 		},
 		methods: {
 			skipButton() {
 				this.$router.push("/");
+			},
+			processPayment(val) {
+				if (!val) {
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "Error",
+							text: `An Error has occurred`,
+							icon: "AlertTriangleIcon",
+							variant: "danger",
+						},
+					});
+				}
+				if (val.staus === "success") {
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "All Good",
+							text: `Payment successfull`,
+							icon: "CheckIcon",
+							variant: "success",
+						},
+					});
+					let transactions = {
+						transRef: val.trxref,
+						transId: val.trans,
+					};
+
+					let payload = {
+						id: this.currenUserId,
+						data: {
+							transaction: transactions,
+							subscribed: true,
+						},
+					};
+					this.store
+						.dispatch("Users/UPDATE_SINGLE_USER", payload)
+						.then((resp) => {
+							this.$router.push("/");
+						})
+						.cath((err) => {
+							console.log(err);
+						});
+					return false;
+				}
+				if (val.status) {
+				}
+			},
+
+			closePayment(val) {
+				this.$toast({
+					component: ToastificationContent,
+					props: {
+						title: "Oh no",
+						text: `The subscription proccess has been terminated, You can re-initiate again`,
+						icon: "AlertTriangleIcon",
+						variant: "danger",
+					},
+				});
+				return false;
+			},
+
+			validationForm() {
+				this.$refs.simpleRules.validate().then((success) => {
+					if (success) {
+						// eslint-disable-next-line
+						alert("form submitted!");
+					}
+				});
 			},
 		},
 	};
