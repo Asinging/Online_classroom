@@ -100,12 +100,29 @@
 			</b-modal>
 
 			<b-modal
+				ref="modalTransferCash"
 				id="modal-transfer"
 				cancel-variant="outline-secondary"
 				title="Submit Your Details"
 				ok-title="Submit"
 				@ok="handleOk"
 			>
+				<template slot="modal-ok">
+					<b-button
+						v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+						variant="primary"
+						class="mt-0 text-right d-flex justify-content-end"
+						:disabled="isSendingTransfer"
+					>
+						<feather-icon
+							v-if="!isSendingTransfer"
+							icon="UploadIcon"
+							class="mr-25"
+						/>
+						<b-spinner v-else class="mr-25" small />
+						<span>Ok</span>
+					</b-button>
+				</template>
 				<div class="alert alert-success pa-2 my-2 text-center">
 					Payment using transfers may take a while before
 					confirmation, please bear with us as we resolve this issues
@@ -163,10 +180,11 @@
 								}}</small>
 							</validation-provider>
 						</b-form-group>
+
 						<b-input-group
 							prepend="$"
 							append=".00"
-							class="input-group-merge"
+							class="input-group-merge mb-1"
 						>
 							<b-form-input
 								v-model="amount"
@@ -174,6 +192,23 @@
 								disabled
 							/>
 						</b-input-group>
+
+						<b-form-group>
+							<validation-provider
+								#default="{ errors }"
+								name="Brief Description"
+								rules="required"
+							>
+								<b-form-textarea
+									v-model="body"
+									rows="2"
+									placeholder="Brief Description"
+								/>
+								<small class="text-danger">{{
+									errors[0]
+								}}</small>
+							</validation-provider>
+						</b-form-group>
 					</b-form>
 				</validation-observer>
 			</b-modal>
@@ -186,6 +221,8 @@
 	/* eslint-disable global-require */
 	// import Flutterwave from  'flutterwave-vue-v3'
 	import {
+		BSpinner,
+		BFormTextarea,
 		BLink,
 		BFormInput,
 		BButton,
@@ -212,7 +249,7 @@
 	// import {FlutterwavePayButton} from "flutterwave-vue-v3"
 	import { ValidationProvider, ValidationObserver } from "vee-validate";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
-
+	import { serverTimestamp } from "firebase/firestore";
 	import { required, email } from "@validations";
 
 	export default {
@@ -223,6 +260,8 @@
 		},
 		components: {
 			// FlutterwavePayButton,
+			BSpinner,
+			BFormTextarea,
 			ToastificationContent,
 			BLink,
 			BFormInput,
@@ -257,6 +296,8 @@
 				transRef: "",
 				phone: "",
 				nameState: null,
+				isSendingTransfer: false,
+				body: "",
 			};
 		},
 
@@ -288,37 +329,72 @@
 			},
 		},
 		methods: {
-			checkFormValidity() {
-				const valid = this.$refs.form.checkValidity();
-				this.nameState = valid;
-				return valid;
-			},
-			handleOk(bvModalEvt) {
+			payWithTransfer() {
 				this.$refs.transfersCash.validate().then((success) => {
 					if (!success) {
-						this.$toast({
+						toast({
 							component: ToastificationContent,
 							props: {
 								title: "Oops",
-								text: `Some required field are empty. please check!`,
-								icon: "AlertTriangleIcon",
+								text: `One of the required field has been forgotten, please check!`,
+								icon: "AlertTriagleIcon",
 								variant: "danger",
 							},
 						});
 						return false;
 					}
 
-					this.$toast({
-						component: ToastificationContent,
-						props: {
-							title: "All Sent",
-							text: `Transaction Details succefully submitted`,
-							icon: "CheckIcon",
-							variant: "Success",
-						},
-					});
+					let data = {
+						create_at: serverTimestamp(),
+						status: 1,
+						subject: "Subscription Payment with Transfer",
+						tag: "subscription, payment, transfer",
+						category: "payment",
+						email: this.email,
+						user_id: this.currenUserId,
+					};
+
+					this.isSendingTransfer = true;
+					this.$store
+						.dispatch("Ticket/CREATE_TICKET", { data })
+						.then((resp) => {
+							this.$refs["modalTransferCash"].hide();
+
+							this.isSendingTransfer = false;
+							if (!resp) return false;
+							this.subject = "";
+							this.email = "";
+							this.body = "";
+							this.$toast({
+								component: ToastificationContent,
+								props: {
+									title: "All Good",
+									text: `Ticket created successfully! Issues will be addresss accordingly`,
+									icon: "CheckIcon",
+									variant: "success",
+								},
+							});
+						})
+						.catch((err) => {
+							this.isSendingTransfer = false;
+							console.log(err);
+						});
 				});
 			},
+
+			checkFormValidity() {
+				const valid = this.$refs.form.checkValidity();
+				this.nameState = valid;
+				return valid;
+			},
+
+			handleOk(bvModalEvent) {
+				// Prevent modal from closing
+				bvModalEvent.preventDefault();
+				// Trigger submit handler
+				this.payWithTransfer();
+			},
+
 			skipButton() {
 				this.$router.push("/");
 			},
