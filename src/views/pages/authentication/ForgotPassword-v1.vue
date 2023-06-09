@@ -7,13 +7,15 @@
 					<!-- logo -->
 					<vuexy-logo />
 
-					<h2 class="brand-text text-primary ml-1">O.C</h2>
+					<!-- <h2 class="brand-text text-primary ml-1">O.C</h2> -->
 				</b-link>
 
-				<b-card-title class="mb-1"> Forgot Password? 🔒 </b-card-title>
+				<b-card-title class="mb-1 text-center">
+					Forgot Password? 🔒
+				</b-card-title>
 				<b-card-text class="mb-2">
-					Enter your email and we'll send you instructions to reset
-					your password
+					Enter your email address and we'll send you instructions to
+					reset your password
 				</b-card-text>
 
 				<b-alert
@@ -106,6 +108,7 @@
 		BAlert,
 	} from "bootstrap-vue";
 	import { required, email } from "@validations";
+	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 
 	export default {
 		components: {
@@ -146,11 +149,31 @@
 							this.isSending = false;
 							this.passwordResetLinkSent = true;
 							this.userEmail = "";
-							debugger;
-							// this.$router.push({ name: "auth-reset-password-v1" });
+							this.$toast({
+								component: ToastificationContent,
+								position: "top-right",
+								props: {
+									title: `Email Sent`,
+									icon: "CoffeeIcon",
+									variant: "success",
+									text: `Check you email box and follow instructions how to reset it`,
+								},
+							});
+							this.$router.push({
+								name: "auth-login",
+							});
 						})
 						.catch((err) => {
 							this.isSending = false;
+							this.$toast({
+								component: ToastificationContent,
+								props: {
+									title: "Error",
+									text: `${err?.code || err?.message}`,
+									icon: "AlertTriangleIcon",
+									variant: "danger",
+								},
+							});
 						});
 				});
 			},

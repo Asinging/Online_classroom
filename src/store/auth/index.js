@@ -20,7 +20,6 @@ export default {
     },
     mutations: {
         mCurrentUser(state, payload) {
-            debugger;
             state.currentUser = payload;
         }
     },
@@ -29,6 +28,7 @@ export default {
             return new Promise(async(resolve, reject) => {
                 try {
                     let result = await sendPasswordResetEmail(authentication, payload.userEmail);
+                    debugger;
                     resolve(result);
                 } catch (err) {
                     reject(err);
