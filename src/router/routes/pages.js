@@ -1,5 +1,22 @@
 export default [
    {
+      path: '/support-team/two-four-seven',
+      name: 'support-team',
+      component: () => import('@/views/pages/support'),
+      meta: {
+         pageTitle: 'Contacts',
+         breadcrumb: [
+            {
+               text: 'Support'
+            },
+            {
+               text: 'Team',
+               active: true
+            }
+         ]
+      }
+   },
+   {
       path: '/class/global-online-class',
       name: 'telegram-class',
       component: () => import('@/views/pages/classroom'),
