@@ -1,5 +1,15 @@
 export default [
    {
+      path: '/class/global-online-class',
+      name: 'telegram-class',
+      component: () => import('@/views/pages/classroom'),
+      meta: {
+         layout: 'full',
+         resource: 'Auth',
+         action: 'read'
+      }
+   },
+   {
       path: '/logout',
       name: 'auth-logout',
       component: () => import('@/views/pages/authentication/Logout.vue'),
