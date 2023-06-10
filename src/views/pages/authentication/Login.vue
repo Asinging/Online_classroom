@@ -258,6 +258,7 @@
 		},
 		methods: {
 			async signWithGoogle() {
+			
 				try {
 					let response = await this.$store.dispatch(
 						"Auth/SIGN_IN_WITH_GOOGLE"
@@ -268,8 +269,8 @@
 							"Users/GET_SINGLE_USER_BY_Id",
 							{ id: response.user.uid }
 						);
-
-						let formObject = setLocalstorage(response.user, resp2.user);
+        
+						let formObject = setLocalstorage(response.user, resp2);
 						this.$store.commit("Auth/mCurrentUser", formObject);
 						this.$toast({
 							component: ToastificationContent,
@@ -281,16 +282,19 @@
 								text: `You have successfully signed in`,
 							},
 						});
+						this.$router.push({
+							name: "auth-init",
+						});
 					}
 				} catch (err) {
+				
 					this.$toast({
 						component: ToastificationContent,
-						position: "top-right",
 						props: {
-							title: `Error`,
+							title: "Error",
+							text: `${err?.code || err?.message}`,
 							icon: "AlertTriangleIcon",
 							variant: "danger",
-							text: `Application couldm't sign in`,
 						},
 					});
 				}
