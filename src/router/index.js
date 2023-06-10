@@ -18,63 +18,53 @@ let isAdmin = JSON.parse(localStorage.getItem('isAdminIn') || 'false');
 // let isAdmin = store.getters['appConfig/whoIsinGetter'];
 
 const router = new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    scrollBehavior() {
-        return { x: 0, y: 0 };
-    },
-    routes: [{
-            path: '/',
-            redirect: {
-                name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
-            }
-        },
-        ...apps,
-        ...dashboard,
-        ...pages,
-
-        ...others,
-        {
-            path: '*',
-            redirect: 'error-404'
-        }
-    ]
-});
-
-router.beforeEach((to, _, next) => {
-    const isLoggedIn = isUserLoggedIn();
-    if (to.path === '/') {
-        let isAdmin = store.getters['appConfig/whoIsinGetter'];
-        next({
+   mode: 'history',
+   base: process.env.BASE_URL,
+   scrollBehavior() {
+      return { x: 0, y: 0 };
+   },
+   routes: [
+      {
+         path: '/',
+         redirect: {
             name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
-        });
-    }
+         }
+      },
+      ...apps,
+      ...dashboard,
+      ...pages,
 
-    // if (!canNavigate(to)) {
-    //    // Redirect to login if not logged in
-    //    if (!isLoggedIn) return next({ name: 'auth-login' });
+      ...others,
+      {
+         path: '*',
+         redirect: 'error-404'
+      }
+   ]
+});
+router.beforeEach((to, _, next) => {
+   let isAdmin = store.getters['appConfig/whoIsinGetter'];
+   let userData = JSON.parse(localStorage.getItem('userData') || 'false');
 
-    //    // If logged in => not authorized
-    //    return next({ name: 'misc-not-authorized' });
-    // }
+   if (_.path !== '/login' && !userData && to.path !== '/login') {
+      return next('/login');
+   }
+   if (to.path === '/') {
+      return next({
+         name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
+      });
+   }
 
-    // // Redirect if logged in
-    // if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-    //    const userData = getUserData();
-    //    next(getHomeRouteForLoggedInUser(userData ? userData.role : null));
-    // }
-
-    return next();
+   next();
 });
 
 // ? For splash screen
 // Remove afterEach hook if you are not using splash screen
 router.afterEach(() => {
-    // Remove initial loading
-    const appLoading = document.getElementById('loading-bg');
-    if (appLoading) {
-        appLoading.style.display = 'none';
-    }
+   // Remove initial loading
+   const appLoading = document.getElementById('loading-bg');
+   if (appLoading) {
+      appLoading.style.display = 'none';
+   }
 });
 
 export default router;

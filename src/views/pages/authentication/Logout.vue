@@ -50,7 +50,7 @@
 			localStorage.removeItem("userData");
 
 			// Reset ability
-			this.$ability.update(initialAbility);
+			// this.$ability.update(initialAbility);
 		},
 
 		computed: {

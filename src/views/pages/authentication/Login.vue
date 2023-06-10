@@ -238,7 +238,8 @@
 			};
 		},
 		mounted() {
-			this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
+			// this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
+			localStorage.removeItem('userData')
 		},
 
 		computed: {
