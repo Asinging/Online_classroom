@@ -64,7 +64,7 @@
 				color: "#5dc596",
 
 				size: "13px",
-				user: null,
+			
 				relayMessages: "Initialising Application",
 				timer: null,
 				messages: [
@@ -80,75 +80,13 @@
 			counter: {
 				immediate: true,
 				handler(val) {
+					
 					if (this.counter >= 2) {
-						onAuthStateChanged(authentication, (user, err) => {
-							this.user = user;
+						clearInterval(this.timer);
+						onAuthStateChanged(authentication, (user) => {
+							this.initUser(user)
 						});
 					}
-				},
-			},
-			user: {
-				deep: true,
-				immediate: false,
-				handler(val) {
-					if (!val) return false;
-					this.$store
-						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
-							id: val.uid,
-						})
-						.then((resp) => {
-							let formObject = setLocalstorage(
-								authentication.currentUser,
-								resp
-							);
-
-							this.$store.commit("Auth/mCurrentUser", formObject);
-
-							let isAdminIn = resp.user_type < 2 ? true : false;
-
-							this.$store.commit(
-								"appConfig/UPDATE_WHO_IS_IN",
-								isAdminIn
-							);
-
-							localStorage.setItem(
-								"isAdminIn",
-								JSON.stringify(isAdminIn)
-							);
-
-							store.commit("appConfig/UPDATE_SKIN", "light");
-							store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
-								backgroundColor: "primary",
-								type: "floating",
-							});
-							store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
-								type: "static",
-							});
-
-							if (resp.user_type < 2) {
-								store.commit("appConfig/UPDATE_SKIN", "semi-dark");
-								store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
-									backgroundColor: "dark",
-									type: "sticky",
-								});
-								store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
-									type: "sticky",
-								});
-								this.$router.push("/admin/dashboard");
-								return true;
-							}
-
-							if (!resp.subscribed) {
-								this.$router.push({
-									name: "payment",
-								});
-								return false;
-							}
-							this.$router.push("/dashboard");
-						})
-						.catch((err) => {
-							console.log(err);
-						});
 				},
 			},
 		},
@@ -186,6 +124,73 @@
 				return this.downImg;
 			},
 		},
+		methods:{
+			initUser(val){
+			
+						if (!val) return false;
+					
+						this.$store
+							.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+								id: val.uid,
+							})
+							.then((resp) => {
+								let formObject = setLocalstorage(
+									authentication.currentUser,
+									resp
+								);
+
+								this.$store.commit("Auth/mCurrentUser", formObject);
+
+								let isAdminIn = resp.user_type < 2 ? true : false;
+
+								this.$store.commit(
+									"appConfig/UPDATE_WHO_IS_IN",
+									isAdminIn
+								);
+
+								localStorage.setItem(
+									"isAdminIn",
+									JSON.stringify(isAdminIn)
+								);
+
+								store.commit("appConfig/UPDATE_SKIN", "light");
+								store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
+									backgroundColor: "primary",
+									type: "floating",
+								});
+								store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
+									type: "static",
+								});
+
+								if (resp.user_type < 2) {
+									store.commit("appConfig/UPDATE_SKIN", "semi-dark");
+									store.commit("appConfig/UPDATE_NAVBAR_CONFIG", {
+										backgroundColor: "dark",
+										type: "sticky",
+									});
+									store.commit("appConfig/UPDATE_FOOTER_CONFIG", {
+										type: "sticky",
+									});
+									this.$router.push("/admin/dashboard");
+									return true;
+								}
+
+								if (!resp.subscribed) {
+									this.$router.push({
+										name: "payment",
+									});
+									return false;
+								}
+								this.$router.push("/dashboard");
+							})
+							.catch((err) => {
+								console.log(err);
+							});
+					},
+				},
+			
+			
+		
 	};
 </script>
 

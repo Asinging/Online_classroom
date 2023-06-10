@@ -38,12 +38,19 @@
 
 					<b-alert
 						variant="danger"
-						v-if="emailVericationSent"
+						v-if="emailVerificationSent"
 						show
 						class="text-center"
 					>
-						<div class="alert-body text-center">
-							Check your mailbox for verification link!!!
+						<div class="alert-body text-center d-flex justify-content-between">
+							<span>Check your mailbox for verification link!!! </span>
+							<b-link
+							variant="danger"
+								@click="resendVerificationMail"
+								class="text-danger cursor-pointer"
+							>
+							Resend	
+							</b-link>
 						</div>
 					</b-alert>
 
@@ -186,7 +193,7 @@
 								:disabled="
 									isSigningUp ||
 									invalid ||
-									emailVericationSent
+									emailVerificationSent
 								"
 							>
 								<span>Sign Up</span>
@@ -245,11 +252,12 @@
 	import { togglePasswordVisibility } from "@core/mixins/ui/forms";
 	import store from "@/store/index";
 	import { serverTimestamp } from "firebase/firestore";
-	import { onAuthStateChanged } from "firebase/auth";
+	import { onAuthStateChanged, sendEmailVerification, getAuth } from "firebase/auth";
+
 
 	import { setLocalstorage } from "@/helpers/user-helpers";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
-
+const auth = getAuth();
 	export default {
 		components: {
 			BAlert,
@@ -286,7 +294,7 @@
 				required,
 				email,
 				user: null,
-				emailVericationSent: false,
+				emailVerificationSent: false,
 				events: ["click", "mousedown", "scroll", "keypress", "mouseover"],
 			};
 		},
@@ -296,38 +304,42 @@
 				handler(val) {
 					if (!val) return false;
 
-					// if (val.emailVerified) {
-					// 	this.emailVericationSent = true;
+					if (val.emailVerified) {
 
-					// 	this.userEmail = "";
-					// 	this.userName = "";
-					// 	this.password = "";
+						this.events.forEach((event) => {
+							window.removeEventListener(event, this.runTimer);
+						});
+						this.emailVerificationSent = false
 
-					// 	this.events.forEach((event) => {
-					// 		window.removeEventListener(event, this.runTimer);
-					// 	});
+						this.userEmail = "";
+						this.userName = "";
+						this.password = "";
 
-					// 	this.$router.push({
-					// 		name: "auth-init",
-					// 	});
-					// 	return false;
-					// }
-					// if (!this.emailVericationSent) {
-					// 	sendEmailVerification(auth?.currentUser)
-					// 		.then(() => {
-					// 			this.emailVericationSent = true;
-					// 		})
-					// 		.catch((err) => console.log(err));
-					// }
-					this.$router.push({
-						name: "auth-init",
-					});
+						this.$router.push({
+							name: "auth-init",
+						});
+
+
+						
+						return false;
+					}
+
+					if (!this.emailVerificationSent) {
+						this.emailVerificationSent = true;
+						sendEmailVerification(auth?.currentUser)
+							.then(() => {
+								
+							})
+							.catch((err) => console.log(err));
+
+					}
+					return false
 				},
 			},
 		},
 		mounted() {
 			this.events.forEach((event) => {
-				window.addEventListener(event, this.resetTimer);
+				window.addEventListener(event, this.runTimer);
 			});
 		},
 		computed: {
@@ -346,6 +358,14 @@
 			},
 		},
 		methods: {
+			resendVerificationMail(){
+				this.emailVerificationSent = true;
+				sendEmailVerification(auth?.currentUser)
+						.then(() => {
+						})
+						.catch((err) => console.log(err));
+				
+			},
 			registerUser() {
 				this.$refs.registerUserForm.validate().then(async (success) => {
 					if (!success) {
@@ -381,7 +401,7 @@
 					this.$store
 						.dispatch("Auth/SIGN_UP", payload)
 						.then((resp) => {
-							this.emailVericationSent = true;
+							// this.emailVerificationSent = true;
 
 							let formObject = setLocalstorage(
 								authentication.currentUser,
@@ -397,7 +417,7 @@
 							data.updated_at = null;
 							data.is_root = false;
 							data.subscribed = false;
-							data.enabled = true;
+							data.enabled = 1;
 							data.status = 1;
 
 							data.email = this.userEmail;
@@ -407,9 +427,9 @@
 							data.user_type = 2;
 
 							data.user_UID = resp?.user.uid;
-							this.userEmail = "";
-							this.userName = "";
-							this.password = "";
+							// this.userEmail = "";
+							// this.userName = "";
+							// this.password = "";
 
 							this.$store
 								.dispatch("Users/CREATE_USER", {
@@ -423,18 +443,31 @@
 									console.log(err);
 								});
 
-							this.events.forEach((event) => {
-								window.addEventListener(event, this.runTimer);
-							});
+							// this.events.forEach((event) => {
+							// 	window.addEventListener(event, this.runTimer);
+							// });
 						})
-						.catch((e) => {
+						.catch((err) => {
+							this.$toast({
+								component: ToastificationContent,
+								props: {
+									title: "Error",
+									text: `${err?.code || err?.message}`,
+									icon: "AlertTriangleIcon",
+									variant: "danger",
+								},
+							});
+							
 							this.isSigningUp = false;
-							console.log(e);
+							console.log(err);
 						});
 				});
 			},
 			runTimer() {
-				onAuthStateChanged(authentication, (user) => {
+			
+				onAuthStateChanged(auth, (user) => {
+				
+			if(!user) return false
 					this.user = user;
 				});
 			},
