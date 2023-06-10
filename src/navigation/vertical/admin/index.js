@@ -58,14 +58,14 @@ export default [{
         ]
     },
 
-    {
-        title: 'Tickets',
-        icon: 'FileIcon',
-        tag: '',
-        tagVariant: 'light-warning',
+    // {
+    //     title: 'Tickets',
+    //     icon: 'FileIcon',
+    //     tag: '',
+    //     tagVariant: 'light-warning',
 
-        route: 'app-tickets'
-    },
+    //     route: 'app-tickets'
+    // },
     {
         title: 'Logout',
         icon: 'LockIcon',

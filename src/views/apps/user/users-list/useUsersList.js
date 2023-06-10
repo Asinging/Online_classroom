@@ -30,6 +30,8 @@ export default function useUsersList() {
         { key: 'f_name', formatter: title, label: 'Full Name', sortable: true },
         { key: 'email', sortable: true },
         { key: 'user_type', label: 'User type', sortable: true },
+        { key: 'phone', label: 'Phone', sortable: true },
+
         {
             key: 'subscribed',
             label: 'Subscribed',
@@ -95,6 +97,12 @@ export default function useUsersList() {
         //     currentPage: currentPage.value
         // };
         // return paginateCounteFromOne(payload);
+        users = users.map(item => {
+            if (!item.phone) {
+                item.phone = 'Nil';
+            }
+            return item;
+        });
         return countFromOne(users);
     });
 

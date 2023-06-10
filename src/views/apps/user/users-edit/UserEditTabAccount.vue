@@ -100,6 +100,14 @@
 						/>
 					</b-form-group>
 				</b-col>
+				<b-col cols="12" md="4">
+					<b-form-group label="Phone" label-for="phone">
+						<b-form-input
+							id="phone"
+							v-model="computeUserData.phone"
+						/>
+					</b-form-group>
+				</b-col>
 
 				<!-- Field: Status -->
 				<b-col cols="12" md="4">
@@ -127,16 +135,16 @@
 							input-id="user-role"
 						/>
 					</b-form-group>
-				</b-col>	
-					<b-col cols="12" md="4" v-if="isAdmin">
-					<b-form-group label="Subscription" label-for="subscription">
+				</b-col>
+				<b-col cols="12" md="4" v-if="isAdmin">
+					<b-form-group label="Subscription" label-for="subcribed">
 						<v-select
 							v-model="computeUserData.subscription"
 							:dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
 							:options="subscriptionOptions"
 							:reduce="(val) => val.value"
 							:clearable="false"
-							input-id="user-role"
+							input-id="subcribed"
 						/>
 					</b-form-group>
 				</b-col>
@@ -239,7 +247,7 @@
 
 			const roleOptions = [
 				{ label: "Admin", value: 1 },
-				{ label: "Student", value: 0 },
+				{ label: "Student", value: 2 },
 			];
 			const subscriptionOptions = [
 				{ label: "Subcribed", value: 1 },
@@ -247,7 +255,6 @@
 			];
 
 			const statusOptions = [
-				{ label: "Pending", value: 2 },
 				{ label: "Active", value: 1 },
 				{ label: "Inactive", value: 0 },
 			];
@@ -263,18 +270,29 @@
 
 			const computeUserData = computed(() => {
 				let x = store.getters["Users/singleUserGetter"];
+
 				coverArtUrl.value = x.avatar;
 				if (!x) return false;
-				x.subscription = null
+
 				if (x.enabled == 1) {
 					x.enabled = { label: "Active", value: 1 };
-					return x;
 				}
 				if (x.enabled == 0) {
 					x.enabled = { label: "Inactive", value: 0 };
-					return x;
 				}
-				x.enabled = { label: "Pending", value: 2 };
+
+				if (!x.subscribed) {
+					x.subscription = { label: "Not Subscribed", value: 2 };
+				}
+				if (x.subscribed) {
+					x.subscription = { label: "Subcribed", value: 1 };
+				}
+				if (x.user_type == 2) {
+					x.user_type = { label: "Student", value: 2 };
+				}
+				if (x.user_type == 1) {
+					x.user_type = { label: "Admin", value: 1 };
+				}
 				return x;
 			});
 
@@ -355,7 +373,7 @@
 					data.enabled = data.enabled;
 					data.updated_at = serverTimestamp();
 					data.avatar = coverArtUrl.value;
-					data.subscribed = data.subscription===1?true:false
+					data.subscribed = data.subscription === 1 ? true : false;
 
 					let payload = {
 						data,
