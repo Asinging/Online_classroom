@@ -127,7 +127,7 @@
 				<b-col cols="12" md="4" v-if="isAdmin">
 					<b-form-group label="User Role" label-for="user-role">
 						<v-select
-							v-model="computeUserData.user_type"
+							v-model="computeUserData.userType"
 							:dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
 							:options="roleOptions"
 							:reduce="(val) => val.value"
@@ -288,10 +288,10 @@
 					x.subscription = { label: "Subcribed", value: 1 };
 				}
 				if (x.user_type == 2) {
-					x.user_type = { label: "Student", value: 2 };
+					x.userType = { label: "Student", value: 2 };
 				}
 				if (x.user_type == 1) {
-					x.user_type = { label: "Admin", value: 1 };
+					x.userType = { label: "Admin", value: 1 };
 				}
 				return x;
 			});
@@ -370,16 +370,18 @@
 
 				try {
 					let data = Object.assign({}, computeUserData.value);
-					data.enabled = data.enabled;
+					data.enabled = data.enabled.value;
 					data.updated_at = serverTimestamp();
 					data.avatar = coverArtUrl.value;
-					data.subscribed = data.subscription === 1 ? true : false;
+					data.subscribed = data.subscription.value === 1 ? true : false;
+					data.user_type = data.userType.value;
 
 					let payload = {
 						data,
 						id: userId,
 					};
-
+					console.log(payload);
+					debugger;
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
 					store
