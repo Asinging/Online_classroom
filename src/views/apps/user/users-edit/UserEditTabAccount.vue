@@ -127,6 +127,18 @@
 							input-id="user-role"
 						/>
 					</b-form-group>
+				</b-col>	
+					<b-col cols="12" md="4" v-if="isAdmin">
+					<b-form-group label="Subscription" label-for="subscription">
+						<v-select
+							v-model="computeUserData.subscription"
+							:dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
+							:options="subscriptionOptions"
+							:reduce="(val) => val.value"
+							:clearable="false"
+							input-id="user-role"
+						/>
+					</b-form-group>
 				</b-col>
 
 				<!-- Field: Email -->
@@ -227,7 +239,11 @@
 
 			const roleOptions = [
 				{ label: "Admin", value: 1 },
-				{ label: "Student", value: 2 },
+				{ label: "Student", value: 0 },
+			];
+			const subscriptionOptions = [
+				{ label: "Subcribed", value: 1 },
+				{ label: "Not Subscribed", value: 2 },
 			];
 
 			const statusOptions = [
@@ -249,6 +265,7 @@
 				let x = store.getters["Users/singleUserGetter"];
 				coverArtUrl.value = x.avatar;
 				if (!x) return false;
+				x.subscription = null
 				if (x.enabled == 1) {
 					x.enabled = { label: "Active", value: 1 };
 					return x;
@@ -335,9 +352,10 @@
 
 				try {
 					let data = Object.assign({}, computeUserData.value);
-					data.enabled = data.enabled.value;
+					data.enabled = data.enabled;
 					data.updated_at = serverTimestamp();
 					data.avatar = coverArtUrl.value;
+					data.subscribed = data.subscription===1?true:false
 
 					let payload = {
 						data,
@@ -459,6 +477,7 @@
 				statusOptions,
 				isEditingRecord,
 				isResetRecord,
+				subscriptionOptions,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
