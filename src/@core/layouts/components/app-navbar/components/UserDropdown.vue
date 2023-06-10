@@ -8,10 +8,10 @@
 			<div class="d-sm-flex d-none user-nav">
 				<p class="user-name font-weight-bolder mb-0">
 					<small></small>
-					{{ currentUser.fullName || "Full Name" }}
+					{{ currentUser.fullName || currentUser.username }}
 				</p>
 				<span class="user-status">{{
-					currentUser.role || "role"
+					currentUser.role || 'student'
 				}}</span>
 			</div>
 			<b-avatar
@@ -71,7 +71,7 @@
 		},
 		computed: {
 			currentUser() {
-				return this.$store.getters["Auth/currentUserGetter"];
+				return this.$store.getters["Auth/currentUserGetter"] || {}
 			},
 		},
 		methods: {
