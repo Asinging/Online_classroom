@@ -11,7 +11,7 @@ const isAdminIn = JSON.parse(localStorage.getItem('isAdminIn') || 'false');
 // APP CONFIG
 export const $themeConfig = {
    app: {
-      appName: 'O.C', // Will update name in navigation menu (Branding)
+      appName: 'Wealth Think', // Will update name in navigation menu (Branding)
       // eslint-disable-next-line global-require
       appLogoImage: require('@/assets/images/logo/logo.svg') // Will update logo in navigation menu (Branding)
    },

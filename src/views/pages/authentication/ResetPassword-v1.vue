@@ -7,7 +7,7 @@
 				<b-link class="brand-logo">
 					<vuexy-logo />
 
-					<h2 class="brand-text text-primary ml-1">O.C</h2>
+					<h2 class="brand-text text-primary ml-1">Wealth Think</h2>
 				</b-link>
 
 				<b-card-title class="mb-1"> Reset Password 🔒 </b-card-title>
