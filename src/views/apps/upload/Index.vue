@@ -59,8 +59,21 @@
 				<!-- <div
 					class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-1 mb-sm-0"
 				>	 -->
-				<div class="mb-1 mb-sm-0">
+				<div class="mb-1 mb-sm-1">
+					<div class="d-flex justify-content-between">
+
 					<h4>Course Propertise</h4>
+
+						<b-form-group v-if="!isEditPage">
+								<b-form-checkbox
+										id="remember-me"
+										v-model="introVideo"
+										name="checkbox-1"
+								>
+										Mark as intro clip
+								</b-form-checkbox>
+						</b-form-group>
+					</div>
 					<p class="text-primary">
 						Go to the YouTube video or playlist you want to add.
 						From the list of Share options, click Embed. From the
@@ -69,7 +82,7 @@
 						the link from the Url bar and paste!!
 					</p>
 					<div>
-						<div class="pl-3 mb-1">
+						<div class="pl-md-3 pl-0 mb-2 mb-md-0">
 							<b-form
 								ref="form"
 								:style="{ height: trHeight }"
@@ -97,7 +110,7 @@
 									</b-col>
 
 									<!-- Cost -->
-									<b-col md="4">
+									<b-col md="4" class="mb-0 mb-sm-1">
 										<b-form-textarea
 											v-model="
 												items[index].courseDescriptions
@@ -120,7 +133,7 @@
 
 									<b-col
 										cols="12"
-										class="mx-1 mb-1 mb-md-3 mt-sm-25 mt-md-0 d-flex justify-content-end"
+										class="mx-1 mb-25 mb-md-3 mt-sm-25 mt-md-0 d-flex justify-content-end"
 									>
 										<b-button
 											v-ripple.400="
@@ -131,6 +144,7 @@
 											class="sm mr-25"
 											size="sm"
 											v-if="items.length === index + 1"
+											:disabled="introVideo"
 										>
 											<feather-icon
 												icon="PlusIcon"
@@ -207,6 +221,7 @@
 		BFormGroup,
 		BFormInput,
 		BFormTextarea,
+		BFormCheckbox
 	} from "bootstrap-vue";
 	import AppTimeline from "@core/components/app-timeline/AppTimeline.vue";
 	import AppTimelineItem from "@core/components/app-timeline/AppTimelineItem.vue";
@@ -226,6 +241,7 @@
 		onMounted,
 		onUnmounted,
 		nextTick,
+		watch
 	} from "@vue/composition-api";
 	import { serverTimestamp } from "@firebase/firestore";
 
@@ -257,6 +273,7 @@
 			BFormGroup,
 			BFormInput,
 			BFormTextarea,
+			BFormCheckbox
 		},
 		directives: { "b-toggle": VBToggle, "b-tooltip": VBTooltip, Ripple },
 
@@ -266,6 +283,8 @@
 
 			const pickingImage = ref(false);
 			const isUploading = ref(false);
+			const isEditPage = ref(false);
+			const introVideo = ref(false);
 			const nextTodoId = ref(2);
 			const blogEdit = ref({});
 			const blogFile = ref(null);
@@ -290,6 +309,7 @@
 				window.addEventListener("resize", initTrHeight());
 				let courseId;
 				if (JSON.parse(route.value.params.edit)) {
+					isEditPage.value = true
 					courseId = route.value.params.id;
 				}
 				try {
@@ -334,6 +354,21 @@
 				trHeight.value = `${heightValue - Number(val)}px`;
 			};
 
+			watch(introVideo, (val)=>{
+				if(val){
+					removeItemFromArr(items.value)
+				}
+
+			})
+
+const removeItemFromArr= (item)=>{
+	
+	if(item.length >1){
+		item.splice(1, 1 )
+	removeItemFromArr(item)
+	}
+	return 
+}
 			const initTrHeight = () => {
 				trSetHeight(null);
 				nextTick(() => {
@@ -548,6 +583,8 @@
 				pickingImage,
 
 				isUploading,
+				isEditPage,
+				introVideo,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,

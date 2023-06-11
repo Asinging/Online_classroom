@@ -259,30 +259,29 @@
 			const { mqShallShowLeftSidebar } =
 				useResponsiveAppLeftSidebarVisibility();
 
-			onBeforeMount(async () => {
+			onBeforeMount(() => {
 				let courseId = route.value.params.id;
 				let storage = localStorage.getItem("courseDisplay");
-
-				try {
-					let response = await store.dispatch(
+					store.dispatch(
 						"Course/GET_SINGLE_COURSE_BY_Id",
 						{
 							id: courseId,
 						}
-					);
-					isServerResponse.value = true;
-					if (response) {
-						courseDisplay.value = storage
-							? JSON.parse(storage)
-							: response.mudules[0];
-						courseModules.value = response.mudules;
-						course.value = response;
-					}
-				} catch (err) {
-					isServerResponse.value = true;
-					console.log(err);
-				}
-			});
+					).then(response=>{
+						isServerResponse.value = true;
+						if (response) {
+							courseDisplay.value = storage
+								? JSON.parse(storage)
+								: response.mudules[0];
+							courseModules.value = response.mudules;
+							course.value = response;
+						}
+					}).catch ((err) =>{
+						isServerResponse.value = true;
+						console.log(err);
+					})
+				})
+
 			watch(markAsWatch, (val) => {
 				let payload = {
 					id: route.value.params.id,
