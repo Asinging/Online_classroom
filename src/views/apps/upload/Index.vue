@@ -365,6 +365,7 @@
 				}
 				return;
 			};
+
 			const initTrHeight = () => {
 				trSetHeight(null);
 				nextTick(() => {
@@ -400,6 +401,56 @@
 					},
 				});
 				trTrimHeight(row.value.offsetHeight);
+			};
+
+			const _uploadRecord = async (course) => {
+				try {
+					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
+						course,
+					});
+					isUploading.value = false;
+
+					if (!responses) {
+						toast({
+							component: ToastificationContent,
+							props: {
+								title: "Uncought Error",
+								text: `The upload could not be completed!`,
+								icon: "AlertTriangleIcon",
+								variant: "danger",
+							},
+						});
+						return false;
+					}
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Good Job!",
+							text: `Upload successfull done"`,
+							icon: "CheckIcon",
+							variant: "success",
+						},
+					});
+					items.value = [
+						{
+							courseTitle: "",
+							courseDescriptions: "",
+							videoUrl: "",
+						},
+					];
+				} catch (err) {
+					isUploading.value = false;
+					console.error(err);
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Ouch !!",
+							text: `An Error Occured`,
+							icon: "AlertTriangleIcon",
+							variant: "danger",
+						},
+					});
+				}
 			};
 
 			const saveRecord = async () => {
@@ -454,6 +505,7 @@
 						id: route.value.params.id,
 						data: {
 							status: 0,
+							updated_at: serverTimestamp(),
 						},
 					};
 					store
@@ -476,8 +528,13 @@
 									.dispatch("Course/UPDATE_SINGLE_COURSE", {
 										id: response.id,
 										data: {
-											status: 0,
+											intro_video: 0,
+											updated_at: serverTimestamp(),
 										},
+									})
+									.then((res) => {
+										debugger;
+										_uploadRecord(course);
 									})
 									.catch((err) => {
 										console.log(err);
@@ -488,54 +545,10 @@
 							this.isServerResponse = true;
 							console.log(err);
 						});
+					return false;
 				}
 
-				try {
-					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
-						course,
-					});
-					isUploading.value = false;
-
-					if (!responses) {
-						toast({
-							component: ToastificationContent,
-							props: {
-								title: "Uncought Error",
-								text: `The upload could not be completed!`,
-								icon: "AlertTriangleIcon",
-								variant: "danger",
-							},
-						});
-					}
-					toast({
-						component: ToastificationContent,
-						props: {
-							title: "Good Job!",
-							text: `Upload successfull done"`,
-							icon: "CheckIcon",
-							variant: "success",
-						},
-					});
-					items.value = [
-						{
-							courseTitle: "",
-							courseDescriptions: "",
-							videoUrl: "",
-						},
-					];
-				} catch (err) {
-					isUploading.value = false;
-					console.error(err);
-					toast({
-						component: ToastificationContent,
-						props: {
-							title: "Ouch !!",
-							text: `An Error Occured`,
-							icon: "AlertTriangleIcon",
-							variant: "danger",
-						},
-					});
-				}
+				_uploadRecord(course);
 			};
 
 			const { inputImageRenderer } = useInputImageRenderer(
