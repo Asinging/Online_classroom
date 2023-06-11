@@ -262,12 +262,11 @@
 			onBeforeMount(() => {
 				let courseId = route.value.params.id;
 				let storage = localStorage.getItem("courseDisplay");
-					store.dispatch(
-						"Course/GET_SINGLE_COURSE_BY_Id",
-						{
-							id: courseId,
-						}
-					).then(response=>{
+				store
+					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
+						id: courseId,
+					})
+					.then((response) => {
 						isServerResponse.value = true;
 						if (response) {
 							courseDisplay.value = storage
@@ -276,11 +275,12 @@
 							courseModules.value = response.mudules;
 							course.value = response;
 						}
-					}).catch ((err) =>{
+					})
+					.catch((err) => {
 						isServerResponse.value = true;
 						console.log(err);
-					})
-				})
+					});
+			});
 
 			watch(markAsWatch, (val) => {
 				let payload = {

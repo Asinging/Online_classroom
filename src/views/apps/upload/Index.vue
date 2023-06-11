@@ -61,17 +61,16 @@
 				>	 -->
 				<div class="mb-1 mb-sm-1">
 					<div class="d-flex justify-content-between">
-
-					<h4>Course Propertise</h4>
+						<h4>Course Propertise</h4>
 
 						<b-form-group v-if="!isEditPage">
-								<b-form-checkbox
-										id="remember-me"
-										v-model="introVideo"
-										name="checkbox-1"
-								>
-										Mark as intro clip
-								</b-form-checkbox>
+							<b-form-checkbox
+								id="remember-me"
+								v-model="introVideo"
+								name="checkbox-1"
+							>
+								Mark as intro clip
+							</b-form-checkbox>
 						</b-form-group>
 					</div>
 					<p class="text-primary">
@@ -221,7 +220,7 @@
 		BFormGroup,
 		BFormInput,
 		BFormTextarea,
-		BFormCheckbox
+		BFormCheckbox,
 	} from "bootstrap-vue";
 	import AppTimeline from "@core/components/app-timeline/AppTimeline.vue";
 	import AppTimelineItem from "@core/components/app-timeline/AppTimelineItem.vue";
@@ -241,7 +240,7 @@
 		onMounted,
 		onUnmounted,
 		nextTick,
-		watch
+		watch,
 	} from "@vue/composition-api";
 	import { serverTimestamp } from "@firebase/firestore";
 
@@ -273,7 +272,7 @@
 			BFormGroup,
 			BFormInput,
 			BFormTextarea,
-			BFormCheckbox
+			BFormCheckbox,
 		},
 		directives: { "b-toggle": VBToggle, "b-tooltip": VBTooltip, Ripple },
 
@@ -309,7 +308,7 @@
 				window.addEventListener("resize", initTrHeight());
 				let courseId;
 				if (JSON.parse(route.value.params.edit)) {
-					isEditPage.value = true
+					isEditPage.value = true;
 					courseId = route.value.params.id;
 				}
 				try {
@@ -354,21 +353,19 @@
 				trHeight.value = `${heightValue - Number(val)}px`;
 			};
 
-			watch(introVideo, (val)=>{
-				if(val){
-					removeItemFromArr(items.value)
+			watch(introVideo, (val) => {
+				if (val) {
+					removeItemFromArr(items.value);
 				}
+			});
 
-			})
-
-const removeItemFromArr= (item)=>{
-	
-	if(item.length >1){
-		item.splice(1, 1 )
-	removeItemFromArr(item)
-	}
-	return 
-}
+			const removeItemFromArr = (item) => {
+				if (item.length > 1) {
+					item.splice(1, 1);
+					removeItemFromArr(item);
+				}
+				return;
+			};
 			const initTrHeight = () => {
 				trSetHeight(null);
 				nextTick(() => {
@@ -449,8 +446,9 @@ const removeItemFromArr= (item)=>{
 					tracks: items.value.length || 1,
 					user_id: store.getters["Users/signInUserId"] || 1,
 					mudules: serverItem,
+					intro_video: introVideo.value ? 1 : 0,
 				};
-
+				isUploading.value = true;
 				// check if this is a edit operation
 				if (JSON.parse(route.value.params.edit)) {
 					let payload = {
@@ -465,29 +463,44 @@ const removeItemFromArr= (item)=>{
 							console.log(err);
 						});
 				}
-				isUploading.value = true;
+
+				// Check if another video has been mark as intro in the database
+				if (introVideo.value) {
+					store
+						.dispatch("Course/GET_SINGLE_COURSE", {
+							field: "intro_video",
+							value: 1,
+						})
+						.then((response) => {
+							debugger;
+							if (response && response.length) {
+								this.courseDisplay = response.mudules[0];
+								// Disable the video
+
+								store
+									.dispatch("Course/UPDATE_SINGLE_COURSE", {
+										id: response.id,
+										data: {
+											status: 0,
+										},
+									})
+									.catch((err) => {
+										console.log(err);
+									});
+							}
+						})
+						.catch((err) => {
+							this.isServerResponse = true;
+							console.log(err);
+						});
+				}
+
 				try {
 					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
 						course,
 					});
 					isUploading.value = false;
 
-					// let serverItem = items.value.map((item) => {
-					// 	return {
-					// 		status: 1,
-					// 		title: item.courseTitle,
-					// 		description: item.courseDescriptions,
-					// 		video_url: item.videoUrl,
-					// 		course_id: responses.id,
-					// 		duration: 0,
-					// 		created_at: serverTimestamp(),
-					// 	};
-					// });
-
-					// let response2 = await store.dispatch(
-					// 	"Course/UPLOAD_VIDEOS_CONTENT",
-					// 	{ array: serverItem }
-					// );
 					if (!responses) {
 						toast({
 							component: ToastificationContent,
@@ -508,6 +521,13 @@ const removeItemFromArr= (item)=>{
 							variant: "success",
 						},
 					});
+					items.value = [
+						{
+							courseTitle: "",
+							courseDescriptions: "",
+							videoUrl: "",
+						},
+					];
 				} catch (err) {
 					isUploading.value = false;
 					console.error(err);
