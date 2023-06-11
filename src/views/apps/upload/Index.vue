@@ -77,8 +77,7 @@
 						Go to the YouTube video or playlist you want to add.
 						From the list of Share options, click Embed. From the
 						box that appears, copy the HTML code. Paste the code
-						into the Below marked for youtube video. Or Just Copy
-						the link from the Url bar and paste!!
+						into the Below marked for youtube video.
 					</p>
 					<div>
 						<div class="pl-md-3 pl-0 mb-2 mb-md-0">
@@ -472,11 +471,7 @@
 							value: 1,
 						})
 						.then((response) => {
-							debugger;
-							if (response && response.length) {
-								this.courseDisplay = response.mudules[0];
-								// Disable the video
-
+							if (response) {
 								store
 									.dispatch("Course/UPDATE_SINGLE_COURSE", {
 										id: response.id,

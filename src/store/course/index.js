@@ -108,9 +108,11 @@ export default {
       // UPDATE_COURSE
       UPDATE_SINGLE_COURSE({ commit }, payload) {
          return new Promise(async (resolve, reject) => {
+            debugger;
             const docRef = doc(db, 'courses', payload.id);
             try {
                const docSnap = updateDoc(docRef, payload.data);
+               debugger;
                resolve(docSnap);
             } catch (err) {
                console.log(err);
@@ -148,6 +150,7 @@ export default {
                let fetcheData = await getDocs(q);
 
                if (fetcheData.docs.length) {
+                  debugger;
                   let course = fetcheData.docs[0];
 
                   resolve({ ...course.data(), id: course.id });
