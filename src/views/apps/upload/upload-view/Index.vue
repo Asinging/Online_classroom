@@ -40,26 +40,23 @@
 			<!-- Email List -->
 			<div class="email-app-list">
 				<!-- App Searchbar Header -->
-				<div class="app-fixed-search d-flex align-items-center">
-					<!-- Toggler -->
+				<div class="app-fixed-search d-flex align-items-center bg-dark">
 					<div class="sidebar-toggle d-block d-lg-none ml-1">
 						<feather-icon
-							icon="MenuIcon"
+							icon="ListIcon"
 							size="21"
-							class="cursor-pointer"
+							class="cursor-pointer text-white"
 							@click="mqShallShowLeftSidebar = true"
 						/>
 					</div>
 				</div>
 
 				<!-- App Action Bar -->
-				<div class="app-action">
-					<div class="action-left">
-						<b-card-text
-							class="text-capitalize h3 font-weight-bold"
-							>{{ `${computeCourseDisplay.title}` }}</b-card-text
-						>
-					</div>
+				<div class="app-action bg-dark">
+					<b-card-text
+						class="text-capitalize h3 font-weight-bold text-white"
+						>{{ `${computeCourseDisplay.title}` }}</b-card-text
+					>
 				</div>
 
 				<!-- Emails List -->
@@ -67,7 +64,37 @@
 					:settings="perfectScrollbarSettings"
 					class="email-user-list scroll-area"
 				>
-					<b-card class="container">
+					<b-card
+						v-if="isRequsting"
+						class="align-items-center min-vh-70 d-flex justify-content-center"
+					>
+						<div class="container text-center">
+							<b-spinner
+								size="xl"
+								class="text-center text-primary"
+							></b-spinner>
+						</div>
+					</b-card>
+					<b-card class="container" v-else-if="course">
+						<div
+							id="iframeContainer"
+							v-if="computeCourseDisplay.isIframe"
+						>
+							<div
+								class="iframe d-flex"
+								v-html="computeCourseDisplay.video_url"
+							></div>
+						</div>
+						<div v-else class="iframe">
+							<b-embed
+								type="iframe"
+								aspect="16by9"
+								:src="computeCourseDisplay.video_url"
+								allowfullscreen
+							/>
+						</div>
+					</b-card>
+					<!-- <b-card class="container">
 						<div
 							id="iframeContainer"
 							v-if="computeCourseDisplay.isIframe"
@@ -91,21 +118,8 @@
 									Mark as watched
 								</b-form-checkbox>
 							</div>
-							<!-- <div class="d-flex justify-content-end">
-								<b-pagination
-									v-model="currentPage"
-									:total-rows="courseModulesTotal"
-									:per-page="perPage"
-									first-text="⏮"
-									prev-text="⏪"
-									next-text="⏩"
-									align="left"
-									last-text="⏭"
-									class="mt-2"
-								/>
-							</div> -->
 						</div>
-					</b-card>
+					</b-card> -->
 				</vue-perfect-scrollbar>
 			</div>
 
@@ -212,6 +226,7 @@
 			const perPage = ref(50);
 			const course = ref(null);
 			const isServerResponse = ref(false);
+			const isRequsting = ref(true);
 			const courseTitles = [
 				{
 					title: "Personal",
@@ -262,13 +277,14 @@
 			onBeforeMount(() => {
 				let courseId = route.value.params.id;
 				let storage = localStorage.getItem("courseDisplay");
-					store.dispatch(
-						"Course/GET_SINGLE_COURSE_BY_Id",
-						{
-							id: courseId,
-						}
-					).then(response=>{
+				isRequsting.value = true;
+				store
+					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
+						id: courseId,
+					})
+					.then((response) => {
 						isServerResponse.value = true;
+						isRequsting.value = false;
 						if (response) {
 							courseDisplay.value = storage
 								? JSON.parse(storage)
@@ -276,11 +292,13 @@
 							courseModules.value = response.mudules;
 							course.value = response;
 						}
-					}).catch ((err) =>{
-						isServerResponse.value = true;
-						console.log(err);
 					})
-				})
+					.catch((err) => {
+						isServerResponse.value = true;
+						isRequsting.value = false;
+						console.log(err);
+					});
+			});
 
 			watch(markAsWatch, (val) => {
 				let payload = {
@@ -295,11 +313,13 @@
 			});
 
 			return {
+				isRequsting,
 				isServerResponse,
 				courseTitles,
 				markAsWatch,
 				currentPage,
 				perPage,
+				course,
 				// UI
 				perfectScrollbarSettings,
 				computeCourseDisplay,
@@ -320,16 +340,28 @@
 
 <style lang="scss">
 	@import "~@core/scss/base/pages/app-email.scss";
+	.container {
+		height: 65vh !important;
+		width: 100% !important;
+	}
 	.video-container {
-		height: 100vh;
-		overflow: hidden;
 		position: relative;
 	}
-	#iframeContainer {
-		height: 300px; /* Adjust the height as needed */
-	}
 
-	#iframeContainer .iframe {
+	.container_loader {
+		height: 30vh;
+	}
+	.iframeContainer {
+		position: relative;
+	}
+	.iframe {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 0;
+		margin: 0;
+		width: 100%;
 		height: 100%;
+		border: 0;
 	}
 </style>

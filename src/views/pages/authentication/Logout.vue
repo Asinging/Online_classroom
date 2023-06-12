@@ -5,7 +5,7 @@
 			<div class="w-100 text-center">
 				<h2 class="mb-1">LOGGED OUT !🔻</h2>
 				<p class="mb-2">
-					Bye!. Do have a great day ahead from Wealth Think
+					Bye!. Do have a great day ahead from Wealth Link
 				</p>
 				<p class="">
 					<b-button

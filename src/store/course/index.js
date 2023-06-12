@@ -54,22 +54,18 @@ export default {
          });
       },
 
-      UPLOAD_VIDEOS_CONTENT({ commit }, payload) {
-         return new Promise(async (resolve, reject) => {
-            try {
-               resolve(resp);
-            } catch (err) {
-               reject(err);
-            }
-         });
-      },
-
       GET_COURSES({ commit }, payload) {
          return new Promise(async (resolve, reject) => {
             const listOfCourses = collection(db, 'courses');
 
             try {
-               const q = query(listOfCourses, limit(50), orderBy('created_at', 'desc'), where('status', '==', 1));
+               const q = query(
+                  listOfCourses,
+                  limit(50),
+                  orderBy('created_at', 'desc'),
+                  where('status', '==', 1),
+                  where('intro_video', '==', 0)
+               );
                let fetcheData = await getDocs(q);
                let filteredUserObject = fetcheData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
@@ -85,15 +81,16 @@ export default {
       SEARCH_COURSES({ commit }, payload) {
          // ;
          return new Promise(async (resolve, reject) => {
-            const listOfUsers = collection(db, 'courses');
+            const listOfCourses = collection(db, 'courses');
 
             try {
                const q = query(
-                  listOfUsers,
+                  listOfCourses,
                   limit(50),
                   orderBy('title', 'asc'),
                   orderBy('created_at', 'desc'),
                   where('status', '==', 1),
+                  where('intro_video', '==', 0),
                   where('is_root', '==', false),
                   where('title', '>=', payload.searchString),
                   where('title', '<', payload.searchString + '\uf8ff')
@@ -121,6 +118,7 @@ export default {
             }
          });
       },
+
       GET_SINGLE_COURSE_BY_Id({ commit }, payload) {
          return new Promise((resolve, reject) => {
             const docRef = doc(db, 'courses', payload.id);
@@ -138,6 +136,27 @@ export default {
                   console.log(err);
                   reject(err);
                });
+         });
+      },
+
+      GET_SINGLE_COURSE({ commit }, payload) {
+         return new Promise(async (resolve, reject) => {
+            const courseRef = collection(db, 'courses');
+            try {
+               const q = query(courseRef, where(payload.field, '==', payload.value), where('status', '==', 1));
+
+               let fetcheData = await getDocs(q);
+
+               if (fetcheData.docs.length) {
+                  let course = fetcheData.docs[0];
+
+                  resolve({ ...course.data(), id: course.id });
+                  return;
+               }
+               resolve([]);
+            } catch (err) {
+               reject(err);
+            }
          });
       }
    },
