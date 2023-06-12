@@ -24,7 +24,7 @@
 						title-tag="h2"
 						class="font-weight-bold mb-1 text-center text-lg-left"
 					>
-						Welcome!. Wealth Think
+						Welcome To Wealth Link
 					</b-card-title>
 					<b-card-text class="mb-2 text-center text-lg-left">
 						Please sign-in to your account and start the adventure
