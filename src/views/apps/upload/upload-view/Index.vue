@@ -40,26 +40,23 @@
 			<!-- Email List -->
 			<div class="email-app-list">
 				<!-- App Searchbar Header -->
-				<div class="app-fixed-search d-flex align-items-center">
-					<!-- Toggler -->
+				<div class="app-fixed-search d-flex align-items-center bg-dark">
 					<div class="sidebar-toggle d-block d-lg-none ml-1">
 						<feather-icon
-							icon="MenuIcon"
+							icon="ListIcon"
 							size="21"
-							class="cursor-pointer"
+							class="cursor-pointer text-white"
 							@click="mqShallShowLeftSidebar = true"
 						/>
 					</div>
 				</div>
 
 				<!-- App Action Bar -->
-				<div class="app-action">
-					<div class="action-left">
-						<b-card-text
-							class="text-capitalize h3 font-weight-bold"
-							>{{ `${computeCourseDisplay.title}` }}</b-card-text
-						>
-					</div>
+				<div class="app-action bg-dark">
+					<b-card-text
+						class="text-capitalize h3 font-weight-bold text-white"
+						>{{ `${computeCourseDisplay.title}` }}</b-card-text
+					>
 				</div>
 
 				<!-- Emails List -->

@@ -1,34 +1,48 @@
 <template>
-	<div class="sidebar-left">
-		<div class="sidebar">
-			<div class="sidebar-content email-app-sidebar">
-				<div class="email-app-menu">
+	<div class="sidebar-left bg-secondary">
+		<div class="sidebar bg-secondary">
+			<div class="sidebar-content email-app-sidebar bg-secondary">
+				<div class="email-app-menu bg-secondary">
 					<vue-perfect-scrollbar
 						:settings="perfectScrollbarSettings"
-						class="sidebar-menu-list scroll-area"
+						class="sidebar-menu-list scroll-area bg-secondary-darken"
 					>
 						<!-- Labels -->
-						<h6 class="section-label mt-1 mb-1 px-2">
-							Course Module
-						</h6>
+						<div>
+							<h6
+								class="section-label bg-secondary-darken py-1 px-2 text-white text-decoration-underline font-weight-bold"
+							>
+								Course Module
+							</h6>
+						</div>
 
-						<b-list-group class="list-group-labels cursor-pointer">
+						<b-list-group
+							class="list-group-labels cursor-pointer bg-secondary"
+						>
 							<b-list-group-item
 								v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-								style="cursor: pointer"
+								style="
+									cursor: pointer;
+									font-family: sans serif !important ;
+								"
 								v-for="label in prCcourseTitles"
 								:key="label.title"
 								:id="label.video_url"
 								@click="courseModuleClick(label)"
+								class="bg-secondary text-white my-0 py-0 font-weight-bold h5"
 							>
 								<!-- @click="$emit('close-left-sidebar')" -->
-								<span class="`bullet-primary"> </span>
+								<span
+									class="`bullet-secondary"
+									:class="`bullet-${label.color}`"
+								>
+								</span>
 								<!-- :class="`bullet-${label.color}`" -->
 								<!-- v-b-tooltip.hover
 								:title="lable.title" -->
-								<span class="text-capitalized">{{
-									label.title.length > 30
-										? label.title.slice(0, 27) + " ..."
+								<span class="text-capitalize">{{
+									label.title.length > 23
+										? label.title.slice(0, 22) + " .."
 										: label.title
 								}}</span>
 
@@ -36,7 +50,7 @@
 									:target="label.video_url"
 									placement="bottom"
 									triggers="hover"
-									variant="primary"
+									variant="dark"
 								>
 									{{ label.title }}
 								</b-tooltip>
