@@ -39,7 +39,7 @@
 		<b-card class="container" v-else-if="course">
 			<div id="iframeContainer" v-if="computeCourseDisplay.isIframe">
 				<div
-					class="video-container d-flex justify-content-center align-center iframe"
+					class="iframe d-flex"
 					v-html="computeCourseDisplay.video_url"
 				></div>
 			</div>
@@ -205,13 +205,28 @@
 	};
 </script>
 <style scoped>
+	.container {
+		height: 75vh !important;
+		width: 100% !important;
+	}
 	.video-container {
-		height: 50vh;
-		overflow: hidden;
 		position: relative;
 	}
 
 	.container_loader {
 		height: 30vh;
+	}
+	.iframeContainer {
+		position: relative;
+	}
+	.iframe {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
 	}
 </style>
