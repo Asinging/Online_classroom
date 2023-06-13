@@ -162,11 +162,58 @@
 			BTab,
 			BImg,
 			FaqQuestionAnswer,
+			response:[]
 		},
 		data() {
 			return {
+
+				ticketData: [
+							// payment
+							 {
+										icon: 'CreditCardIcon',
+										title: 'Payment',
+										subtitle: 'Which license do I need?',
+										id:1,
+										body:{}
+										
+							},
+						 {
+										icon: 'CheckIcon',
+										title: 'ConFirmation',
+										subtitle: 'Which license do I need?',
+								id:2, body:{}
+									
+							},
+				
+								 {
+										icon: 'RefreshCwIcon',
+										title: 'App Usablility',
+										subtitle: 'Which license do I need?',
+								id:3,
+								body:{}
+									
+							},
+					 {
+										icon: 'PackageIcon',
+										title: 'Others',
+										subtitle: 'Which license do I need?',
+
+								id:4,
+								body:{}
+									
+							},
+					 {
+										icon: 'SettingsIcon',
+										title: 'AdminStration',
+										subtitle: 'Which license do I need?',
+								id:5,
+								body:{}
+										
+							}
+				],
 				faqSearchQuery: "",
 				faqData: {},
+				response:{},
 			};
 		},
 		watch: {
@@ -177,7 +224,35 @@
 				},
 			},
 		},
+		beforeMount(){
+		let item = {
+			field:'category', 
+			value:'payment'
+		}
+			this.fetchTickets(item)
+		},
+		computed:{
+			computeTickets(){
+				let tickets = this.$store.getters["Ticket/allTicketGetter"]
+				if(!tickets) return 
+
+			}
+		},
 		methods: {
+			fetchTickets(item){
+			let	payload = {
+					field:item.field,
+					value:item.value
+				}
+				
+				this.$store.dispatch("Ticket/GET_TICKETS", payload).then(resp=>{
+					if(!resp) return  false
+					this.response =  resp
+					debugger
+				}).catch(err=>console.log(err))
+			},
+
+
 			fetchData() {
 				this.$http
 					.get("/faq/data", { params: { q: this.faqSearchQuery } })

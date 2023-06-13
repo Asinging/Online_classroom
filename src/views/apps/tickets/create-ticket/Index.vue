@@ -196,10 +196,11 @@
 			const tag = ref("");
 			const categorySelected = ref(null);
 			const categoryOption = [
-				"Payment",
-				"Confirmation",
-				"App Usablility",
-				"Others",
+				"others",
+				"payment",
+				"confirmation",
+				"app usablility",
+				"administration",
 			];
 			const toast = useToast();
 
@@ -227,11 +228,12 @@
 				}
 
 				let data = {
-					create_at: serverTimestamp(),
+					created_at: serverTimestamp(),
 					status: 1,
 					subject: subject.value,
 					tag: tag.value,
 					category: categorySelected.value,
+					body:	body.value,
 					email: email.value,
 					user_id: currentUser.value.id,
 				};
