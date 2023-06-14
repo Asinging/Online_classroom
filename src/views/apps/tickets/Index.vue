@@ -1,5 +1,12 @@
 <template>
 	<div>
+		<b-overlay
+			:show="isSending"
+			spinner-variant="primary"
+			spinner-type="grow"
+			spinner-small
+			rounded="sm"
+		>
 		<!-- faq search section -->
 		<section id="faq-search-filter">
 			<b-card
@@ -10,9 +17,9 @@
 				}"
 			>
 				<b-card-body class="text-center">
-					<h2 class="text-primary">Searched some questions</h2>
+					<h2 class="text-primary">Searched Available Queries</h2>
 					<b-card-text class="mb-2">
-						or choose a category to quickly find the help you need
+						or choose a category to quickly find the tickets that may be raised
 					</b-card-text>
 
 					<!-- form -->
@@ -23,7 +30,7 @@
 							</b-input-group-prepend>
 							<b-form-input
 								id="searchbar"
-								v-model="faqSearchQuery"
+								v-model="seachQuery"
 								placeholder="Search faq..."
 							/>
 						</b-input-group>
@@ -36,6 +43,11 @@
 
 		<!-- frequently asked questions tabs pills -->
 		<section id="faq-tabs">
+			<b-card-text class="text-center py-1 font-weight-bold h5">
+				<b-alert variant="success" v-if="seachQuery" class="text-center py-1 font-weight-bold h5" show>
+					Searched Result
+				</b-alert>
+			</b-card-text>
 			<b-tabs
 				vertical
 				content-class="col-12 col-md-8 col-lg-9"
@@ -46,8 +58,8 @@
 			>
 				<!-- payment tab -->
 				<b-tab
-					v-for="(categoryObj, categoryName, index) in computeTickets"
-					:key="categoryName"
+					v-for="(categoryObj, index) in computeTickets"
+					:key="index"
 					:active="!index"
 					
 					lazy
@@ -60,7 +72,7 @@
 							size="18"
 							class="mr-1"
 						/>
-						{{index}}
+						
 						<span class="font-weight-bold">{{
 							categoryObj.title
 						}}</span>
@@ -83,16 +95,13 @@
 				<!--/ sitting lady image -->
 			</b-tabs>
 		</section>
-		<!--/ frequently asked questions tabs pills -->
-
-		<!-- contact us -->
-	
-		<!--/ contact us -->
+		</b-overlay>
 	</div>
 </template>
 
 <script>
 	import {
+		BAlert,
 		BCard,
 		BCardBody,
 		BForm,
@@ -106,11 +115,14 @@
 		BRow,
 		BCol,
 		BAvatar,
+		BOverlay,
 	} from "bootstrap-vue";
 	import Collapsible from "./Collapsible.vue";
 
 	export default {
 		components: {
+			BAlert,
+			BOverlay,
 			BForm,
 			BCard,
 			BRow,
@@ -129,7 +141,11 @@
 		},
 		data() {
 			return {
+				isSending:false,
 				tabIndex: 0,
+				snowOption: {
+					theme: "snow",
+				},
 
 				ticketData: [
 							// payment
@@ -138,13 +154,15 @@
 										title: 'Payment',
 										subtitle: 'Payment Categories',
 										id:1,
-										body:[]
+										body:[], 
+								key: 'payment',
 										
 							},
 						 {
 										icon: 'CheckIcon',
 										title: 'Confirmation',
 										subtitle: 'Confirmation Categories',
+								key: 'confirmation',
 								id:2, body:[]
 									
 							},
@@ -153,6 +171,7 @@
 										icon: 'RefreshCwIcon',
 										title: 'App Usablility',
 										subtitle: 'All App Usability Categories',
+										key: 'app usability',
 								id:3,
 								body:[]
 									
@@ -161,36 +180,54 @@
 										icon: 'PackageIcon',
 										title: 'Others',
 										subtitle: 'Unspecified Miscellaneous Categories',
+								key: 'others',
 
 								id:4,
 								body:[]
 									
 							},
 					 {
-										icon: 'SettingsIcon',
+							icon: 'SettingsIcon',
 										title: 'Adminstration',
 										subtitle: 'About Adminstrations',
+							key: 'administration',
 								id:5,
 								body:[]
 										
 							}
 				],
-				faqSearchQuery: "",
+				seachQuery: "",
 				faqData: {},
-				response:{},
+				searchQueryResult:[],
+				searchCategory:{},
 			};
 		},
 		watch: {
 			tabIndex:{
+				immediate:false,
 				handler(val){
+					if(this.seachQuery){
+this.searchCategory =this.structureItemForSearch(val)
+return false
+					}
+					this.seachQuery = ''
 					this.fetchTickets(this.structureItemForSearch(val))
 			
 				}
 			},
-			faqSearchQuery: {
+			seachQuery: {
 				immediate: true,
-				handler() {
-					this.fetchData();
+				handler(val) {
+					if(!val ) return false
+					this.isSending = true
+					this.$store.dispatch("Ticket/SEARCH_TICKET", {searchString:val.toLowerCase()}).then(resp=>{
+						this.isSending = false
+					
+						this.searchQueryResult = resp
+					}).catch(err=>{
+						this.isSending = false
+					})
+					
 				},
 			},
 		},
@@ -201,19 +238,31 @@
 		}
 			this.fetchTickets(item)
 		},
+		mounted(){
+			setTimeout(()=>{
+				this.isSending = false
+			},15000)
+		},
 		computed:{
 			computeTickets(){
-				let tickets = this.$store.getters["Ticket/allTicketGetter"]
-				
+				let tickets = this.seachQuery? this.searchQueryResult : this.$store.getters["Ticket/allTicketGetter"]
+			
+
+	
 				if(!tickets) return this.ticketData
-				return this.ticketData.map(item=>{
-					item.body = tickets
-					// .map(ele=>{
-					// 	ele.title = ele.subject
-					// 	return title
-					// })
+
+
+
+						return this.ticketData.map(item=>{
+								if(this.seachQuery){
+									item.body = tickets.filter(ticketItem=>{
+						return ticketItem.category == item.key
+					})
 					return item
-				})
+							}
+					item.body = tickets
+					return item
+						})
 
 			}
 		},
@@ -244,21 +293,19 @@
 					value:item.value
 				}
 				
+				this.isSending = true
 				this.$store.dispatch("Ticket/GET_TICKETS", payload).then(resp=>{
 					if(!resp) return  false
-					this.response =  resp
+				
+					this.isSending=false
 					
-				}).catch(err=>console.log(err))
+				}).catch(err=>{
+					this.isSending =false
+			
+			})
+			
 			},
 
-
-			fetchData() {
-				this.$http
-					.get("/faq/data", { params: { q: this.faqSearchQuery } })
-					.then((res) => {
-						this.faqData = res.data;
-					});
-			},
 		},
 	};
 </script>

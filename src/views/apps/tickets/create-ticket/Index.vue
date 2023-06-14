@@ -230,14 +230,14 @@
 				let data = {
 					created_at: serverTimestamp(),
 					status: 1,
-					subject: subject.value,
+					subject: subject.value.toLowerCase(),
 					tag: tag.value,
 					category: categorySelected.value,
 					body:	body.value,
 					email: email.value,
 					user_id: currentUser.value.id,
 				};
-
+	
 				isSending.value = true;
 				store
 					.dispatch("Ticket/CREATE_TICKET", { data })
