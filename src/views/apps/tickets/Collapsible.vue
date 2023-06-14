@@ -30,11 +30,12 @@
     >
 
       <app-collapse-item
-        v-for="( data,index) in options.qandA"
+        v-for="( data,index) in options.body"
         :key="index"
-        :title="data.question"
+        :title="data.subject"
       >
-        {{ data.ans }}
+      <span v-html="data.body"></span>
+       
       </app-collapse-item>
 
     </app-collapse>
