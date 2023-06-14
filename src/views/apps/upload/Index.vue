@@ -103,6 +103,8 @@
 												"
 												rows="2"
 												placeholder="Title of Course"
+											lazy-formatter
+											:formatter="formatter"
 											/>
 										</b-form-group>
 									</b-col>
@@ -403,6 +405,11 @@
 				trTrimHeight(row.value.offsetHeight);
 			};
 
+
+			const formatter = (value) =>{
+				if(!value) return ''
+					return value.toLowerCase().trim()
+			}
 			const _uploadRecord = async (course) => {
 				try {
 					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
@@ -613,7 +620,7 @@
 				isUploading,
 				isEditPage,
 				introVideo,
-
+				formatter, 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
 				refPreviewEl,

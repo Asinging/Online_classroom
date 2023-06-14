@@ -139,7 +139,7 @@
 								size="16"
 								title="Watch Course"
 								class="text-success cursor-pointer mx-25"
-								@click="viewCourse(data.item)"
+								@click="viewCourse(data)"
 							/>
 
 							<feather-icon
