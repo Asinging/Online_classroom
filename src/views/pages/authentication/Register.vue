@@ -78,6 +78,8 @@
 										id="register-username"
 										v-model="username"
 										name="register-username"
+										lazy-formatter
+										:formatter="formatter"
 										:state="
 											errors.length > 0 ? false : null
 										"
@@ -358,6 +360,10 @@ const auth = getAuth();
 			},
 		},
 		methods: {
+		formatter(value){
+				if(!value) return ''
+					return value.toLowerCase().trim()
+			}, 
 			resendVerificationMail(){
 				this.emailVerificationSent = true;
 				sendEmailVerification(auth?.currentUser)

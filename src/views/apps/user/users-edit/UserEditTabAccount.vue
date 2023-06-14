@@ -301,7 +301,8 @@
 			});
 
 			const formatter = (value) =>{
-					return value.toLowerCase()
+				if(!value) return ''
+					return value.toLowerCase().trim()
 			}
 			const resetField = () => {
 				if (!isEditingRecord.value) {

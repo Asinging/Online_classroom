@@ -147,7 +147,6 @@ export default {
                );
                let fetcheData = await getDocs(q);
                let filteredUserObject = fetcheData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-               console.log(filteredUserObject);
 
                resolve(filteredUserObject);
             } catch (err) {
