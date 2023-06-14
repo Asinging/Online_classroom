@@ -75,6 +75,8 @@
 						<b-form-input
 							id="username"
 							v-model="computeUserData.username"
+						lazy-formatter
+						:formatter="formatter"
 						/>
 					</b-form-group>
 				</b-col>
@@ -85,6 +87,8 @@
 						<b-form-input
 							id="full-name"
 							v-model="computeUserData.f_name"
+						lazy-formatter
+						:formatter="formatter"
 						/>
 					</b-form-group>
 				</b-col>
@@ -296,6 +300,10 @@
 				return x;
 			});
 
+			const formatter = (value) =>{
+				if(!value) return ''
+					return value.toLowerCase().trim()
+			}
 			const resetField = () => {
 				if (!isEditingRecord.value) {
 					isResetRecord.value = true;
@@ -351,7 +359,7 @@
 						})
 
 						.catch((err) => {
-							console.log(err);
+						
 						});
 					store
 						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
@@ -359,7 +367,7 @@
 						})
 						.catch((err) => {});
 				} catch (err) {
-					console.error(err);
+				
 					isRemovingProfilePhoto.value = false;
 				}
 			};
@@ -380,8 +388,7 @@
 						data,
 						id: userId,
 					};
-					console.log(payload);
-					debugger;
+				
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
 					store
@@ -452,7 +459,7 @@
 									})
 
 									.catch((err) => {
-										console.log(err);
+										
 									});
 							}
 
@@ -498,6 +505,7 @@
 				isEditingRecord,
 				isResetRecord,
 				subscriptionOptions,
+				formatter,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
