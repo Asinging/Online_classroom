@@ -44,7 +44,7 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
    let isAdmin = store.getters['appConfig/whoIsinGetter'];
    let userData = JSON.parse(localStorage.getItem('userData') || 'false');
-
+   debugger;
    if (_.path !== '/login' && !userData && to.path !== '/login') {
       return next('/login');
    }

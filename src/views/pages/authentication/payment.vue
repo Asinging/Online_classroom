@@ -536,7 +536,7 @@
 									variant: "success",
 								},
 							});
-							this.$router.push("/");
+							this.$router.push({name:"dashboard-analytics"});
 						})
 						.catch((err) => {
 							this.isSendingTransfer = false;
@@ -559,7 +559,7 @@
 			},
 
 			skipButton() {
-				this.$router.push("/");
+				this.$router.push({name:'dashboard-analytics'});
 			},
 
 			processPayment(val) {
@@ -600,7 +600,7 @@
 					this.store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
-							this.$router.push("/");
+							this.$router.push({name:"dashboard-analytics"});
 						})
 						.cath((err) => {
 							console.log(err);
