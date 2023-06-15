@@ -23,7 +23,7 @@ import '@/libs/vue-select';
 import '@/libs/tour';
 
 // Axios Mock Adapter
-import '@/@fake-db/db';
+// import '@/@fake-db/db';
 
 // BSV Plugin Registration
 Vue.use(ToastPlugin);
