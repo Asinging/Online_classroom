@@ -107,7 +107,31 @@
 		},
 		data() {
 			return {
-				data: {},
+				 data : {
+			
+							subscribersGained: {
+										series: [
+													{
+																name: 'Subscribers',
+																data: [ 28, 40, 36, 52, 38, 60, 55 ]
+													}
+										],
+										analyticsData: {
+													subscribers: 92600
+										}
+							},
+							ordersRecevied: {
+										series: [
+													{
+																name: 'Contents',
+																data: [ 10, 15, 8, 15, 7, 12, 8 ]
+													}
+										],
+								
+							},
+				
+					
+				},
 				courseDisplay: null,
 				course: null,
 				isRequsting: true,
@@ -123,8 +147,8 @@
 				return x;
 			},
 			subscriberGain() {
-				return kFormatter(3893489);
-				// this.$store.getters["Counter/adminCounterGetter"] || 0;
+				return kFormatter(1676);
+				// let x= this.$store.getters["Counter/adminCounterGetter"] || 0;
 			},
 			engagingContent() {
 				return kFormatter(
@@ -133,10 +157,7 @@
 			},
 		},
 		created() {
-			// data
-			this.$http.get("/analytics/data").then((response) => {
-				this.data = response.data;
-			});
+		
 
 			this.$store
 				.dispatch("Counter/COUNTER", {
