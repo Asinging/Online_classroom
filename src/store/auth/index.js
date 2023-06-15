@@ -66,7 +66,9 @@ export default {
       LOG_OUT({}) {
          return new Promise(async (resolve, reject) => {
             try {
+               debugger;
                let logoutUser = await signOut(authentication);
+               debugger;
 
                resolve(logoutUser);
             } catch (error) {
