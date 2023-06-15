@@ -221,7 +221,7 @@
 	import formValidation from "@core/comp-functions/forms/form-validation";
 	import Ripple from "vue-ripple-directive";
 	import vSelect from "vue-select";
-	import countries from "@/@fake-db/data/other/countries";
+
 	import store from "@/store";
 
 	import { serverTimestamp } from "firebase/firestore";
@@ -265,7 +265,6 @@
 				required,
 				alphaNum,
 				email,
-				countries,
 			};
 		},
 		setup(props, { emit }) {

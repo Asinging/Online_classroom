@@ -9,7 +9,7 @@ import dashboard from './routes/dashboard';
 
 import pages from './routes/pages';
 
-import others from './routes/others';
+// import others from './routes/others';
 
 import store from '@/store';
 
@@ -34,7 +34,6 @@ const router = new VueRouter({
       ...dashboard,
       ...pages,
 
-      ...others,
       {
          path: '*',
          redirect: 'error-404'
