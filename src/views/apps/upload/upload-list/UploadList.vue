@@ -285,7 +285,7 @@
 				// ****************  FXN *****
 				refreshStop,
 
-				avatarClick,
+				
 				deleteCourse,
 				editCourse,
 				viewCourse,
@@ -317,7 +317,7 @@
 				// ******* FXN *******
 				refreshStop,
 
-				avatarClick,
+		
 				deleteCourse,
 				editCourse,
 				viewCourse,

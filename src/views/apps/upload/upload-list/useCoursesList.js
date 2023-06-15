@@ -138,13 +138,6 @@ export default function useCoursesList() {
       fetchCourses();
    };
 
-   const avatarClick = val => {
-      router.push({
-         name: navUserDiff.value === 2 ? 'apps-contact-view' : 'apps-users-view',
-         params: { id: val.item.id }
-      });
-   };
-
    const viewCourse = val => {
       router.push({
          name: 'app-view-course',
@@ -231,7 +224,6 @@ export default function useCoursesList() {
       deleteCourse,
       editCourse,
       viewCourse,
-      avatarClick,
 
       fetchCourses,
 
