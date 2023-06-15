@@ -4,7 +4,7 @@
 			Hello 🎉 {{ `${JSON.stringify(data.username)}` }}!
 		</h5>
 		<b-card-text class="font-small-3">
-			Have a walk around you statistics
+			Have a walk around your statistics
 		</b-card-text>
 		<h3 class="mb-75 mt-2 pt-50">
 			<!-- <b-link>${{ kFormatter(data.saleToday) }}</b-link> -->

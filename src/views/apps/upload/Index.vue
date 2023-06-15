@@ -410,6 +410,7 @@
 				if(!value) return ''
 					return value.toLowerCase().trim()
 			}
+
 			const _uploadRecord = async (course) => {
 				try {
 					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
@@ -487,7 +488,7 @@
 				let serverItem = items.value.map((item) => {
 					return {
 						status: 1,
-						title: item.courseTitle,
+						title: item.courseTitle?item.courseTitle.toLowerCase():item.courseTitle,
 						description: item.courseDescriptions,
 						video_url: item.videoUrl,
 						duration: 0,

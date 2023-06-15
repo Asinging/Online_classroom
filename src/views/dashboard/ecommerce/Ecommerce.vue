@@ -139,8 +139,7 @@
 			statisticalData() {
 				return this.statisticsItems.map((item) => {
 					if (item.id === 1) {
-						item.title = kFormatter(3893489);
-						this.$store.getters["Counter/adminCounterGetter"] || 0;
+						item.title = kFormatter(this.$store.getters["Counter/adminCounterGetter"] || 0)
 						return item;
 					}
 

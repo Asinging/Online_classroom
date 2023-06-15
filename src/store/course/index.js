@@ -91,15 +91,16 @@ export default {
                   orderBy('created_at', 'desc'),
                   where('status', '==', 1),
                   where('intro_video', '==', 0),
-                  where('is_root', '==', false),
                   where('title', '>=', payload.searchString),
                   where('title', '<', payload.searchString + '\uf8ff')
                );
                let fetcheData = await getDocs(q);
+               debugger;
                let filteredUserObject = fetcheData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 
                resolve(filteredUserObject);
             } catch (err) {
+               debugger;
                console.log(err);
                reject(err);
             }

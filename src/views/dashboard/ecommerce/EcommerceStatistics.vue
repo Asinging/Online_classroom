@@ -3,7 +3,7 @@
 		<b-card-header>
 			<b-card-title>Statistics</b-card-title>
 			<b-card-text class="font-small-2 mr-25 mb-0">
-				Updated a minute ago
+				Updated some seconds ago
 			</b-card-text>
 		</b-card-header>
 		<b-card-body class="statistics-body">

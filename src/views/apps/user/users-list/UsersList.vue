@@ -115,8 +115,10 @@
 									params: { id: data.item.id },
 								}"
 								class="font-weight-bold d-block text-nowrap text-capitalize"
+								v-b-tooltip.hover.bottom
+								:title="data.item.f_name || data.item.username "
 							>
-								{{ data.item.f_name || data.item.username }}
+								{{nameShortener (data.item.f_name) || nameShortener(data.item.username) }}
 							</b-link>
 							<small class="text-muted text-lighten-blue"
 								>@{{ data.item.username }}</small
@@ -278,6 +280,7 @@
 		BDropdown,
 		BDropdownItem,
 		BPagination,
+		VBTooltip,
 	} from "bootstrap-vue";
 	import vSelect from "vue-select";
 	import store from "@/store";
@@ -290,6 +293,9 @@
 	import BCardActions from "@core/components/b-card-actions/BCardActions.vue";
 
 	export default {
+		directives: {
+			"b-tooltip": VBTooltip,
+		},
 		props: {
 			isComponent: {
 				type: Boolean,
@@ -352,6 +358,7 @@
 				resolveUserRoleIcon,
 				resolveUserStatusVariant,
 				deleteUser,
+				nameShortener,
 
 				// Extra Filters
 				roleFilter,
@@ -396,6 +403,7 @@
 				refetchData,
 				fetchUsers,
 				deleteUser,
+				nameShortener,
 				// Filter
 				avatarText,
 				resolveUserRoleVariant,
