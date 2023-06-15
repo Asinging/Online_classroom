@@ -6,11 +6,11 @@
 	>
 		<template #button-content>
 			<div class="d-sm-flex d-none user-nav">
-				<p class="user-name font-weight-bolder mb-0">
-					<small></small>
+				<p class="user-name font-weight-bolder mb-0 text-capitalize">
+	
 					{{ currentUser.fullName || currentUser.username }}
 				</p>
-				<span class="user-status">{{
+				<span class="user-status text-capitalize">{{
 					currentUser.role || 'student'
 				}}</span>
 			</div>
