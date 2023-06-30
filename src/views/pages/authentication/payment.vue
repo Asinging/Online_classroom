@@ -144,11 +144,17 @@
 						:email="email"
 						:paystackkey="PUBLIC_KEY"
 						:reference="reference"
-						:callback="processPayment"
+						:callback="processPaystackPayment"
 						:close="closePayment"
 					>
 					</paystack>
 				</template>
+				<div class="d-flex justify-content-center my-3">
+					<div>
+						<div class="font-weight-bold h3 pb-25">Amount</div>
+						<div class="font-weight-black h1">10000</div>
+					</div>
+				</div>
 				<validation-observer ref="simpleRules">
 					<b-form>
 						<b-form-group>
@@ -168,18 +174,6 @@
 								}}</small>
 							</validation-provider>
 						</b-form-group>
-
-						<b-input-group
-							prepend="$"
-							append=".00"
-							class="input-group-merge"
-						>
-							<b-form-input
-								v-model="amount"
-								placeholder="100"
-								disabled
-							/>
-						</b-input-group>
 					</b-form>
 				</validation-observer>
 			</b-modal>
@@ -403,7 +397,7 @@
 						description: "Customization Description",
 						logo: "https://flutterwave.com/images/logo-colored.svg",
 					},
-					callback: this.makePaymentCallback,
+					callback: this.makePaymentWithFlutterwave,
 					onclose: this.closedPaymentModal,
 				},
 			};
@@ -437,7 +431,8 @@
 			},
 		},
 		methods: {
-			makePaymentCallback(response) {
+			makePaymentWithFlutterwave(response) {
+				debugger
 				if (!val) {
 					this.$toast({
 						component: ToastificationContent,
@@ -450,7 +445,19 @@
 					});
 					return false;
 				}
+				this.$toast({
+					component: ToastificationContent,
+					props: {
+						title: "Oops, Service not available",
+						text: `Please we have issues with payment using transfers, please use paystack while we resolve the issue, thanks for understanding`,
+						icon: "XIcon",
+						variant: "danger",
+					},
+				});
+				return false;
+
 				if (val.staus === "success") {
+					localStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -494,7 +501,7 @@
 			payWithTransfer() {
 				this.$refs.transfersCash.validate().then((success) => {
 					if (!success) {
-						toast({
+						this.$toast({
 							component: ToastificationContent,
 							props: {
 								title: "Oops",
@@ -505,6 +512,16 @@
 						});
 						return false;
 					}
+					this.$toast({
+						component: ToastificationContent,
+						props: {
+							title: "Oops, Service not available",
+							text: `Please we have issues with payment using transfers, please use paystack while we resolve the issue, thanks for understanding`,
+							icon: "XIcon",
+							variant: "danger",
+						},
+					});
+					return false;
 
 					let data = {
 						create_at: serverTimestamp(),
@@ -536,7 +553,7 @@
 									variant: "success",
 								},
 							});
-							this.$router.push({name:"dashboard-analytics"});
+							this.$router.push({ name: "dashboard-analytics" });
 						})
 						.catch((err) => {
 							this.isSendingTransfer = false;
@@ -559,10 +576,10 @@
 			},
 
 			skipButton() {
-				this.$router.push({name:'dashboard-analytics'});
+				this.$router.push({ name: "dashboard-analytics" });
 			},
 
-			processPayment(val) {
+			processPaystackPayment(val) {
 				if (!val) {
 					this.$toast({
 						component: ToastificationContent,
@@ -576,6 +593,7 @@
 					return false;
 				}
 				if (val.staus === "success") {
+					localStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -600,7 +618,7 @@
 					this.store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
-							this.$router.push({name:"dashboard-analytics"});
+							this.$router.push({ name: "dashboard-analytics" });
 						})
 						.cath((err) => {
 							console.log(err);

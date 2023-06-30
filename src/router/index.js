@@ -43,10 +43,16 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
    let isAdmin = store.getters['appConfig/whoIsinGetter'];
    let userData = JSON.parse(localStorage.getItem('userData') || 'false');
-   debugger;
+   let userSubscriptionCheck = JSON.parse(localStorage.getItem('isValid') || '0');
+
    if (_.path !== '/login' && !userData && to.path !== '/login') {
       return next('/login');
    }
+
+   if (userData && !userSubscriptionCheck && to.path !== '/payment-methods') {
+      return next('/payment-methods');
+   }
+
    if (to.path === '/') {
       return next({
          name: isAdmin ? 'dashboard-ecommerce' : 'dashboard-analytics'
