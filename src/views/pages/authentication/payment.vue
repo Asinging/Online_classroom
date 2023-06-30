@@ -36,14 +36,14 @@
 				</div>
 
 				<div class="col col-sm-12 d-flex justify-content-end">
-					<b-button
+					<!-- <b-button
 						v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 						variant="success"
 						@click="skipButton"
 						v-b-tooltip.hover.bottom="'Skip Payment'"
 					>
 						<span>Skip</span>
-					</b-button>
+					</b-button> -->
 				</div>
 			</div>
 
@@ -56,7 +56,7 @@
 			>
 				<template slot="modal-ok">
 					<flutterwave-pay-button
-						v-bind="paymentData"
+						v-bind="flutterwavePaymentData"
 						variant="primary"
 						class="btn btn-primary btn-sm"
 					>
@@ -383,7 +383,7 @@
 				nameState: null,
 				isSendingTransfer: false,
 				body: "",
-				paymentData: {
+				flutterwavePaymentData: {
 					tx_ref: this.generateReference(),
 					amount: 10,
 					currency: "NGN",
