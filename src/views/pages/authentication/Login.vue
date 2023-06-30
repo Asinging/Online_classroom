@@ -31,8 +31,33 @@
 					</b-card-text>
 					<!-- <network-checker /> -->
 					<!-- form -->
-					<b-alert variant="danger" v-if="errorMessage">
-						{{ errorMessage }}
+					<b-alert
+						variant="danger"
+						v-if="errorMessage"
+						show
+						class="text-center"
+					>
+						<div>{{ errorMessage }}</div>
+						<div>
+							<b-button
+								@click="resendVerificationMail"
+								v-if="emailNotVerified"
+								:disabled="sendingVerificationEmail"
+								class="mt-25"
+								size="sm"
+								variant="danger"
+								block
+							>
+								<span>Resend Email Verification link</span>
+								<span class="py-1">
+									<b-spinner
+										v-if="sendingVerificationEmail"
+										class="ml-1"
+										small
+									/>
+								</span>
+							</b-button>
+						</div>
 					</b-alert>
 					<validation-observer ref="loginForm">
 						<b-form class="auth-login-form mt-2" @submit.prevent>
@@ -144,12 +169,12 @@
 					</b-card-text>
 
 					<!-- divider -->
-					<div class="divider my-2">
+					<!-- <div class="divider my-2">
 						<div class="divider-text">or</div>
-					</div>
+					</div> -->
 
 					<!-- social buttons -->
-					<div class="auth-footer-btn d-flex justify-content-center">
+					<!-- <div class="auth-footer-btn d-flex justify-content-center">
 						<b-button
 							variant="google"
 							@click="signWithGoogle"
@@ -159,7 +184,7 @@
 							<feather-icon icon="MailIcon" class="mr-25" />
 							<span>Google Sign In</span>
 						</b-button>
-					</div>
+					</div> -->
 				</b-col>
 			</b-col>
 			<!-- /Login-->
@@ -197,7 +222,8 @@
 	import { setLocalstorage } from "@/helpers/user-helpers";
 
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
-
+	import { sendEmailVerification, getAuth } from "firebase/auth";
+	const auth = getAuth();
 	export default {
 		directives: {
 			"b-tooltip": VBTooltip,
@@ -231,6 +257,8 @@
 				sideImg: require("@/assets/images/pages/login-v2.svg"),
 				isLogining: false,
 				errorMessage: null,
+				emailNotVerified: false,
+				sendingVerificationEmail: false,
 
 				// validation rules
 				required,
@@ -239,7 +267,7 @@
 		},
 		mounted() {
 			// this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
-			localStorage.removeItem('userData')
+			localStorage.removeItem("userData");
 		},
 
 		computed: {
@@ -259,7 +287,6 @@
 		},
 		methods: {
 			async signWithGoogle() {
-			
 				try {
 					let response = await this.$store.dispatch(
 						"Auth/SIGN_IN_WITH_GOOGLE"
@@ -270,7 +297,7 @@
 							"Users/GET_SINGLE_USER_BY_Id",
 							{ id: response.user.uid }
 						);
-        
+
 						let formObject = setLocalstorage(response.user, resp2);
 						this.$store.commit("Auth/mCurrentUser", formObject);
 						this.$toast({
@@ -288,7 +315,6 @@
 						});
 					}
 				} catch (err) {
-				
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -305,6 +331,29 @@
 					name: "auth-register",
 				});
 			},
+			resendVerificationMail() {
+				this.sendingVerificationEmail = true;
+
+				sendEmailVerification(auth?.currentUser)
+					.then((resp) => {
+						this.sendingVerificationEmail = false;
+						this.emailNotVerified = false;
+						this.errorMessage = null;
+						this.$toast({
+							component: ToastificationContent,
+							props: {
+								title: "Success",
+								text: `Please check your email box, Verification instructions sent successfully `,
+								icon: "CheckIcon",
+								variant: "success",
+							},
+						});
+					})
+					.catch((err) => {
+						this.sendingVerificationEmail = false;
+					});
+			},
+
 			login() {
 				this.$refs.loginForm.validate().then(async (success) => {
 					if (!success) {
@@ -325,14 +374,37 @@
 						email: this.userEmail,
 						password: this.password,
 					};
+					this.emailNotVerified = false;
+					this.errorMessage = null;
 					this.$store
 						.dispatch("Auth/SIGN_IN", payload)
 						.then((resp) => {
-							
 							this.isLogining = false;
+
 							if (!resp) {
 								return false;
 							}
+
+							if (!resp.user.emailVerified) {
+								this.errorMessage =
+									"Please Verify email account here in your email box";
+								this.emailNotVerified = true;
+								this.$toast({
+									component: ToastificationContent,
+									props: {
+										title: "Oops",
+										text: `Please Verify email before you procceed!`,
+										icon: "XIcon",
+										variant: "danger",
+									},
+								});
+								// this.$store
+								// 	.dispatch("Auth/LOG_OUT")
+								// 	.catch((err) => console.log(er));
+								// ;
+								return false;
+							}
+
 							this.$store
 								.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 									id: resp.user.uid,

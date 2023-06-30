@@ -42,12 +42,12 @@
 						show
 						class="text-center"
 					>
-						<div class="alert-body text-center d-flex justify-content-between">
-							<span>Check your mailbox for verification link!!! </span>
+						<div class="alert-body text-center d-md-flex justify-content-between">
+							<span>Check your mailbox for verification link. </span>
 							<b-link
 							variant="danger"
 								@click="resendVerificationMail"
-								class="text-danger cursor-pointer"
+								class="text-danger cursor-pointer d-flex justify-content-end"
 							>
 							Resend	
 							</b-link>
@@ -217,7 +217,7 @@
 
 					<p class="text-center mt-2">
 						<span>Already have an account?</span>
-						<b-link :to="{ name: 'auth-login' }">
+						<b-link @click="toLogin">
 							<span>&nbsp;Sign in instead</span>
 						</b-link>
 					</p>
@@ -255,11 +255,11 @@
 	import store from "@/store/index";
 	import { serverTimestamp } from "firebase/firestore";
 	import { onAuthStateChanged, sendEmailVerification, getAuth } from "firebase/auth";
+const auth = getAuth();
 
 
 	import { setLocalstorage } from "@/helpers/user-helpers";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
-const auth = getAuth();
 	export default {
 		components: {
 			BAlert,
@@ -320,26 +320,24 @@ const auth = getAuth();
 						this.$router.push({
 							name: "auth-init",
 						});
-
-
-						
 						return false;
 					}
 
+      
 					if (!this.emailVerificationSent) {
 						this.emailVerificationSent = true;
 						sendEmailVerification(auth?.currentUser)
 							.then(() => {
-								
 							})
 							.catch((err) => console.log(err));
-
 					}
+
 					return false
 				},
 			},
 		},
 		mounted() {
+			this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 			this.events.forEach((event) => {
 				window.addEventListener(event, this.runTimer);
 			});
@@ -360,18 +358,24 @@ const auth = getAuth();
 			},
 		},
 		methods: {
+		toLogin(){
+			localStorage.removeItem('userData')
+			this.$router.push('/login')
+		},
 		formatter(value){
 				if(!value) return ''
 					return value.toLowerCase().trim()
 			}, 
+			
 			resendVerificationMail(){
 				this.emailVerificationSent = true;
 				sendEmailVerification(auth?.currentUser)
 						.then(() => {
 						})
 						.catch((err) => console.log(err));
-				
 			},
+
+
 			registerUser() {
 				this.$refs.registerUserForm.validate().then(async (success) => {
 					if (!success) {

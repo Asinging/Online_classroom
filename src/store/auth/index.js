@@ -67,7 +67,6 @@ export default {
          return new Promise(async (resolve, reject) => {
             try {
                let logoutUser = await signOut(authentication);
-
                resolve(logoutUser);
             } catch (error) {
                reject(error);
