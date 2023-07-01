@@ -181,6 +181,7 @@
 									});
 									return false;
 								}
+										localStorage.setItem("isValid", 1);
 								this.$router.push("/dashboard");
 							})
 							.catch((err) => {

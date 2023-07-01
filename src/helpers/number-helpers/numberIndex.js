@@ -69,9 +69,10 @@ export function numbFormat(nb, region, currencyUsed) {
    // return form
 
    //
-   return parseFloat(nb).toLocaleString(region, {
+   return parseFloat(nb).toLocaleString(region || 'en-US', {
       style: 'currency',
-      currency: currencyUsed
+      currency: currencyUsed || 'USD',
+      maximumSignificantDigits: 2
    });
 }
 

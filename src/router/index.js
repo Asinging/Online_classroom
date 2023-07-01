@@ -49,7 +49,7 @@ router.beforeEach((to, _, next) => {
       return next('/login');
    }
 
-   if (userData && !userSubscriptionCheck && to.path !== '/payment-methods') {
+   if (userData && !userSubscriptionCheck && to.path !== '/payment-methods' && !isAdmin) {
       return next('/payment-methods');
    }
 

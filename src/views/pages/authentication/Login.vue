@@ -336,6 +336,7 @@
 
 				sendEmailVerification(auth?.currentUser)
 					.then((resp) => {
+						debugger;
 						this.sendingVerificationEmail = false;
 						this.emailNotVerified = false;
 						this.errorMessage = null;
@@ -387,7 +388,7 @@
 
 							if (!resp.user.emailVerified) {
 								this.errorMessage =
-									"Please Verify email account here in your email box";
+									"Please Verify email address using the guides sent to your mailbox ";
 								this.emailNotVerified = true;
 								this.$toast({
 									component: ToastificationContent,
@@ -401,7 +402,7 @@
 								// this.$store
 								// 	.dispatch("Auth/LOG_OUT")
 								// 	.catch((err) => console.log(er));
-								// ;
+								// debugger;
 								return false;
 							}
 

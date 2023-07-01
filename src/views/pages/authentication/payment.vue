@@ -19,7 +19,7 @@
 					<payment-card
 						v-b-modal.modal-scrollable
 						title="Paystack"
-						text="Pay in Paystack"
+						text="Pay with Paystack"
 						variant="secondary"
 						@click="handlePayment('ps')"
 					/>
@@ -28,7 +28,7 @@
 				<div class="col col-sm-4">
 					<payment-card
 						v-b-modal.modal-transfer
-						title="Bank Transfer"
+						title="Transfer"
 						text="Pay with transfer"
 						variant="warning"
 						@click="handlePayment('bt')"
@@ -51,7 +51,7 @@
 				ref="modalFlutterWave"
 				id="modal-flutterwave"
 				cancel-variant="outline-secondary"
-				title="Pay Using flutter wave"
+				title="Pay Using flutterwave"
 				ok-title="Submit"
 			>
 				<template slot="modal-ok">
@@ -63,6 +63,13 @@
 						Click To Pay
 					</flutterwave-pay-button>
 				</template>
+				<div class="d-flex justify-content-center my-3">
+					<div>
+						<div class="font-weight-bold text-success h1">
+							{{ numbFormat(1000, "en-US", "USD") }}
+						</div>
+					</div>
+				</div>
 
 				<validation-observer ref="payWithFlutterwave">
 					<b-form>
@@ -116,18 +123,6 @@
 								}}</small>
 							</validation-provider>
 						</b-form-group>
-
-						<b-input-group
-							prepend="$"
-							append=".00"
-							class="input-group-merge mb-1"
-						>
-							<b-form-input
-								v-model="amount"
-								placeholder="100"
-								disabled
-							/>
-						</b-input-group>
 					</b-form>
 				</validation-observer>
 			</b-modal>
@@ -142,7 +137,7 @@
 						class="btn btn-primary btn-sm"
 						:amount="amount * 100"
 						:email="email"
-						:paystackkey="PUBLIC_KEY"
+						:paystackkey="paystackPublicKey"
 						:reference="reference"
 						:callback="processPaystackPayment"
 						:close="closePayment"
@@ -151,8 +146,9 @@
 				</template>
 				<div class="d-flex justify-content-center my-3">
 					<div>
-						<div class="font-weight-bold h3 pb-25">Amount</div>
-						<div class="font-weight-black h1">10000</div>
+						<div class="font-weight-bold text-success h1">
+							{{ numbFormat(1000, "en-US", "USD") }}
+						</div>
 					</div>
 				</div>
 				<validation-observer ref="simpleRules">
@@ -205,6 +201,13 @@
 				<div class="alert alert-success pa-2 my-2 text-center">
 					Payment using transfers may take a while before
 					confirmation, please bear with us as we resolve this issues
+				</div>
+				<div class="d-flex justify-content-center my-3">
+					<div>
+						<div class="font-weight-bold text-success h1">
+							{{ numbFormat(1000, "en-US", "USD") }}
+						</div>
+					</div>
 				</div>
 				<validation-observer ref="transfersCash">
 					<b-form>
@@ -259,18 +262,6 @@
 								}}</small>
 							</validation-provider>
 						</b-form-group>
-
-						<b-input-group
-							prepend="$"
-							append=".00"
-							class="input-group-merge mb-1"
-						>
-							<b-form-input
-								v-model="amount"
-								placeholder="100"
-								disabled
-							/>
-						</b-input-group>
 
 						<b-form-group>
 							<validation-provider
@@ -330,6 +321,7 @@
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 	import { serverTimestamp } from "firebase/firestore";
 	import { required, email } from "@validations";
+	import { numbFormat } from "@/helpers/number-helpers/numberIndex";
 
 	export default {
 		directives: {
@@ -368,10 +360,12 @@
 			return {
 				downImg: require("@/assets/images/pages/under-maintenance.svg"),
 				required,
+				numbFormat,
 				fulName: "",
 				email: "",
 				amount: 1000,
-				PUBLIC_KEY: "pk_test_c610dd4b558b5813504dab0bf26eee446c7c5b29",
+				paystackPublicKey:
+					"pk_test_2682ed4a145e5a19e2ebe0d09c6ed25230130cad",
 				transRef: "",
 				phone: "",
 				nameState: null,
@@ -379,7 +373,7 @@
 				body: "",
 				flutterwavePaymentData: {
 					tx_ref: this.generateReference(),
-					amount: 10,
+					amount: 1000,
 					currency: "NGN",
 					payment_options: "card,ussd",
 					redirect_url: "",
@@ -388,13 +382,13 @@
 						consumer_mac: "kjs9s8ss7dd",
 					},
 					customer: {
-						name: "Demo Customer  Name",
-						email: "customer@mail.com",
+						name: "10figuresacademy",
+						email: "10figuresacademy@mail.com",
 						phone_number: "0818450***44",
 					},
 					customizations: {
-						title: "Customization Title",
-						description: "Customization Description",
+						title: "Payment testing",
+						description: "Use this as payment testing",
 						logo: "https://flutterwave.com/images/logo-colored.svg",
 					},
 					callback: this.makePaymentWithFlutterwave,
@@ -432,7 +426,6 @@
 		},
 		methods: {
 			makePaymentWithFlutterwave(response) {
-				debugger
 				if (!val) {
 					this.$toast({
 						component: ToastificationContent,
@@ -454,9 +447,8 @@
 						variant: "danger",
 					},
 				});
-				return false;
 
-				if (val.staus === "success") {
+				if (val.status === "success") {
 					localStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
@@ -479,7 +471,7 @@
 							subscribed: true,
 						},
 					};
-					this.store
+					this.$store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
 							this.$router.push("/");
@@ -592,7 +584,8 @@
 					});
 					return false;
 				}
-				if (val.staus === "success") {
+
+				if (val.status === "success") {
 					localStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
@@ -615,7 +608,7 @@
 							subscribed: true,
 						},
 					};
-					this.store
+					this.$store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
 							this.$router.push({ name: "dashboard-analytics" });
