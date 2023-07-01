@@ -49,6 +49,7 @@
 			// Remove userData from localStorage
 			localStorage.removeItem("userData");
 			localStorage.removeItem("isValid");
+			localStorage.removeItem("isAdminIn");
 
 			// Reset ability
 			// this.$ability.update(initialAbility);

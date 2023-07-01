@@ -7,11 +7,10 @@
 		<template #button-content>
 			<div class="d-sm-flex d-none user-nav">
 				<p class="user-name font-weight-bolder mb-0 text-capitalize">
-	
 					{{ currentUser.fullName || currentUser.username }}
 				</p>
 				<span class="user-status text-capitalize">{{
-					currentUser.role || 'student'
+					currentUser.role || "student"
 				}}</span>
 			</div>
 			<b-avatar
@@ -71,7 +70,7 @@
 		},
 		computed: {
 			currentUser() {
-				return this.$store.getters["Auth/currentUserGetter"] || {}
+				return this.$store.getters["Auth/currentUserGetter"] || {};
 			},
 		},
 		methods: {
@@ -96,9 +95,11 @@
 
 				// Remove userData from localStorage
 				localStorage.removeItem("userData");
+				localStorage.removeItem("isValid");
+				localStorage.removeItem("isAdminIn");
 
 				// Reset ability
-				this.$ability.update(initialAbility);
+				// this.$ability.update(initialAbility);
 
 				// Redirect to login page
 				this.$router.push({ name: "auth-login" });
