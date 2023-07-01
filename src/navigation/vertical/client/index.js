@@ -5,7 +5,7 @@ export default [
    {
       title: 'Dashboards',
       icon: 'HomeIcon',
-      tag: 'updated',
+
       tagVariant: 'light-warning',
 
       route: 'dashboard-analytics'
@@ -13,7 +13,7 @@ export default [
    {
       title: 'Courses',
       icon: 'BookIcon',
-      tag: 'new',
+      tag: 'updated',
       tagVariant: 'light-warning',
 
       route: 'courses-card'

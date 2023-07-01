@@ -94,9 +94,7 @@
 
 	export default {
 		beforeRouteEnter(to, from, next) {
-	
 			next((vm) => {
-			
 				let isAdmin = JSON.parse(
 					localStorage.getItem("isAdminIn") || "false"
 				);
