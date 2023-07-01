@@ -33,7 +33,20 @@
 	import Users from "@/views/apps/user/users-list/UsersList.vue";
 	import { kFormatter } from "@/@core/utils/filter";
 
+
 	export default {
+		beforeRouteEnter (to, from, next) {
+				next(vm => {
+						let isAdmin = JSON.parse(localStorage.getItem('isAdminIn') || 'false');
+						if (!isAdmin) {
+					
+										vm.$router.push('/dashboard');
+										return
+						}
+						// access to component public instance via `vm`
+				})
+		},
+
 		components: {
 			Users,
 			BCard,

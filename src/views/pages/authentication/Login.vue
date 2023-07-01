@@ -2,13 +2,11 @@
 	<div class="auth-wrapper auth-v2">
 		<b-row class="auth-inner m-0">
 			<!-- Brand logo-->
-			<b-link class="brand-logo">
-				<logo />
-			</b-link>
+			<b-link class="brand-logo"> </b-link>
 
-			<b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
+			<b-col lg="8" class="d-none d-lg-flex align-items-center">
 				<div
-					class="w-100 d-lg-flex align-items-center justify-content-center px-5"
+					class="w-100 d-lg-flex align-items-center justify-content-center fill-height"
 				>
 					<b-img fluid :src="imgUrl" alt="Login V2" />
 				</div>
@@ -21,13 +19,13 @@
 					</b-link>
 
 					<b-card-title
-						title-tag="h2"
+						title-tag="h3"
 						class="font-weight-bold mb-1 text-center text-lg-left"
 					>
 						Welcome To Wealth Link
 					</b-card-title>
 					<b-card-text class="mb-2 text-center text-lg-left">
-						Please sign-in to your account and start the adventure
+						Login to your account and start the adventure
 					</b-card-text>
 					<!-- <network-checker /> -->
 					<!-- form -->
@@ -254,7 +252,8 @@
 				status: "",
 				password: "admin",
 				userEmail: "admin@demo.com",
-				sideImg: require("@/assets/images/pages/login-v2.svg"),
+				// sideImg: require("@/assets/images/pages/login-v2.svg"),
+				sideImg: require("@/assets/images/fromtony/loginview.jpg"),
 				isLogining: false,
 				errorMessage: null,
 				emailNotVerified: false,
@@ -268,6 +267,7 @@
 		mounted() {
 			// this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
 			localStorage.removeItem("userData");
+			localStorage.removeItem("isValid");
 		},
 
 		computed: {
@@ -279,7 +279,8 @@
 			imgUrl() {
 				if (store.state.appConfig.layout.skin === "dark") {
 					// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-					this.sideImg = require("@/assets/images/pages/login-v2-dark.svg");
+					// this.sideImg = require("@/assets/images/pages/login-v2-dark.svg");
+					this.sideImg = require("@/assets/images/fromtony/loginview.jpg");
 					return this.sideImg;
 				}
 				return this.sideImg;

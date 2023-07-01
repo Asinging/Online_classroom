@@ -48,6 +48,7 @@
 
 			// Remove userData from localStorage
 			localStorage.removeItem("userData");
+			localStorage.removeItem("isValid");
 
 			// Reset ability
 			// this.$ability.update(initialAbility);

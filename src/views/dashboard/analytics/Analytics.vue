@@ -93,6 +93,20 @@
 	import { checkIframe } from "@/helpers/iframe-helpers";
 
 	export default {
+		beforeRouteEnter(to, from, next) {
+	
+			next((vm) => {
+			
+				let isAdmin = JSON.parse(
+					localStorage.getItem("isAdminIn") || "false"
+				);
+				if (isAdmin) {
+					vm.$router.push("/admin/dashboard");
+					return;
+				}
+				// access to component public instance via `vm`
+			});
+		},
 		components: {
 			BEmbed,
 			BCard,
@@ -107,30 +121,26 @@
 		},
 		data() {
 			return {
-				 data : {
-			
-							subscribersGained: {
-										series: [
-													{
-																name: 'Subscribers',
-																data: [ 28, 40, 36, 52, 38, 60, 55 ]
-													}
-										],
-										analyticsData: {
-													subscribers: 92600
-										}
+				data: {
+					subscribersGained: {
+						series: [
+							{
+								name: "Subscribers",
+								data: [28, 40, 36, 52, 38, 60, 55],
 							},
-							ordersRecevied: {
-										series: [
-													{
-																name: 'Contents',
-																data: [ 10, 15, 8, 15, 7, 12, 8 ]
-													}
-										],
-								
+						],
+						analyticsData: {
+							subscribers: 92600,
+						},
+					},
+					ordersRecevied: {
+						series: [
+							{
+								name: "Contents",
+								data: [10, 15, 8, 15, 7, 12, 8],
 							},
-				
-					
+						],
+					},
 				},
 				courseDisplay: null,
 				course: null,
@@ -157,8 +167,6 @@
 			},
 		},
 		created() {
-		
-
 			this.$store
 				.dispatch("Counter/COUNTER", {
 					collection: "Users",
