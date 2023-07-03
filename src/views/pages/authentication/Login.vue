@@ -27,8 +27,7 @@
 					<b-card-text class="mb-2 text-center text-lg-left">
 						Login to your account and start the adventure
 					</b-card-text>
-					<!-- <network-checker /> -->
-					<!-- form -->
+
 					<b-alert
 						variant="danger"
 						v-if="errorMessage"
@@ -161,7 +160,7 @@
 
 					<b-card-text class="text-center mt-2">
 						<span>New on our platform? </span>
-						<b-link @click="toCreateAccount">
+						<b-link @click="toCreateAccount" class="text-primary text-decoration-none">
 							<span>&nbsp;Create an account</span>
 						</b-link>
 					</b-card-text>

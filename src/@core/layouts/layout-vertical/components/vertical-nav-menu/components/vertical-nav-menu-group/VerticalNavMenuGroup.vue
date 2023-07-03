@@ -1,7 +1,7 @@
 <template>
 	<!-- v-if="canViewVerticalNavMenuGroup(item)" -->
 	<li
-		class="nav-item has-sub"
+		class="nav-item has-sub text-decoration-none"
 		:class="{
 			open: isOpen,
 			disabled: item.disabled,
@@ -9,7 +9,7 @@
 		}"
 	>
 		<b-link
-			class="d-flex align-items-center"
+			class="d-flex align-items-center text-decoration-none"
 			@click="() => updateGroupOpen(!isOpen)"
 		>
 			<feather-icon :icon="item.icon || 'CircleIcon'" />

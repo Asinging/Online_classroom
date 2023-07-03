@@ -2,7 +2,7 @@
 	<div class="auth-wrapper auth-v2">
 		<b-row class="auth-inner m-0">
 			<b-link class="brand-logo">
-				<logo />
+				<!-- <logo /> -->
 			</b-link>
 
 			<b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
@@ -26,7 +26,7 @@
 			<!-- Register-->
 			<b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
 				<b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
-					<b-link class="brand-logo-2 d-none">
+					<b-link class="brand-logo-2 d-none text-primary" variant="primary">
 						<logo />
 					</b-link>
 					<b-card-title class="font-weight-bold mb-1 text-center">
@@ -42,14 +42,18 @@
 						show
 						class="text-center"
 					>
-						<div class="alert-body text-center d-md-flex justify-content-between">
-							<span>Check your mailbox for verification link. </span>
+						<div
+							class="alert-body text-center d-md-flex justify-content-between"
+						>
+							<span
+								>Check your mailbox for verification link.
+							</span>
 							<b-link
-							variant="danger"
+								variant="danger"
 								@click="resendVerificationMail"
 								class="text-danger cursor-pointer d-flex justify-content-end"
 							>
-							Resend	
+								Resend
 							</b-link>
 						</div>
 					</b-alert>
@@ -217,7 +221,7 @@
 
 					<p class="text-center mt-2">
 						<span>Already have an account?</span>
-						<b-link @click="toLogin">
+						<b-link @click="toLogin" 		class="text-primary text-decoration-none">
 							<span>&nbsp;Sign in instead</span>
 						</b-link>
 					</p>
@@ -254,9 +258,12 @@
 	import { togglePasswordVisibility } from "@core/mixins/ui/forms";
 	import store from "@/store/index";
 	import { serverTimestamp } from "firebase/firestore";
-	import { onAuthStateChanged, sendEmailVerification, getAuth } from "firebase/auth";
-const auth = getAuth();
-
+	import {
+		onAuthStateChanged,
+		sendEmailVerification,
+		getAuth,
+	} from "firebase/auth";
+	const auth = getAuth();
 
 	import { setLocalstorage } from "@/helpers/user-helpers";
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
@@ -307,11 +314,10 @@ const auth = getAuth();
 					if (!val) return false;
 
 					if (val.emailVerified) {
-
 						this.events.forEach((event) => {
 							window.removeEventListener(event, this.runTimer);
 						});
-						this.emailVerificationSent = false
+						this.emailVerificationSent = false;
 
 						this.userEmail = "";
 						this.userName = "";
@@ -323,16 +329,14 @@ const auth = getAuth();
 						return false;
 					}
 
-      
 					if (!this.emailVerificationSent) {
 						this.emailVerificationSent = true;
 						sendEmailVerification(auth?.currentUser)
-							.then(() => {
-							})
+							.then(() => {})
 							.catch((err) => console.log(err));
 					}
 
-					return false
+					return false;
 				},
 			},
 		},
@@ -358,23 +362,21 @@ const auth = getAuth();
 			},
 		},
 		methods: {
-		toLogin(){
-			localStorage.removeItem('userData')
-			this.$router.push('/login')
-		},
-		formatter(value){
-				if(!value) return ''
-					return value.toLowerCase().trim()
-			}, 
-			
-			resendVerificationMail(){
-				this.emailVerificationSent = true;
-				sendEmailVerification(auth?.currentUser)
-						.then(() => {
-						})
-						.catch((err) => console.log(err));
+			toLogin() {
+				localStorage.removeItem("userData");
+				this.$router.push("/login");
+			},
+			formatter(value) {
+				if (!value) return "";
+				return value.toLowerCase().trim();
 			},
 
+			resendVerificationMail() {
+				this.emailVerificationSent = true;
+				sendEmailVerification(auth?.currentUser)
+					.then(() => {})
+					.catch((err) => console.log(err));
+			},
 
 			registerUser() {
 				this.$refs.registerUserForm.validate().then(async (success) => {
@@ -467,17 +469,15 @@ const auth = getAuth();
 									variant: "danger",
 								},
 							});
-							
+
 							this.isSigningUp = false;
 							console.log(err);
 						});
 				});
 			},
 			runTimer() {
-			
 				onAuthStateChanged(auth, (user) => {
-				
-			if(!user) return false
+					if (!user) return false;
 					this.user = user;
 				});
 			},

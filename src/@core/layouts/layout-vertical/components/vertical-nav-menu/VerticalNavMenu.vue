@@ -23,7 +23,7 @@
 				<ul class="nav navbar-nav flex-row">
 					<!-- Logo & Text -->
 					<li class="nav-item mr-auto">
-						<b-link class="navbar-brand" to="/">
+						<b-link class="navbar-brand text-decoration-none" to="/">
 							<span class="brand-logo">
 								<b-img :src="appLogoImage" alt="logo" />
 							</span>

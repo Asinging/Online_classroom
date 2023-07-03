@@ -53,7 +53,7 @@
 							</h2>
 							<a class="btn btn-white" href="javascript:void(0);" 
 							@click="register"
-								>Register New</a
+								>SignUp Here</a
 							>
 						</div>
 					</div>

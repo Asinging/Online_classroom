@@ -46,13 +46,12 @@ router.beforeEach((to, _, next) => {
    let userData = JSON.parse(localStorage.getItem('userData') || 'false');
    let userSubscriptionCheck = JSON.parse(localStorage.getItem('isValid') || '0');
    let notFirstTime = JSON.parse(localStorage.getItem('notFirstTime') || 'false');
-   debugger;
 
    if (to.path !== '/welcome' && !notFirstTime) {
       return next('/welcome');
    }
 
-   if (to.path !== '/welcome' && _.path !== '/login' && !userData && to.path !== '/login') {
+   if (to.path !== '/welcome' && _.path !== '/login' && !userData && to.path !== '/login' && to.path !== '/register') {
       return next('/welcome');
    }
 
