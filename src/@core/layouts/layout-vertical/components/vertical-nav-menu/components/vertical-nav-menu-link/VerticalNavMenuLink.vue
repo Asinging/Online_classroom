@@ -7,7 +7,10 @@
 			disabled: item.disabled,
 		}"
 	>
-		<b-link v-bind="linkProps" class="d-flex align-items-center text-decoration-none">
+		<b-link
+			v-bind="linkProps"
+			class="d-flex align-items-center text-decoration-none"
+		>
 			<feather-icon :icon="item.icon || 'CircleIcon'" />
 			<span class="menu-title text-truncate">{{ t(item.title) }}</span>
 			<b-badge
@@ -62,3 +65,17 @@
 		},
 	};
 </script>
+<style>
+	a:hover .btn-group {
+		text-decoration: none !important;
+	}
+	a .btn-group:hover {
+		text-decoration: none !important;
+	}
+	a:hover .btn-group .btn {
+		text-decoration: none !important;
+	}
+	a .btn-group .btn:hover {
+		text-decoration: none !important;
+	}
+</style>
