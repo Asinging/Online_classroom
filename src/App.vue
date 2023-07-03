@@ -129,3 +129,17 @@
 		},
 	};
 </script>
+<style>
+	li {
+		text-decoration: none !important;
+	}
+	li list {
+		text-decoration: none !important;
+	}
+	li .btn-group .btn {
+		text-decoration: none !important;
+	}
+	a .btn-group .btn:hover {
+		text-decoration: none !important;
+	}
+</style>

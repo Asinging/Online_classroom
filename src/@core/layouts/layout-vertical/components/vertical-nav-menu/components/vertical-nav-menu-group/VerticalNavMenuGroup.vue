@@ -88,4 +88,16 @@
 </script>
 
 <style>
+	a:hover .btn-group {
+		text-decoration: none !important;
+	}
+	a .btn-group:hover {
+		text-decoration: none !important;
+	}
+	a:hover .btn-group .btn {
+		text-decoration: none !important;
+	}
+	a .btn-group .btn:hover {
+		text-decoration: none !important;
+	}
 </style>
