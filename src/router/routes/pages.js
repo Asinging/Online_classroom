@@ -48,6 +48,16 @@ export default [
       }
    },
    {
+      path: '/welcome',
+      name: 'welcome',
+      component: () => import('@/views/pages/miscellaneous/WelcomePage.vue'),
+      meta: {
+         layout: 'full',
+         resource: 'Auth',
+         action: 'read'
+      }
+   },
+   {
       path: '/account-init',
       name: 'auth-init',
       component: () => import('@/views/pages/authentication/init.vue'),
