@@ -47,6 +47,7 @@ router.beforeEach((to, _, next) => {
    if (to.path !== '/welcome' && !notFirstTime) {
       localStorage.removeItem('userData');
       localStorage.removeItem('isValid');
+      localStorage.removeItem('isAdminIn');
 
       return next('/welcome');
    }
