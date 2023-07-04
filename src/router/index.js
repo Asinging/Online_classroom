@@ -59,7 +59,7 @@ router.beforeEach((to, _, next) => {
       return next('/payment-methods');
    }
 
-   if (userData && to.path == '/login' && _.path == '/payment-methods') {
+   if (userData && _.path == '/payment-methods' && (to.path == '/login' || to.path == '/register')) {
       return next('/welcome');
    }
 
