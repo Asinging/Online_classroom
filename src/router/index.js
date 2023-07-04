@@ -2,14 +2,11 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 // Routes
-import { canNavigate } from '@/libs/acl/routeProtection';
 
 import apps from './routes/apps';
 import dashboard from './routes/dashboard';
 
 import pages from './routes/pages';
-
-// import others from './routes/others';
 
 import store from '@/store';
 
@@ -48,6 +45,9 @@ router.beforeEach((to, _, next) => {
    let notFirstTime = JSON.parse(localStorage.getItem('notFirstTime') || 'false');
 
    if (to.path !== '/welcome' && !notFirstTime) {
+      localStorage.removeItem('userData');
+      localStorage.removeItem('isValid');
+
       return next('/welcome');
    }
 

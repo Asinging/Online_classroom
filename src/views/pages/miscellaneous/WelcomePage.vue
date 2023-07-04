@@ -48,10 +48,8 @@
 					<div class="text-center">
 						<h1 class="mx-auto my-0 text-uppercase">WEALTH LINK</h1>
 						<h2 class="text-white mx-auto mt-2 mb-5">
-							N12K, you have the full experience of a one on one
-							tutoring, your comfort prioritise all your
-							neccessary needs
-						</h2>
+						With	$15K Subscription plan, you have full experience of our one to one
+							tutoring, we prioritise your comfort in learning whilst still given  you the neccessary skills needed for making wealth 	</h2>
 						<a
 							class="btn btn-white"
 							href="javascript:void(0);"
@@ -70,7 +68,7 @@
 						<h2 class="text-white mb-4">Our sole, Our Soul</h2>
 						<p class="text-white-50">
 							We believe in giving back to the community from
-							which we have benefited from, that this the sole
+							which we have benefited from, that the sole
 							drive for this innovative platform, we tutor,
 							mentor, coach with practical lessons on how to grow
 							wealth!.
@@ -172,7 +170,7 @@
 								<h4 class="text-uppercase m-0">Address</h4>
 								<hr class="my-4 mx-auto" />
 								<div class="small text-black-50">
-									4923 Market Street, Orlando FL
+									Owerri Imo state
 								</div>
 							</div>
 						</div>
@@ -185,8 +183,8 @@
 								></i>
 								<h4 class="text-uppercase m-0">Email</h4>
 								<hr class="my-4 mx-auto" />
-								<div class="small text-black-50">
-									<a href="#!">hello@yourdomain.com</a>
+								<div class="small text-black-50 text-primary">
+									<a href="pkpremium6@gmail.com" class="text-primary text-decoration-none">pkpremium6@gmail.com</a>
 								</div>
 							</div>
 						</div>
@@ -200,7 +198,7 @@
 								<h4 class="text-uppercase m-0">Phone</h4>
 								<hr class="my-4 mx-auto" />
 								<div class="small text-black-50">
-									+1 (555) 902-8832
+									+234 805 552 8141
 								</div>
 							</div>
 						</div>
@@ -219,51 +217,8 @@
 </template>
 
 <script>
-	window.addEventListener("DOMContentLoaded", (event) => {
-		debugger;
-		// Navbar shrink function
-		var navbarShrink = function () {
-			const navbarCollapsible = document.body.querySelector("#mainNav");
-			if (!navbarCollapsible) {
-				return;
-			}
-			if (window.scrollY === 0) {
-				debugger;
-				navbarCollapsible.classList.remove("navbar-shrink");
-			} else {
-				debugger;
-				navbarCollapsible.classList.add("navbar-shrink");
-			}
-		};
 
-		// Shrink the navbar
-		navbarShrink();
-
-		// Shrink the navbar when page is scrolled
-		document.addEventListener("scroll", navbarShrink);
-
-		// Activate Bootstrap scrollspy on the main nav element
-		const mainNav = document.body.querySelector("#mainNav");
-		if (mainNav) {
-			new bootstrap.ScrollSpy(document.body, {
-				target: "#mainNav",
-				rootMargin: "0px 0px -40%",
-			});
-		}
-
-		// Collapse responsive navbar when toggler is visible
-		const navbarToggler = document.body.querySelector(".navbar-toggler");
-		const responsiveNavItems = [].slice.call(
-			document.querySelectorAll("#navbarResponsive .nav-link")
-		);
-		responsiveNavItems.map(function (responsiveNavItem) {
-			responsiveNavItem.addEventListener("click", () => {
-				if (window.getComputedStyle(navbarToggler).display !== "none") {
-					navbarToggler.click();
-				}
-			});
-		});
-	});
+	
 	/* eslint-disable global-require */
 	import { BLink, BForm, BFormInput, BButton, BImg } from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
@@ -283,11 +238,55 @@
 			};
 		},
 		computed: {},
-		created() {},
+		created() { window.addEventListener("DOMContentLoaded", this.runEvent(event))},
 		mounted() {
 			localStorage.setItem("notFirstTime", true);
+
 		},
 		methods: {
+			navbarShrink(){
+				const navbarCollapsible = document.body.querySelector("#mainNav");
+				if (!navbarCollapsible) {
+					return;
+				}
+				if (window.scrollY === 0) {
+				;
+					navbarCollapsible.classList.remove("navbar-shrink");
+				} else {
+				;
+					navbarCollapsible.classList.add("navbar-shrink");
+				}
+			}, 
+
+			runEvent(event){
+
+				this.navbarShrink();
+				// Shrink the navbar when page is scrolled
+				document.addEventListener("scroll", this.navbarShrink);
+
+				// Activate Bootstrap scrollspy on the main nav element
+				const mainNav = document.body.querySelector("#mainNav");
+				if (mainNav) {
+					new bootstrap.ScrollSpy(document.body, {
+						target: "#mainNav",
+						rootMargin: "0px 0px -40%",
+					});
+				}
+
+				// Collapse responsive navbar when toggler is visible
+				const navbarToggler = document.body.querySelector(".navbar-toggler");
+				const responsiveNavItems = [].slice.call(
+					document.querySelectorAll("#navbarResponsive .nav-link")
+				);
+				responsiveNavItems.map(function (responsiveNavItem) {
+					responsiveNavItem.addEventListener("click", () => {
+						if (window.getComputedStyle(navbarToggler).display !== "none") {
+							navbarToggler.click();
+						}
+					});
+				})
+
+			},
 			login() {
 				this.$router.push("/login");
 			},

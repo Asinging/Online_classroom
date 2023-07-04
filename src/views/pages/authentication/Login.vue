@@ -249,8 +249,8 @@
 		data() {
 			return {
 				status: "",
-				password: "admin",
-				userEmail: "admin@demo.com",
+				password: "",
+				userEmail: "",
 				// sideImg: require("@/assets/images/pages/login-v2.svg"),
 				sideImg: require("@/assets/images/fromtony/loginview.jpg"),
 				isLogining: false,
