@@ -27,7 +27,7 @@
 <script>
 	import { BRow, BCol, BCard } from "bootstrap-vue";
 
-	import { getUserData } from "@/auth/utils";
+
 	import EcommerceMedal from "./EcommerceMedal.vue";
 	import EcommerceStatistics from "./EcommerceStatistics.vue";
 	import Users from "@/views/apps/user/users-list/UsersList.vue";

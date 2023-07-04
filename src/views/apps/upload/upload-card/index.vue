@@ -34,8 +34,6 @@
 			<!--/ search input -->
 
 			<section id="knowledge-base-content">
-		
-
 				<b-row class="kb-search-content-info match-height">
 					<b-col
 						v-for="item in computeCourses"

@@ -40,7 +40,7 @@
 		},
 		data() {
 			return {
-				downImg: require("@/assets/images/pages/error.svg"),
+				downImg: require("@/assets/images/pages/calendar-illustration.png"),
 			};
 		},
 		mounted() {
@@ -59,7 +59,7 @@
 			imgUrl() {
 				if (store.state.appConfig.layout.skin === "dark") {
 					// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-					this.downImg = require("@/assets/images/pages/error.svg");
+					this.downImg = require("@/assets/images/pages/calendar-illustration.png");
 					return this.downImg;
 				}
 				return this.downImg;

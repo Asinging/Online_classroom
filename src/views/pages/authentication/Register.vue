@@ -26,7 +26,10 @@
 			<!-- Register-->
 			<b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
 				<b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
-					<b-link class="brand-logo-2 d-none text-primary" variant="primary">
+					<b-link
+						class="brand-logo-2 d-none text-primary"
+						variant="primary"
+					>
 						<logo />
 					</b-link>
 					<b-card-title class="font-weight-bold mb-1 text-center">
@@ -221,7 +224,10 @@
 
 					<p class="text-center mt-2">
 						<span>Already have an account?</span>
-						<b-link @click="toLogin" 		class="text-primary text-decoration-none">
+						<b-link
+							@click="toLogin"
+							class="text-primary text-decoration-none"
+						>
 							<span>&nbsp;Sign in instead</span>
 						</b-link>
 					</p>

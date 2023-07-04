@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 // Routes
 import { canNavigate } from '@/libs/acl/routeProtection';
-import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils';
+
 import apps from './routes/apps';
 import dashboard from './routes/dashboard';
 
