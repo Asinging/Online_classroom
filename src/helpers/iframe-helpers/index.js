@@ -29,10 +29,13 @@ export const checkIframe = item => {
 
 const _itemManipulate = item => {
    let arr = item.split('/');
-   let lastEle = arr.slice(-1);
-   lastEle = lastEle + '?rel=0';
+   let lastEle = arr.slice(-1)[0];
+
+   lastEle = lastEle.replace(/\"/g, '?rel=0');
+
    arr.splice(arr.length - 1, 1, lastEle);
    let str = arr.reduce((prev, ele) => prev + '/' + ele);
+   console.log(str);
 
    return str;
 };
