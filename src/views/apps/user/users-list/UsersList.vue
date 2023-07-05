@@ -114,7 +114,7 @@
 									name: 'apps-users-view',
 									params: { id: data.item.id },
 								}"
-								class="font-weight-bold d-block text-nowrap text-capitalize"
+								class="font-weight-bold d-block text-nowrap text-capitalize text-primary text-decoration-none"
 								v-b-tooltip.hover.bottom
 								:title="data.item.f_name || data.item.username "
 							>

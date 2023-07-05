@@ -46,8 +46,8 @@ export default function useUsersList() {
    const currentPage = ref(1);
    const perPageOptions = [ 50, 75, 100 ];
    const searchQuery = ref('');
-   const sortBy = ref('id');
-   const isSortDirDesc = ref(true);
+   const sortBy = ref('count');
+   const isSortDirDesc = ref(false);
    const isSortDirAsc = ref(true);
    const roleFilter = ref(null);
    const planFilter = ref(null);
@@ -103,6 +103,7 @@ export default function useUsersList() {
          }
          return item;
       });
+      debugger;
       return countFromOne(users);
    });
 

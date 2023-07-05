@@ -68,7 +68,7 @@
 							></b-spinner>
 						</div>
 						<div v-else class="text-center text-primary">
-							No rows to displayd!
+							No rows to display!
 						</div>
 					</template>
 
@@ -90,18 +90,24 @@
 								}"
 								v-b-tooltip.hover.bottom
 								:title="data.item.title"
-								class="font-weight-bold d-block text-nowrap text-capitalize"
+								class="font-weight-bold d-block text-nowrap text-capitalize text-primary text-decoration-none"
 							>
-								{{ data.item.title.length>20?data.item.title.slice(0, 20) + '...':data.item.title }}
+								{{
+									data.item.title.length > 20
+										? data.item.title.slice(0, 20) + "..."
+										: data.item.title
+								}}
 							</b-link>
 						</b-media>
 					</template>
 
 					<!-- Column: Module -->
 					<template #cell(modules)="data">
-						<div class="text-nowrap cursor-pointer" v-b-tooltip.hover.bottom 
-							:title="`${data.item.tracks + ' module'  }`">
-							
+						<div
+							class="text-nowrap cursor-pointer"
+							v-b-tooltip.hover.bottom
+							:title="`${data.item.tracks + ' module'}`"
+						>
 							<feather-icon
 								icon="BoxIcon"
 								size="18"
@@ -289,7 +295,6 @@
 				// ****************  FXN *****
 				refreshStop,
 
-				
 				deleteCourse,
 				editCourse,
 				viewCourse,
@@ -321,7 +326,6 @@
 				// ******* FXN *******
 				refreshStop,
 
-		
 				deleteCourse,
 				editCourse,
 				viewCourse,
