@@ -5,7 +5,7 @@
 			<template #aside>
 				<b-avatar
 					ref="refPreviewEl"
-					:src="computeUserData.avatar"
+					:src="computeUserData.avatar || coverArtUrl"
 					:text="
 						avatarText(
 							computeUserData.f_name || computeUserData.username
@@ -311,6 +311,7 @@
 				[userDefaultValue, coverArtUrl],
 				(old, oldval) => {
 					if (!oldval[0] && !oldval[1]) return false;
+
 					checkFormEdited();
 				},
 				{
@@ -385,7 +386,6 @@
 			};
 
 			const checkFormEdited = () => {
-				;
 				isFormEdited.value = true;
 			};
 
@@ -398,11 +398,9 @@
 
 					data.enabled = data.enable.value;
 					data.updated_at = serverTimestamp();
-					data.avatar = coverArtUrl.value || null;
+					data.avatar = coverArtUrl.value ? coverArtUrl.value : null;
 					data.subscribed = data.subscription.value === 1 ? true : false;
 					data.user_type = data.userType.value;
-					;
-
 					delete data.enable;
 					delete data.subscription;
 					delete data.userType;
@@ -411,8 +409,6 @@
 						data,
 						id: userId,
 					};
-			
-					;
 
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
@@ -440,10 +436,7 @@
 			const { inputImageRenderer } = useInputImageRenderer(
 				refInputEl,
 				async (file, base64) => {
-					// refPreviewEl.value.src = base64;
-
 					let userId = router.currentRoute.params.id;
-
 					// computeUserData.value.avatar = base64;
 
 					if (file.size > 2000000) {
@@ -468,15 +461,7 @@
 							if (!resp) {
 								return false;
 							}
-							toast({
-								component: ToastificationContent,
-								props: {
-									title: "All Good",
-									text: `Avatar successfully selected`,
-									icon: "CheckIcon",
-									variant: "info",
-								},
-							});
+						
 
 							if (coverArtUrl.value) {
 								store
@@ -488,8 +473,8 @@
 							}
 
 							getDownloadURL(resp.ref)
-								.then((resp) => {
-									coverArtUrl.value = resp;
+								.then((response) => {
+									coverArtUrl.value = response;
 								})
 								.catch();
 
@@ -515,7 +500,7 @@
 
 			return {
 				isAdmin,
-				isFormEdited, 
+				isFormEdited,
 				saveRecord,
 				inputImageRenderer,
 				avatarText,
@@ -531,6 +516,7 @@
 				isResetRecord,
 				subscriptionOptions,
 				formatter,
+				coverArtUrl, 
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
