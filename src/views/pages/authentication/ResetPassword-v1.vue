@@ -114,7 +114,10 @@
 				</validation-observer>
 
 				<p class="text-center mt-2">
-					<b-link :to="{ name: 'auth-login' }">
+					<b-link
+						:to="{ name: 'auth-login' }"
+						class="text-primary text-decoration-none"
+					>
 						<feather-icon icon="ChevronLeftIcon" /> Back to login
 					</b-link>
 				</p>

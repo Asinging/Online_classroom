@@ -88,6 +88,7 @@
 										:to="{
 											name: 'auth-forgot-password',
 										}"
+										class="text-primary text-decoration-none"
 									>
 										<small>Forgot Password?</small>
 									</b-link>

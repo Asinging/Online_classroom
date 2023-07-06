@@ -54,7 +54,7 @@
 							<b-link
 								variant="danger"
 								@click="resendVerificationMail"
-								class="text-danger cursor-pointer d-flex justify-content-end"
+								class="text-danger cursor-pointer d-flex justify-content-end text-decoration-none"
 							>
 								Resend
 							</b-link>
