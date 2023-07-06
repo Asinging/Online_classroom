@@ -47,7 +47,7 @@
 				<div class="d-flex justify-content-center">
 					<div class="text-center">
 						<h1 class="mx-auto my-0 text-uppercase">WEALTH LINK</h1>
-						<h2 class="text-white mx-auto mt-2 mb-5">
+						<h2 class="text-white mx-auto mt-2 mb-5 text-center">
 						With	$15K Subscription plan, you have full experience of our one to one
 							tutoring, we prioritise your comfort in learning whilst still given  you the neccessary skills needed for making wealth 	</h2>
 						<a
@@ -11815,8 +11815,9 @@
 		}
 		.masthead h2,
 		.masthead .h2 {
-			max-width: 30rem;
-			font-size: 1.25rem;
+			max-width: 50rem;
+			text-align:center;
+			font-size: 1.35rem;
 		}
 	}
 
