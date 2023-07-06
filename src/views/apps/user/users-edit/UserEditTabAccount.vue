@@ -75,8 +75,8 @@
 						<b-form-input
 							id="username"
 							v-model="computeUserData.username"
-						lazy-formatter
-						:formatter="formatter"
+							lazy-formatter
+							:formatter="formatter"
 						/>
 					</b-form-group>
 				</b-col>
@@ -87,8 +87,8 @@
 						<b-form-input
 							id="full-name"
 							v-model="computeUserData.f_name"
-						lazy-formatter
-						:formatter="formatter"
+							lazy-formatter
+							:formatter="formatter"
 						/>
 					</b-form-group>
 				</b-col>
@@ -117,7 +117,7 @@
 				<b-col cols="12" md="4">
 					<b-form-group label="Status" label-for="user-status">
 						<v-select
-							v-model="computeUserData.enabled"
+							v-model="computeUserData.enable"
 							:dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
 							:options="statusOptions"
 							:reduce="(val) => val.value"
@@ -163,7 +163,7 @@
 			class="mb-1 mb-sm-0 mr-0 mr-sm-1"
 			:block="$store.getters['app/currentBreakPoint'] === 'xs'"
 			@click="saveRecord"
-			:disabled="isEditingRecord || isUpdateProfilePhoto"
+			:disabled="isEditingRecord || isUpdateProfilePhoto || !isFormEdited"
 		>
 			<span class="mr-1">Save Changes</span>
 			<span>
@@ -212,7 +212,7 @@
 	import { avatarText } from "@core/utils/filter";
 	import { useInputImageRenderer } from "@core/comp-functions/forms/form-utils";
 	import vSelect from "vue-select";
-	import { ref, computed } from "@vue/composition-api";
+	import { ref, computed, watch } from "@vue/composition-api";
 	import useUsersList from "../users-list/useUsersList";
 	import { serverTimestamp } from "firebase/firestore";
 	import router from "@/router";
@@ -247,6 +247,7 @@
 			const isUpdateProfilePhoto = ref(false);
 			const isEditingRecord = ref(false);
 			const isResetRecord = ref(false);
+			const isFormEdited = ref(false);
 			const coverArtUrl = ref(null);
 
 			const roleOptions = [
@@ -266,7 +267,7 @@
 			// ? Demo Purpose => Update image on click of update
 			const refInputEl = ref(null);
 			const refPreviewEl = ref(null);
-			const userData = ref(null);
+			const userDefaultValue = ref(null);
 
 			const isAdmin = computed(() => {
 				return store.getters["appConfig/whoIsinGetter"];
@@ -274,15 +275,16 @@
 
 			const computeUserData = computed(() => {
 				let x = store.getters["Users/singleUserGetter"];
+				userDefaultValue.value = x;
 
 				coverArtUrl.value = x.avatar;
 				if (!x) return false;
 
 				if (x.enabled == 1) {
-					x.enabled = { label: "Active", value: 1 };
+					x.enable = { label: "Active", value: 1 };
 				}
 				if (x.enabled == 0) {
-					x.enabled = { label: "Inactive", value: 0 };
+					x.enable = { label: "Inactive", value: 0 };
 				}
 
 				if (!x.subscribed) {
@@ -300,10 +302,23 @@
 				return x;
 			});
 
-			const formatter = (value) =>{
-				if(!value) return ''
-					return value.toLowerCase().trim()
-			}
+			const formatter = (value) => {
+				if (!value) return "";
+				return value.toLowerCase().trim();
+			};
+
+			watch(
+				[userDefaultValue, coverArtUrl],
+				(old, oldval) => {
+					if (!oldval[0] && !oldval[1]) return false;
+					checkFormEdited();
+				},
+				{
+					deep: true,
+					immediate: false,
+				}
+			);
+
 			const resetField = () => {
 				if (!isEditingRecord.value) {
 					isResetRecord.value = true;
@@ -358,18 +373,20 @@
 							path: coverArtUrl.value,
 						})
 
-						.catch((err) => {
-						
-						});
+						.catch((err) => {});
 					store
 						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 							id: userId,
 						})
 						.catch((err) => {});
 				} catch (err) {
-				
 					isRemovingProfilePhoto.value = false;
 				}
+			};
+
+			const checkFormEdited = () => {
+				;
+				isFormEdited.value = true;
 			};
 
 			const saveRecord = async () => {
@@ -378,19 +395,28 @@
 
 				try {
 					let data = Object.assign({}, computeUserData.value);
-					data.enabled = data.enabled.value;
+
+					data.enabled = data.enable.value;
 					data.updated_at = serverTimestamp();
-					data.avatar = coverArtUrl.value;
+					data.avatar = coverArtUrl.value || null;
 					data.subscribed = data.subscription.value === 1 ? true : false;
 					data.user_type = data.userType.value;
+					;
+
+					delete data.enable;
+					delete data.subscription;
+					delete data.userType;
 
 					let payload = {
 						data,
 						id: userId,
 					};
-				
+			
+					;
+
 					await store.dispatch("Users/UPDATE_SINGLE_USER", payload);
 					isEditingRecord.value = false;
+					isFormEdited.value = false;
 					store
 						.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 							id: router.currentRoute.params.id,
@@ -458,9 +484,7 @@
 										path: coverArtUrl.value,
 									})
 
-									.catch((err) => {
-										
-									});
+									.catch((err) => {});
 							}
 
 							getDownloadURL(resp.ref)
@@ -491,6 +515,7 @@
 
 			return {
 				isAdmin,
+				isFormEdited, 
 				saveRecord,
 				inputImageRenderer,
 				avatarText,
