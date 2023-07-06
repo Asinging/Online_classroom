@@ -461,7 +461,6 @@
 							if (!resp) {
 								return false;
 							}
-						
 
 							if (coverArtUrl.value) {
 								store
@@ -516,7 +515,7 @@
 				isResetRecord,
 				subscriptionOptions,
 				formatter,
-				coverArtUrl, 
+				coverArtUrl,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,

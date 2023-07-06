@@ -103,7 +103,7 @@ export default function useUsersList() {
          }
          return item;
       });
-      debugger;
+      ;
       return countFromOne(users);
    });
 
