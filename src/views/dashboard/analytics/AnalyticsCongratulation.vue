@@ -1,6 +1,5 @@
 <template>
 	<b-card v-if="data" text-variant="center" class="card card-congratulations">
-		<!-- images -->
 		<b-img
 			:src="require('@/assets/images/decore-left.png')"
 			class="congratulations-img-left"

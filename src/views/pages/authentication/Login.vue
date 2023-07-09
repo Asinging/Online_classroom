@@ -35,7 +35,7 @@
 						class="text-center"
 					>
 						<div>{{ errorMessage }}</div>
-						<div>
+						<!-- <div>
 							<b-button
 								@click="resendVerificationMail"
 								v-if="emailNotVerified"
@@ -54,7 +54,7 @@
 									/>
 								</span>
 							</b-button>
-						</div>
+						</div> -->
 					</b-alert>
 					<validation-observer ref="loginForm">
 						<b-form class="auth-login-form mt-2" @submit.prevent>
@@ -88,7 +88,7 @@
 										:to="{
 											name: 'auth-forgot-password',
 										}"
-										class="text-primary text-decoration-none"
+										class="text-primary text-decoration"
 									>
 										<small>Forgot Password?</small>
 									</b-link>
@@ -387,25 +387,25 @@
 								return false;
 							}
 
-							if (!resp.user.emailVerified) {
-								this.errorMessage =
-									"Please Verify email address using the guides sent to your mailbox ";
-								this.emailNotVerified = true;
-								this.$toast({
-									component: ToastificationContent,
-									props: {
-										title: "Oops",
-										text: `Please Verify email before you procceed!`,
-										icon: "XIcon",
-										variant: "danger",
-									},
-								});
-								// this.$store
-								// 	.dispatch("Auth/LOG_OUT")
-								// 	.catch((err) => console.log(er));
-								// debugger;
-								return false;
-							}
+							// if (!resp.user.emailVerified) {
+							// 	this.errorMessage =
+							// 		"Please Verify email address using the guides sent to your mailbox ";
+							// 	this.emailNotVerified = true;
+							// 	this.$toast({
+							// 		component: ToastificationContent,
+							// 		props: {
+							// 			title: "Oops",
+							// 			text: `Please Verify email before you procceed!`,
+							// 			icon: "XIcon",
+							// 			variant: "danger",
+							// 		},
+							// 	});
+							// 	// this.$store
+							// 	// 	.dispatch("Auth/LOG_OUT")
+							// 	// 	.catch((err) => console.log(er));
+							// 	// debugger;
+							// 	return false;
+							// }
 
 							this.$store
 								.dispatch("Users/GET_SINGLE_USER_BY_Id", {

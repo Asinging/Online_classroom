@@ -60,14 +60,7 @@
 						class="alert-body text-center d-flex justify-content-between"
 					>
 						<span>No intro video uploaded yet. </span>
-						<b-link
-							:active="true"
-							variant="danger"
-							@click="toUpload"
-							class="text-danger cursor-pointer text-decoration-underline pl-25"
-						>
-							Click to upload here one and mark it as intro video
-						</b-link>
+					
 					</div>
 				</b-alert>
 			</div>
@@ -106,12 +99,12 @@
 			});
 		},
 		components: {
-			BEmbed,
 			BCard,
 			BRow,
 			BCol,
 			BAlert,
 			BLink,
+			BEmbed,
 			BSpinner,
 			AnalyticsCongratulation,
 

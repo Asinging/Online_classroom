@@ -13,16 +13,6 @@
 				</div>
 			</b-col>
 
-			<!-- Left Text-->
-			<!-- <b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
-				<div
-					class="w-100 d-lg-flex align-items-center justify-content-center px-5"
-				>
-					<b-img fluid :src="imgUrl" alt="Register V2" />
-				</div>
-			</b-col> -->
-			<!-- /Left Text-->
-
 			<!-- Register-->
 			<b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
 				<b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
@@ -39,7 +29,7 @@
 						The possibilities are endless!
 					</b-card-text>
 
-					<b-alert
+					<!-- <b-alert
 						variant="danger"
 						v-if="emailVerificationSent"
 						show
@@ -54,12 +44,12 @@
 							<b-link
 								variant="danger"
 								@click="resendVerificationMail"
-								class="text-danger cursor-pointer d-flex justify-content-end text-decoration-none"
+								class="text-danger cursor-pointer d-flex justify-content-end"
 							>
 								Resend
 							</b-link>
 						</div>
-					</b-alert>
+					</b-alert> -->
 
 					<!-- form -->
 					<validation-observer
@@ -170,41 +160,15 @@
 								</validation-provider>
 							</b-form-group>
 
-							<!-- <b-form-group>
-								<validation-provider
-									#default="{ errors }"
-									name="Privacy Policies"
-									vid="PrivacyPolicy"
-									rules="required"
-								>
-									<b-form-checkbox
-										id="register-privacy-policy"
-										v-model="status"
-										name="checkbox-1"
-										:state="
-											errors.length > 0 ? false : null
-										"
-									>
-										I agree to
-										<b-link>privacy policy & terms</b-link>
-									</b-form-checkbox>
-									<small class="text-danger">{{
-										errors[0]
-									}}</small>
-								</validation-provider>
-							</b-form-group> -->
 							<b-button
 								type="submit"
 								variant="primary"
 								class="pb-1"
 								block
 								@click="registerUser"
-								:disabled="
-									isSigningUp ||
-									invalid ||
-									emailVerificationSent
-								"
+								:disabled="isSigningUp || invalid"
 							>
+								<!-- emailVerificationSent -->
 								<span>Sign Up</span>
 								<span class="pl-1">
 									<span v-if="!isSigningUp">
@@ -319,21 +283,21 @@
 				handler(val) {
 					if (!val) return false;
 
-					if (val.emailVerified) {
-						this.events.forEach((event) => {
-							window.removeEventListener(event, this.runTimer);
-						});
-						this.emailVerificationSent = false;
+					// if (val.emailVerified) {
+					// this.events.forEach((event) => {
+					// 	window.removeEventListener(event, this.runTimer);
+					// });
+					this.emailVerificationSent = false;
 
-						this.userEmail = "";
-						this.userName = "";
-						this.password = "";
+					this.userEmail = "";
+					this.userName = "";
+					this.password = "";
 
-						this.$router.push({
-							name: "auth-init",
-						});
-						return false;
-					}
+					this.$router.push({
+						name: "auth-init",
+					});
+					return false;
+					// }
 
 					if (!this.emailVerificationSent) {
 						this.emailVerificationSent = true;
@@ -349,7 +313,7 @@
 		mounted() {
 			this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 			this.events.forEach((event) => {
-				window.addEventListener(event, this.runTimer);
+				// window.addEventListener(event, this.runTimer);
 			});
 		},
 		computed: {
@@ -456,6 +420,14 @@
 								})
 								.then(async (resp2) => {
 									this.isSigningUp = false;
+									this.userEmail = "";
+									this.userName = "";
+									this.password = "";
+
+									this.$router.push({
+										name: "auth-init",
+									});
+									return false;
 								})
 								.catch((err) => {
 									console.log(err);
@@ -484,7 +456,7 @@
 			runTimer() {
 				onAuthStateChanged(auth, (user) => {
 					if (!user) return false;
-					this.user = user;
+					// this.user = user;
 				});
 			},
 
