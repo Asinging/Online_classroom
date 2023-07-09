@@ -1,8 +1,7 @@
 <template>
 	<b-card
 		text-variant="center"
-		class="card card-congratulations"
-		:variant="variant"
+		class="card card-congratulations bg-white"
 		v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 		style="cursor: pointer"
 	>
@@ -11,7 +10,7 @@
 		<b-avatar :variant="variant" size="70" class="shadow mb-2">
 			<feather-icon size="28" icon="AwardIcon" />
 		</b-avatar>
-		<h3 class="mb-1 mt-50 text-white">{{ title }}</h3>
+		<h2 class="mb-1 mt-50 text-white">{{ title }}</h2>
 		<b-card-text class="m-auto w-75">
 			{{ text }}
 		</b-card-text>
@@ -53,7 +52,7 @@
 			},
 			variant: {
 				type: String,
-				default: "primary",
+				default: "white",
 			},
 		},
 		data() {
@@ -62,8 +61,12 @@
 	};
 </script>
 
-<style>
+<style scoped>
 	.hovered-class {
 		background-color: yellow;
+	}
+	.card {
+		border-radius: 50px;
+		min-height: 350px;
 	}
 </style>

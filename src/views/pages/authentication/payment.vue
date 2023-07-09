@@ -5,49 +5,101 @@
 				cols="12"
 				md="12"
 				lg="12"
-				class="d-flex align-items-center auth-bg px-1 mt-0 pt-0"
+				class="d-flex align-items-center mt-0 pt-0"
 			>
-				<b-col
-					sm="12"
-					md="12"
-					lg="12"
-					class="px-xl-1 mx-auto mt-0 pt-0"
-				>
-					<div>
-						<!-- overlay
-							img-src="https://picsum.photos/900/250/?image=3" -->
-						<b-card
-							v-if="currentUser"
-							text-variant="center"
-							class="card rounded-5"
-							variant="primary"
-						>
+				<b-col sm="12" md="12" lg="12" class="mx-auto pt-0">
+					<b-card
+						tag="article"
+						v-if="currentUser"
+						text-variant="center"
+						class="shadow-none rounded-100 mt-3 bg-secondary card"
+					>
+						<div class="d-md-flex justify-content-between">
 							<b-img
 								:src="
 									require('@/assets/images/decore-right.png')
 								"
-								class="congratulations-img-right text-right d-flex justify-content-end"
+								class="congratulations-img-left d-flex"
 							/>
-							<!--/ images -->
+							<div
+								class="text-danger d-flex justify-content-end text-md-right"
+								v-if="notSubscribed"
+							>
+								<div class="d-flex">
+									<span class="pr-1">
+										<feather-icon
+											icon="AlertTriangleIcon"
+											class="text-danger"
+											size="25"
+										/>
+									</span>
+									<span
+										class="font-weight-bold h4 text-danger"
+										>Please Upgrade Account to access our
+										premium services</span
+									>
+								</div>
+							</div>
+						</div>
 
-							<h1 class="mb-1 mt-50 text-capitalize h2">
+						<div>
+							<b-card-text
+								class="mb-1 text-capitalize display-4 font-weight-bold text-white"
+								style=""
+							>
 								{{
 									new Date().getHours() > 12
-										? "Good Day,"
-										: "Good Morning,"
+										? "Good Day"
+										: "Good Morning"
 								}}
-								{{ currentUser.username }},
-							</h1>
-							<b-card-text class="m-auto w-75"> </b-card-text>
-						</b-card>
-					</div>
+								{{ currentUser.username }}
+							</b-card-text>
+							<b-card-text
+								class="mb-1 text-capitalize h1 text-white"
+								style="font-size: 20px"
+							>
+								Welcome Back!
+							</b-card-text>
+							<div
+								class="mb-1 text-capitalize h1 text-white"
+								style="font-size: 20px"
+								v-if="emailNotVerified"
+							>
+								<b-button
+									@click="resendVerificationMail"
+									:disabled="sendingVerificationEmail"
+									class="mt-25"
+									size="xl"
+									variant="success"
+								>
+									<span class="font-weight-bold h4 text-white"
+										>Please Verify your email</span
+									>
+									<span class="py-1">
+										<b-spinner
+											v-if="sendingVerificationEmail"
+											class="ml-1"
+											small
+										/>
+									</span>
+								</b-button>
+							</div>
+						</div>
+					</b-card>
 				</b-col>
 			</b-col>
-			<b-col lg="12" cols="12" md="12" class="d-flex p-1">
-				<b-card class="mx-1 vw-100">
+			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 my-10">
+				<b-card
+					class="vw-100 shadow-none rounded-20 bg-light card"
+					tag="article"
+				>
 					<b-row align-h="center">
-						<b-col cols="12">
-							<b-card class="d-flex justify-content-start card">
+						<b-col cols="12" class="p-0 ma-0">
+							<b-card
+								class="d-flex justify-content-start shadow-none bg-light"
+								tag="article"
+								style="min-height: 400px"
+							>
 								<div
 									v-if="isRequesting"
 									class="align-items-center d-flex justify-content-start"
@@ -62,12 +114,13 @@
 								<div class="container" v-else-if="course">
 									<div
 										v-if="computeCourseDisplay.isIframe"
-										class="iframe d-flex"
+										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
 										style="height: 70vh; width: 100%"
 										v-html="computeCourseDisplay.video_url"
 									></div>
-									<div v-else class="iframe h-100 w-auto">
+									<div v-else class="iframe p-0 m-0">
 										<b-embed
+											class="embed-responsive-item"
 											type="iframe"
 											aspect="16by9"
 											:src="
@@ -79,8 +132,9 @@
 								</div>
 
 								<b-card
-									class="container d-flex align-items-center"
+									class="container d-flex align-items-center card p-0 m-0"
 									v-else
+									tag="div"
 								>
 									<div class="video-container">
 										<b-alert
@@ -101,59 +155,65 @@
 								</b-card>
 							</b-card>
 						</b-col>
-						<!-- <b-col cols="4"
-							><div class="d-flex">
+						<b-col cols="12" class="mt-0">
+							<b-card
+								class="card w-auto d-flex align-items-center justify-content-center"
+								style="
+									width: 100%;
+									min-height: 150px;
+									background-color: #acb3d9;
+									margin-top: 0px;
+								"
+							>
 								<b-card-text
+									class="h2 font-weight-normal text-center text-white"
 									>Watch Introduction and have a test of what
-									we offer</b-card-text
+									we offer. This introduce you our effective
+									training, teaching and mentorship on
+									financial freedom</b-card-text
 								>
-							</div></b-col
-						> -->
+							</b-card>
+						</b-col>
 					</b-row>
 				</b-card>
 
 				<!-- </div> -->
 			</b-col>
 		</b-row>
-
-		<div class="row">
-			<div class="col col-sm-4 rounded-2">
-				<payment-card
-					v-b-modal.modal-flutterwave
-					title="Flutterwave"
-					text="Pay with Stripe"
-					variant="danger"
-				/>
-			</div>
-			<div class="col col-sm-4">
-				<payment-card
-					v-b-modal.modal-scrollable
-					title="Paystack"
-					text="Pay with Paystack"
-					variant="secondary"
-				/>
-			</div>
-
-			<div class="col col-sm-4">
-				<payment-card
-					v-b-modal.modal-transfer
-					title="Transfer"
-					text="Pay with transfer"
-					variant="warning"
-				/>
-			</div>
-
-			<div class="col col-sm-12 d-flex justify-content-end">
-				<!-- <b-button
-				v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-				variant="success"
-				@click="skipButton"
-				v-b-tooltip.hover.bottom="'Skip Payment'"
+		<b-card class="card card_payment shadow-none bg-primary">
+			<b-card-text
+				class="h1 font-weight-normal text-center text-white mb-5 mt-3"
+				>Pay with any of our verify payment Gateway</b-card-text
 			>
-				<span>Skip</span>
-			</b-button> -->
+			<div class="row">
+				<div class="col col-sm-4">
+					<payment-card
+						v-b-modal.modal-flutterwave
+						title="Flutterwave"
+						text="Pay with flutter, with ease, you can pay with dollar"
+						variant="danger"
+					/>
+				</div>
+				<div class="col col-sm-4">
+					<payment-card
+						v-b-modal.modal-scrollable
+						title="Paystack"
+						text="Pay Using Paystack, The best we have verified here in nigeria"
+						variant="secondary"
+					/>
+				</div>
+
+				<div class="col col-sm-4">
+					<payment-card
+						v-b-modal.modal-transfer
+						title="Transfer"
+						text="Pay with transfer, For the ease of transfer, make payment using bank transfer request for confirmation"
+						variant="warning"
+					/>
+				</div>
 			</div>
-		</div>
+		</b-card>
+
 		<b-modal
 			ref="modalFlutterWave"
 			id="modal-flutterwave"
@@ -395,6 +455,7 @@
 		BCardText,
 		BCardTitle,
 		BAvatar,
+		BAlert,
 		VBTooltip,
 		BModal,
 		VBModal,
@@ -446,6 +507,7 @@
 			VuexyLogo,
 			BModal,
 			BFormGroup,
+			BAlert,
 
 			BRow,
 			BCol,
@@ -455,15 +517,19 @@
 		},
 		data() {
 			return {
+				notSubscribed: false,
+				sendingVerificationEmail: false,
+				emailNotVerified: false,
 				courseDisplay: null,
 				course: null,
 				isRequesting: true,
+				isNotVerify: true,
 				downImg: require("@/assets/images/pages/under-maintenance.svg"),
 				required,
 				numbFormat,
 				fulName: "",
 				email: "",
-				amount: 1000,
+				amount: 15000,
 				paystackPublicKey:
 					"pk_test_2682ed4a145e5a19e2ebe0d09c6ed25230130cad",
 				transRef: "",
@@ -516,6 +582,16 @@
 					this.isRequesting = false;
 					console.log(err);
 				});
+
+			this.$store
+				.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+					id: this.$store.getters["Auth/currentUserGetter"].id,
+				})
+				.then((resp) => {
+					if (!resp.subscribed) {
+						this.notSubscribed = true;
+					}
+				});
 		},
 
 		computed: {
@@ -525,6 +601,7 @@
 
 			currentUser() {
 				let x = this.$store.getters["Auth/currentUserGetter"];
+
 				return x;
 			},
 
@@ -547,6 +624,28 @@
 		},
 
 		methods: {
+			resendVerificationMail() {
+				this.sendingVerificationEmail = true;
+
+				sendEmailVerification(auth?.currentUser)
+					.then((resp) => {
+						this.sendingVerificationEmail = false;
+						this.emailNotVerified = false;
+						this.errorMessage = null;
+						this.$toast({
+							component: ToastificationContent,
+							props: {
+								title: "Success",
+								text: `Please check your email box, Verification instructions sent successfully `,
+								icon: "CheckIcon",
+								variant: "success",
+							},
+						});
+					})
+					.catch((err) => {
+						this.sendingVerificationEmail = false;
+					});
+			},
 			makePaymentWithFlutterwave(response) {
 				if (!val) {
 					this.$toast({
@@ -759,13 +858,18 @@
 	};
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	@import "@core/scss/vue/pages/page-auth.scss";
 
 	.wrapper {
 		margin: 10px;
-		padding: 5px;
+		// padding: 5px;
 	}
+	.card_payment {
+		margin-top: 100px !important;
+		margin-bottom: 100px !important;
+	}
+
 	.container {
 		position: relative;
 		display: flex;
@@ -780,6 +884,16 @@
 	.container_loader {
 		height: 30vh;
 	}
+	.card {
+		border-radius: 25px !important;
+		margin: 0px !important;
+		padding: 0px !important;
+		margin-top: 35px !important;
+		// margin-bottom:20px !important;
+	}
+	.introCard {
+		border-radius: 25px !important;
+	}
 	iframe {
 		position: absolute;
 		top: 0;
@@ -791,6 +905,6 @@
 		height: 100%;
 
 		border: 0px !important;
+		border-radius: 30px !important;
 	}
 </style>
-q
