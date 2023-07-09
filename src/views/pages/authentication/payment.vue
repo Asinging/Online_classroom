@@ -640,3 +640,4 @@
 <style lang="scss">
 	@import "@core/scss/vue/pages/page-misc.scss";
 </style>
+q
