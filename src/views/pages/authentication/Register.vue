@@ -299,12 +299,12 @@
 					return false;
 					// }
 
-					if (!this.emailVerificationSent) {
-						this.emailVerificationSent = true;
-						sendEmailVerification(auth?.currentUser)
-							.then(() => {})
-							.catch((err) => console.log(err));
-					}
+					// if (!this.emailVerificationSent) {
+					// 	this.emailVerificationSent = true;
+					// 	sendEmailVerification(auth?.currentUser)
+					// 		.then(() => {})
+					// 		.catch((err) => console.log(err));
+					// }
 
 					return false;
 				},
@@ -341,12 +341,12 @@
 				return value.toLowerCase().trim();
 			},
 
-			resendVerificationMail() {
-				this.emailVerificationSent = true;
-				sendEmailVerification(auth?.currentUser)
-					.then(() => {})
-					.catch((err) => console.log(err));
-			},
+			// resendVerificationMail() {
+			// 	this.emailVerificationSent = true;
+			// 	sendEmailVerification(auth?.currentUser)
+			// 		.then(() => {})
+			// 		.catch((err) => console.log(err));
+			// },
 
 			registerUser() {
 				this.$refs.registerUserForm.validate().then(async (success) => {

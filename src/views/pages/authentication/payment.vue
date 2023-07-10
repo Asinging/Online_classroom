@@ -63,17 +63,21 @@
 							<div
 								class="mb-1 text-capitalize h1 text-white"
 								style="font-size: 20px"
-								v-if="emailNotVerified"
+								v-if="!emailVerified"
 							>
 								<b-button
 									@click="resendVerificationMail"
-									:disabled="sendingVerificationEmail"
+									:disabled="
+										sendingVerificationEmail ||
+										verificationBtn > 0
+									"
 									class="mt-25"
 									size="xl"
-									variant="success"
+									:variant="verificationMsg=='Please verify your email'?'success': 'danger'"
 								>
-									<span class="font-weight-bold h4 text-white"
-										>Please Verify your email</span
+									<span
+										class="font-weight-bold h4 text-white"
+										>{{ verificationMsg }}</span
 									>
 									<span class="py-1">
 										<b-spinner
@@ -82,6 +86,29 @@
 											small
 										/>
 									</span>
+									<div>
+										<b-button
+											@click="resendVerificationMail"
+											:disabled="
+												sendingVerificationEmail ||
+												verificationBtn > 0
+											"
+											class="mt-25"
+											size="sm"
+											:variant="'white'"
+										>
+										<span
+											class="font-weight-bold h4 text-dark"
+											>Resend</span
+										>
+										<span class="py-1">
+											<b-spinner
+												v-if="sendingVerificationEmail"
+												class="ml-1"
+												small
+											/>
+										</span></b-button>
+									</div>
 								</b-button>
 							</div>
 						</div>
@@ -477,6 +504,8 @@
 	import { required, email } from "@validations";
 	import { numbFormat } from "@/helpers/number-helpers/numberIndex";
 	import { checkIframe } from "@/helpers/iframe-helpers";
+	import { getAuth ,sendEmailVerification } from "firebase/auth";
+	const auth = getAuth();
 
 	export default {
 		directives: {
@@ -519,7 +548,10 @@
 			return {
 				notSubscribed: false,
 				sendingVerificationEmail: false,
-				emailNotVerified: false,
+				verificationMsg: "Please verify your email",
+				verificationBtn: 0,
+
+				emailVerified: true,
 				courseDisplay: null,
 				course: null,
 				isRequesting: true,
@@ -539,7 +571,7 @@
 				body: "",
 				flutterwavePaymentData: {
 					tx_ref: this.generateReference(),
-					amount: 20000,
+					amount: 15000,
 					currency: "NGN",
 					payment_options: "card,ussd",
 					redirect_url: "",
@@ -592,6 +624,11 @@
 						this.notSubscribed = true;
 					}
 				});
+
+			if (auth) {
+				let user = auth?.currentUser;
+				this.emailVerified = user?.emailVerified;
+			}
 		},
 
 		computed: {
@@ -625,13 +662,15 @@
 
 		methods: {
 			resendVerificationMail() {
+				if (this.verificationBtn > 0) return false;
 				this.sendingVerificationEmail = true;
-
+				this.verificationBtn = this.verificationBtn + 1;
 				sendEmailVerification(auth?.currentUser)
 					.then((resp) => {
 						this.sendingVerificationEmail = false;
-						this.emailNotVerified = false;
-						this.errorMessage = null;
+
+						this.verificationMsg =
+							"Now check your mailbox for verification guides";
 						this.$toast({
 							component: ToastificationContent,
 							props: {
