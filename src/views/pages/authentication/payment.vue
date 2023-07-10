@@ -58,7 +58,7 @@
 								class="mb-1 text-capitalize h1 text-white"
 								style="font-size: 20px"
 							>
-								Welcome Back!
+								Welcome Back! Good to have you
 							</b-card-text>
 							<div
 								class="mb-1 text-capitalize h1 text-white"
@@ -66,14 +66,19 @@
 								v-if="!emailVerified"
 							>
 								<b-button
-									@click="resendVerificationMail"
+									@click="resendVerificationMail(false)"
 									:disabled="
 										sendingVerificationEmail ||
 										verificationBtn > 0
 									"
 									class="mt-25"
 									size="xl"
-									:variant="verificationMsg=='Please verify your email'?'success': 'danger'"
+									:variant="
+										verificationMsg ==
+										'Please verify your email'
+											? 'success'
+											: 'danger'
+									"
 								>
 									<span
 										class="font-weight-bold h4 text-white"
@@ -86,28 +91,30 @@
 											small
 										/>
 									</span>
-									<div>
+									<div v-if="verificationBtn > 0">
 										<b-button
-											@click="resendVerificationMail"
+											@click="resendVerificationMail(true)"
 											:disabled="
 												sendingVerificationEmail ||
 												verificationBtn > 0
 											"
-											class="mt-25"
+											class="p-0 m-0"
 											size="sm"
-											:variant="'white'"
+											:variant="'light'"
 										>
-										<span
-											class="font-weight-bold h4 text-dark"
-											>Resend</span
-										>
-										<span class="py-1">
-											<b-spinner
-												v-if="sendingVerificationEmail"
-												class="ml-1"
-												small
-											/>
-										</span></b-button>
+											<span
+												class="font-weight-bold h4 text-dark"
+												>Resend</span
+											>
+											<span class="py-1">
+												<b-spinner
+													v-if="
+														sendingVerificationEmail
+													"
+													class="ml-1"
+													small
+												/> </span
+										></b-button>
 									</div>
 								</b-button>
 							</div>
@@ -504,7 +511,7 @@
 	import { required, email } from "@validations";
 	import { numbFormat } from "@/helpers/number-helpers/numberIndex";
 	import { checkIframe } from "@/helpers/iframe-helpers";
-	import { getAuth ,sendEmailVerification } from "firebase/auth";
+	import { getAuth, sendEmailVerification } from "firebase/auth";
 	const auth = getAuth();
 
 	export default {
@@ -661,12 +668,14 @@
 		},
 
 		methods: {
-			resendVerificationMail() {
-				if (this.verificationBtn > 0) return false;
+			resendVerificationMail(resendEmail) {
+				debugger
+				if (this.verificationBtn < 1 || resendEmail) {
 				this.sendingVerificationEmail = true;
-				this.verificationBtn = this.verificationBtn + 1;
+
 				sendEmailVerification(auth?.currentUser)
 					.then((resp) => {
+						this.verificationBtn = this.verificationBtn + 1;
 						this.sendingVerificationEmail = false;
 
 						this.verificationMsg =
@@ -684,6 +693,7 @@
 					.catch((err) => {
 						this.sendingVerificationEmail = false;
 					});
+				}
 			},
 			makePaymentWithFlutterwave(response) {
 				if (!val) {
