@@ -117,9 +117,12 @@
 								}"
 								class="font-weight-bold d-block text-nowrap text-capitalize text-primary text-decoration-none"
 								v-b-tooltip.hover.bottom
-								:title="data.item.f_name || data.item.username "
+								:title="data.item.f_name || data.item.username"
 							>
-								{{nameShortener (data.item.f_name) || nameShortener(data.item.username) }}
+								{{
+									nameShortener(data.item.f_name) ||
+									nameShortener(data.item.username)
+								}}
 							</b-link>
 							<small class="text-muted text-lighten-blue"
 								>@{{ data.item.username }}</small
@@ -207,7 +210,7 @@
 								<span class="align-middle ml-50">Edit</span>
 							</b-dropdown-item>
 
-							<b-dropdown-item @click="deleteUser(data.item)">
+							<b-dropdown-item @click="deleteOrdUser(data.item)">
 								<feather-icon icon="TrashIcon" />
 								<span class="align-middle ml-50">Delete</span>
 							</b-dropdown-item>
@@ -358,7 +361,7 @@
 				resolveUserRoleVariant,
 				resolveUserRoleIcon,
 				resolveUserStatusVariant,
-				deleteUser,
+				deleteOrdUser,
 				nameShortener,
 
 				// Extra Filters
@@ -403,7 +406,7 @@
 				deleteClick,
 				refetchData,
 				fetchUsers,
-				deleteUser,
+				deleteOrdUser,
 				nameShortener,
 				// Filter
 				avatarText,

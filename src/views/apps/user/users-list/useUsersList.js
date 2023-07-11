@@ -10,6 +10,8 @@ import { paginateCounteFromOne, countFromOne } from '@/helpers/number-helpers/nu
 import { paginate } from '@/helpers/pagination-helpers/generalPagination';
 import router from '@/router';
 import Swal from 'sweetalert2';
+import { getAuth, deleteUser } from 'firebase/auth';
+const auth = getAuth();
 
 import { useRoute } from 'vue-router';
 
@@ -103,7 +105,6 @@ export default function useUsersList() {
          }
          return item;
       });
-      ;
       return countFromOne(users);
    });
 
@@ -139,7 +140,7 @@ export default function useUsersList() {
 
    //*************************************************************** */
    // ********************** FUNCTIONS (MEHTODS) ********************************//
-   const deleteUser = user => {
+   const deleteOrdUser = user => {
       new Swal({
          title: ' 😕 Hey Carefull! ',
          text: `You are about to delete this user permanently`,
@@ -170,6 +171,10 @@ export default function useUsersList() {
                   isBusy.value = false;
                   new Swal('Good job!', 'User successfully deleted!', 'success');
                   fetchUsers(1, 1);
+                  let user = auth ? auth.currentUser : 0;
+                  // deleteUser(user).then(() => {}).catch(error => {
+                  //    console.log(error);
+                  // });
                })
                .catch(err => {
                   isBusy.value = false;
@@ -274,7 +279,7 @@ export default function useUsersList() {
       resolveUserRoleIcon,
       resolveUserStatusVariant,
       refetchData,
-      deleteUser,
+      deleteOrdUser,
       nameShortener,
 
       // Extra Filters
