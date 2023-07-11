@@ -1,13 +1,6 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
-	<div style="height: inherit">
-		<!-- <div
-			v-if="!computeCourseDisplay"
-			class="text-center d-flex justify-content-center align-items-center"
-			style="height: 100%"
-		>
-			<b-spinner size="xl" class="text-center text-primary" />
-		</div> -->
+	<div style="height: inherit; margin-bottom:10px">
 		<div
 			v-if="!computeCourseDisplay"
 			class="text-center d-flex justify-content-center align-items-center align-content-center"
@@ -64,36 +57,7 @@
 					:settings="perfectScrollbarSettings"
 					class="email-user-list scroll-area"
 				>
-					<b-card
-						v-if="isRequsting"
-						class="align-items-center min-vh-70 d-flex justify-content-center"
-					>
-						<div class="container text-center">
-							<b-spinner
-								size="xl"
-								class="text-center text-primary"
-							></b-spinner>
-						</div>
-					</b-card>
-					<b-card class="container" v-else-if="course">
-						<div
-							id="iframeContainer"
-							v-if="computeCourseDisplay.isIframe"
-						>
-							<div
-								class="iframe d-flex"
-								v-html="computeCourseDisplay.video_url"
-							></div>
-						</div>
-						<div v-else class="iframe">
-							<b-embed
-								type="iframe"
-								aspect="16by9"
-								:src="computeCourseDisplay.video_url"
-								allowfullscreen
-							/>
-						</div>
-					</b-card>
+		
 					<!-- <b-card class="container">
 						<div
 							id="iframeContainer"
@@ -120,6 +84,43 @@
 							</div>
 						</div>
 					</b-card> -->
+
+					<b-card
+						class="d-flex justify-content-start shadow-none bg-light border-0"
+						tag="article"
+						style="min-height: 400px"
+					>
+						<div
+							v-if="isRequesting"
+							class="align-items-center d-flex justify-content-start"
+						>
+							<div class="container text-center">
+								<b-spinner
+									size="xl"
+									class="text-center text-primary"
+								></b-spinner>
+							</div>
+						</div>
+						<div class="container" v-else-if="course">
+							<div
+								v-if="computeCourseDisplay.isIframe"
+								class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
+								style="height: 70vh; width: 100%"
+								v-html="computeCourseDisplay.video_url"
+							></div>
+							<div v-else class="iframe p-0 m-0">
+								<b-embed
+									class="embed-responsive-item"
+									type="iframe"
+									aspect="16by9"
+									:src="computeCourseDisplay.video_url"
+									allowfullscreen
+								/>
+							</div>
+						</div>
+
+					
+					</b-card>
 				</vue-perfect-scrollbar>
 			</div>
 
@@ -338,11 +339,39 @@
 <style lang="scss" scoped>
 </style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	@import "~@core/scss/base/pages/app-email.scss";
+	// .container {
+	// 	height: 65vh !important;
+	// 	width: 100% !important;
+	// }
+	// .video-container {
+	// 	position: relative;
+	// }
+
+	// .container_loader {
+	// 	height: 30vh;
+	// }
+	// .iframeContainer {
+	// 	position: relative;
+	// }
+	// .iframe {
+	// 	position: absolute;
+	// 	top: 0;
+	// 	right: 0;
+	// 	padding: 0;
+	// 	margin: 0;
+	// 	width: 100%;
+	// 	height: 100%;
+	// 	border: 0;
+	// }
+
 	.container {
-		height: 65vh !important;
-		width: 100% !important;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		max-width: 1000px !important; /* Adjust the value as per your preference */
+		margin: 0 auto;
 	}
 	.video-container {
 		position: relative;
@@ -351,17 +380,24 @@
 	.container_loader {
 		height: 30vh;
 	}
-	.iframeContainer {
-		position: relative;
+	.card {
+		border-radius: 15px !important;
+
 	}
-	.iframe {
+	.introCard {
+		border-radius: 25px !important;
+	}
+	iframe {
 		position: absolute;
 		top: 0;
 		right: 0;
 		padding: 0;
 		margin: 0;
 		width: 100%;
-		height: 100%;
-		border: 0;
+
+		height: 90%;
+
+		border: 0px !important;
+		border-radius: 10px !important;
 	}
 </style>
