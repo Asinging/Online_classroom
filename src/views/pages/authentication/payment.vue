@@ -41,6 +41,25 @@
 									>
 								</div>
 							</div>
+							<div
+								class="d-flex justify-content-end text-md-right"
+								v-else
+							>
+								<b-button
+										v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+										variant="outline-white"
+										class="p-0 border-5"
+										@click="toDashboard"
+								>
+										<feather-icon
+												icon="GridIcon"
+												class="mr-50 text-white"
+												size="20"
+										/>
+										<span class="align-middle text-white font-weight-bold h4">Go to Dashboard</span>
+								</b-button>
+						
+							</div>
 						</div>
 
 						<div>
@@ -676,6 +695,15 @@
 		},
 
 		methods: {
+			toDashboard() {
+				let isAdmin = store.getters['appConfig/whoIsinGetter'];
+				if (isAdmin) {
+					this.$router.push("/admin/dashboard");
+					return true;
+				}
+				
+				this.$router.push('/');
+			},
 			home() {
 				this.$router.push("/welcome");
 			},

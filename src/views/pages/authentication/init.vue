@@ -186,7 +186,10 @@
 							true
 						);
 						localStorage.setItem("isValid", "true");
-						this.$router.push("/dashboard");
+						// this.$router.push("/dashboard");
+						this.$router.push({
+							name: "payment",
+						});
 					})
 					.catch((err) => {
 						console.log(err);

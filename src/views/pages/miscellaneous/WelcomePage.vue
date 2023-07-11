@@ -21,7 +21,7 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
+						<li class="nav-item" v-if="userData">
 							<a
 								class="nav-link"
 								href="javascript:void(0);"
@@ -40,7 +40,7 @@
 								class="nav-link"
 								href="javascript:void(0);"
 								@click="login"
-								>Login</a
+								>{{!userData?'Login' : 'Logout'}}</a
 							>
 						</li>
 					</ul>
@@ -234,6 +234,7 @@
 	/* eslint-disable global-require */
 	import { BLink, BForm, BFormInput, BButton, BImg } from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
+	import store from "@/store/index";
 
 	export default {
 		components: {
@@ -247,11 +248,13 @@
 		data() {
 			return {
 				downImg: require("@/assets/images/pages/coming-soon.svg"),
+				userData:null
 			};
 		},
 		computed: {},
 		created() {
 			window.addEventListener("DOMContentLoaded", this.runEvent(event));
+			this.userData = JSON.parse(localStorage.getItem('userData') || 'false');
 		},
 		mounted() {
 			localStorage.setItem("notFirstTime", true);
@@ -303,14 +306,15 @@
 
 
 			toDashboard() {
-				let userData = JSON.parse(
-					localStorage.getItem("userData") || "false"
-				);
-				if (userData) {
-					this.$router.push("/");
+				let isAdmin = this.$store.getters['appConfig/whoIsinGetter'];
+				if (isAdmin) {
+					this.$router.push("/admin/dashboard");
 					return true;
 				}
-				this.$router.push("/login");
+				
+				this.$router.push({
+					name: "payment",
+				});
 			},
 
 
@@ -323,6 +327,7 @@
 			},
 
 			register() {
+
 				localStorage.removeItem('userData');
 				localStorage.removeItem('isValid');
 				localStorage.removeItem('isAdminIn');
