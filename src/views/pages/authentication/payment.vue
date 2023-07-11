@@ -146,7 +146,7 @@
 					</b-card>
 				</b-col>
 			</b-col>
-			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 my-10">
+			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 my-5">
 				<b-card
 					class="vw-100 shadow-none rounded-20 bg-light card border-0"
 					tag="article"
@@ -160,28 +160,23 @@
 							>
 								<div
 									v-if="isRequesting"
-									class="align-items-center d-flex justify-content-start"
+									class="align-items-center d-flex justify-content-center"
 								>
-									<div
-										class="containing_container text-center"
-									>
+									<div class="containing_container text-center">
 										<b-spinner
 											size="xl"
 											class="text-center text-primary"
 										></b-spinner>
 									</div>
 								</div>
-								<div
-									class="containing_container"
-									v-else-if="course"
-								>
+								<div class="containing_container" v-else-if="course">
 									<div
 										v-if="computeCourseDisplay.isIframe"
-										class="iframe d-flex justify-content-center embed-responsive-item rounded-100 p-0 m-0"
-										style="height: 75vh; width: 100%"
+										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
+										style="height: 90vh; width: 100%"
 										v-html="computeCourseDisplay.video_url"
 									></div>
-									<div v-else class="iframe p-0 m-0 d-flex justify-content-center">
+									<div v-else class="iframe p-0 m-0">
 										<b-embed
 											class="embed-responsive-item"
 											type="iframe"
@@ -198,7 +193,6 @@
 									class="containing_container d-flex align-items-center card p-0 m-0 border-0"
 									v-else
 									tag="div"
-									height="500"
 								>
 									<div class="video-container">
 										<b-alert
@@ -954,7 +948,8 @@
 <style lang="scss" >
 	.wrapper {
 		margin: 10px;
-		padding: 5px;
+		// background:red
+		// padding: 5px;
 	}
 	.card_payment {
 		margin-top: 100px !important;
@@ -965,8 +960,10 @@
 		position: relative;
 		display: flex;
 		justify-content: center;
-		max-width: 1200px !important; /* Adjust the value as per your preference */
-		margin: 4px;
+		max-width: 1600px !important; /* Adjust the value as per your preference */
+		margin-left: 7px;
+		margin-right: 7px;
+		margin-right: 0px !important;
 	}
 	.video-container {
 		position: relative;
@@ -976,10 +973,10 @@
 		height: 30vh;
 	}
 	.card {
-		border-radius: 20px !important;
+		border-radius: 18px !important;
 		margin: 0px !important;
 		padding: 0px !important;
-		margin-top: 30px !important;
+		margin-top: 35px !important;
 		// margin-bottom:20px !important;
 	}
 	.introCard {
