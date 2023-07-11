@@ -4,6 +4,7 @@
 		class="card card-congratulations bg-white"
 		v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 		style="cursor: pointer"
+		
 	>
 		<!--/ images -->
 

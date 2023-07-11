@@ -5,6 +5,7 @@
 		showLoading
 		@refresh="refreshStop"
 		:title="isComponent ? 'Users' : 'All Users'"
+		class="border-0"
 	>
 		<div>
 			<user-list-add-new
@@ -15,8 +16,8 @@
 			/>
 
 			<!-- Table Container Card -->
-			<b-card no-body class="mb-0" title>
-				<div class="m-2">
+			<b-card no-body class="mb-0 border-0" title>
+				<div class="m-2 border-0">
 					<!-- Table Top -->
 					<b-row v-if="!isComponent">
 						<!-- Per Page -->
@@ -61,7 +62,7 @@
 
 				<b-table
 					ref="refUserListTable"
-					class="position-relative"
+					class="position-relative border-0"
 					:items="computeUsers"
 					:fields="tableColumns"
 					primary-key="id"

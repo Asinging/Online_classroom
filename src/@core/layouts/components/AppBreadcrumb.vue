@@ -12,7 +12,7 @@
 					</h2>
 					<div class="breadcrumb-wrapper">
 						<b-breadcrumb>
-							<b-breadcrumb-item to="/">
+							<b-breadcrumb-item to="/" class="text-primary text-decoration-none">
 								<feather-icon
 									icon="HomeIcon"
 									size="16"
@@ -24,6 +24,7 @@
 								:key="item.text"
 								:active="item.active"
 								:to="item.to"
+								class="text-primary text-decoration-none"
 							>
 								{{ item.text }}
 							</b-breadcrumb-item>

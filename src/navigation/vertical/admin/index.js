@@ -1,10 +1,17 @@
 export default [
    {
-      header: 'HOME | ADMIN'
+      header: 'ADMIN'
+   },
+   {
+      title: 'Home',
+      icon: 'HomeIcon',
+
+      route: 'welcome',
+      key: 'home'
    },
    {
       title: 'Dashboards',
-      icon: 'HomeIcon',
+      icon: 'GridIcon',
       tag: 'new',
       tagVariant: 'light-warning',
       route: 'dashboard-ecommerce',

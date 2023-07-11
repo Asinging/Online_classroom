@@ -1,10 +1,16 @@
 export default [
    {
-      header: 'HOME'
+      header: 'CLIENT'
+   },
+   {
+      title: 'Home',
+      icon: 'HomeIcon',
+      route: 'welcome',
+      key: 'home'
    },
    {
       title: 'Dashboards',
-      icon: 'HomeIcon',
+      icon: 'GridIcon',
 
       tagVariant: 'light-warning',
 

@@ -62,52 +62,44 @@
 								Welcome Back! Good to have you
 							</b-card-text>
 							<div
-								class="mb-1 text-capitalize   d-flex justify-content-between"
-							
-							
+								class="mb-1 text-capitalize d-flex justify-content-between"
 							>
-							<div></div>
+								<div></div>
 
-							<div class="d-flex justify-content-center">
-								<b-button
-									v-if="!emailVerified"
-									@click="resendVerificationMail(false)"
-									:disabled="
-										sendingVerificationEmail ||
-										verificationBtn > 0
-									"
-									class="mt-25"
-									size="xl"
-									:variant="
-										verificationMsg ==
-										'Please verify your email'
-											? 'success'
-											: 'danger'
-									"
-								>
-									<span
-										class="font-weight-bold h4 text-white"
-										>{{ verificationMsg }}</span
-									>
-									<span class="py-1">
-										<b-spinner
-											v-if="sendingVerificationEmail"
-											class="ml-1"
-											small
-										/>
-									</span>
-							
-								</b-button>
+								<div class="d-flex justify-content-center">
 									<b-button
-										v-if="verificationBtn > 0"
-										@click="
-											resendVerificationMail(true)
-										"
+										v-if="!emailVerified"
+										@click="resendVerificationMail(false)"
 										:disabled="
 											sendingVerificationEmail ||
 											verificationBtn > 0
 										"
-										class="p-0 m-0"
+										class="mt-25"
+										size="xl"
+										:variant="
+											verificationMsg ==
+											'Please verify your email'
+												? 'success'
+												: 'danger'
+										"
+									>
+										<span
+											class="font-weight-bold h4 text-white"
+											>{{ verificationMsg }}</span
+										>
+										<span class="py-1">
+											<b-spinner
+												v-if="sendingVerificationEmail"
+												class="ml-1"
+												small
+											/>
+										</span>
+									</b-button>
+									<b-button
+										v-if="verificationBtn > 0"
+										@click="resendVerificationMail(true)"
+										:disabled="sendingVerificationEmail"
+										class="ml-25"
 										size="sm"
 										:variant="'light'"
 									>
@@ -115,19 +107,22 @@
 											class="font-weight-bold h4 text-dark"
 											>Resend</span
 										>
-											
-										</b-button>
-							</div>
-							<div class="d-flex justify-content-end align-items-center"  >
-								<feather-icon size="28" icon="HomeIcon" color="white"	@click="home" class="cursor-pointer" v-b-tooltip.hover.bottom title="Go to home"/>
-							</div>
-								
+									</b-button>
 								</div>
-		
-							
-								
-							
-							
+								<div
+									class="d-flex justify-content-end align-items-center"
+								>
+									<feather-icon
+										size="28"
+										icon="HomeIcon"
+										color="white"
+										@click="home"
+										class="cursor-pointer"
+										v-b-tooltip.hover.bottom
+										title="Go to home"
+									/>
+								</div>
+							</div>
 						</div>
 					</b-card>
 				</b-col>
@@ -224,13 +219,16 @@
 				<!-- </div> -->
 			</b-col>
 		</b-row>
-		<b-card class="card card_payment shadow-none bg-primary border-0" variant="primary">
+		<b-card
+			class="card card_payment shadow-none bg-primary border-0"
+			variant="primary"
+		>
 			<b-card-text
 				class="h1 font-weight-normal text-center text-white mb-5 mt-3"
 				>Pay with any of our verify payment Gateway</b-card-text
 			>
 			<div class="row">
-				<div class="col col-sm-4">
+				<div class="col-12 col-md-4">
 					<payment-card
 						v-b-modal.modal-flutterwave
 						title="Flutterwave"
@@ -238,7 +236,7 @@
 						variant="danger"
 					/>
 				</div>
-				<div class="col col-sm-4">
+				<div class="col-12 col-md-4">
 					<payment-card
 						v-b-modal.modal-scrollable
 						title="Paystack"
@@ -247,7 +245,7 @@
 					/>
 				</div>
 
-				<div class="col col-sm-4">
+				<div class="col-12 col-sm-12 col-md-4">
 					<payment-card
 						v-b-modal.modal-transfer
 						title="Transfer"
@@ -678,8 +676,8 @@
 		},
 
 		methods: {
-			home(){
-				this.$router.push("/welcome")
+			home() {
+				this.$router.push("/welcome");
 			},
 			resendVerificationMail(resendEmail) {
 				if (this.verificationBtn < 1 || resendEmail) {

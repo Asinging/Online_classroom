@@ -5,10 +5,11 @@
 		showLoading
 		@refresh="refreshStop"
 		title="All Courses"
+		class="border-0"
 	>
 		<div>
 			<!-- Table Container Card -->
-			<b-card no-body class="mb-0" title>
+			<b-card no-body class="mb-0 border-0" title>
 				<div class="m-2">
 					<!-- Table Top -->
 					<b-row>
@@ -48,7 +49,7 @@
 
 				<b-table
 					ref="refCourseListTable"
-					class="position-relative"
+					class="position-relative border-0"
 					:items="computeCourses"
 					:fields="tableColumns"
 					primary-key="id"

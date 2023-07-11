@@ -318,6 +318,7 @@
 				localStorage.removeItem('userData');
 				localStorage.removeItem('isValid');
 				localStorage.removeItem('isAdminIn');
+				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 				this.$router.push("/login");
 			},
 
@@ -325,6 +326,7 @@
 				localStorage.removeItem('userData');
 				localStorage.removeItem('isValid');
 				localStorage.removeItem('isAdminIn');
+				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 				this.$router.push("/register");
 			},
 		},
