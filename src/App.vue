@@ -14,10 +14,13 @@
 	// This will be populated in `beforeCreate` hook
 	import { $themeColors, $themeBreakpoints, $themeConfig } from "@themeConfig";
 	import { provideToast } from "vue-toastification/composition";
-	import { watch } from "@vue/composition-api";
+	import { watch, ref } from "@vue/composition-api";
 	import useAppConfig from "@core/app-config/useAppConfig";
 
 	import { useWindowSize, useCssVar } from "@vueuse/core";
+	import { onAuthStateChanged } from "firebase/auth";
+	import { authentication } from "@/config/firebase.js";
+	import { setLocalstorage } from "@/helpers/user-helpers";
 
 	import store from "@/store";
 
@@ -46,12 +49,6 @@
 			},
 		},
 
-		beforeMount() {
-			const isAdminIn = JSON.parse(
-				localStorage.getItem("isAdminIn") || "false"
-			);
-			this.$store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
-		},
 		beforeCreate() {
 			// localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
 
@@ -111,17 +108,62 @@
 				timeout: 3000,
 				transition: "Vue-Toastification__fade",
 			});
-			let isAdminIn = JSON.parse(
-				localStorage.getItem("isAdminIn") || "false"
-			);
+			const isAdmin = store.getters["appConfig/whoIsinGetter"];
+
 			// Set Window Width in store
-			store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
+			store.commit("appConfig/UPDATE_USER_SUBSCRIPTION", true);
+			store.commit("appConfig/UPDATE_WHO_IS_IN", isAdmin);
 			store.commit("app/UPDATE_WINDOW_WIDTH", window.innerWidth);
 			const { width: windowWidth } = useWindowSize();
 			watch(windowWidth, (val) => {
 				store.commit("app/UPDATE_WINDOW_WIDTH", val);
 			});
 
+			onAuthStateChanged(authentication, (user) => {
+			
+				initUser(user);
+			});
+
+			const initUser = (val) => {
+				if (!val) return false;
+
+				store
+					.dispatch("Users/GET_SINGLE_USER_BY_Id", {
+						id: val.uid,
+					})
+					.then((resp) => {
+						
+						let formObject = setLocalstorage(
+							authentication.currentUser,
+							resp
+						);
+
+						store.commit("Auth/mCurrentUser", formObject);
+
+						let isAdminIn = resp.user_type < 2 ? true : false;
+
+						store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
+
+						if (resp.user_type < 2) {
+							store.commit("appConfig/UPDATE_WHO_IS_IN", true);
+						}
+
+						if (resp.subscribed) {
+							store.commit(
+								"appConfig/UPDATE_USER_SUBSCRIPTION",
+								true
+							);
+						} else {
+							store.commit(
+								"appConfig/UPDATE_USER_SUBSCRIPTION",
+								false
+							);
+						}
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			};
 			return {
 				skinClasses,
 				enableScrollToTop,

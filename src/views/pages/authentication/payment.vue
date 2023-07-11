@@ -12,9 +12,10 @@
 						tag="article"
 						v-if="currentUser"
 						text-variant="center"
-						class="shadow-none rounded-100 mt-3 bg-secondary card"
+						variant="secondary"
+						class="shadow-none rounded-100 mt-3 bg-secondary card border-0"
 					>
-						<div class="d-md-flex justify-content-between">
+						<div class="d-md-flex justify-content-between border-0">
 							<b-img
 								:src="
 									require('@/assets/images/decore-right.png')
@@ -61,11 +62,15 @@
 								Welcome Back! Good to have you
 							</b-card-text>
 							<div
-								class="mb-1 text-capitalize h1 text-white"
-								style="font-size: 20px"
-								v-if="!emailVerified"
+								class="mb-1 text-capitalize   d-flex justify-content-between"
+							
+							
 							>
+							<div></div>
+
+							<div class="d-flex justify-content-center">
 								<b-button
+									v-if="!emailVerified"
 									@click="resendVerificationMail(false)"
 									:disabled="
 										sendingVerificationEmail ||
@@ -91,46 +96,51 @@
 											small
 										/>
 									</span>
-									<div v-if="verificationBtn > 0">
-										<b-button
-											@click="resendVerificationMail(true)"
-											:disabled="
-												sendingVerificationEmail ||
-												verificationBtn > 0
-											"
-											class="p-0 m-0"
-											size="sm"
-											:variant="'light'"
-										>
-											<span
-												class="font-weight-bold h4 text-dark"
-												>Resend</span
-											>
-											<span class="py-1">
-												<b-spinner
-													v-if="
-														sendingVerificationEmail
-													"
-													class="ml-1"
-													small
-												/> </span
-										></b-button>
-									</div>
+							
 								</b-button>
+									<b-button
+										v-if="verificationBtn > 0"
+										@click="
+											resendVerificationMail(true)
+										"
+										:disabled="
+											sendingVerificationEmail ||
+											verificationBtn > 0
+										"
+										class="p-0 m-0"
+										size="sm"
+										:variant="'light'"
+									>
+										<span
+											class="font-weight-bold h4 text-dark"
+											>Resend</span
+										>
+											
+										</b-button>
 							</div>
+							<div class="d-flex justify-content-end align-items-center"  >
+								<feather-icon size="28" icon="HomeIcon" color="white"	@click="home" class="cursor-pointer" v-b-tooltip.hover.bottom title="Go to home"/>
+							</div>
+								
+								</div>
+		
+							
+								
+							
+							
 						</div>
 					</b-card>
 				</b-col>
 			</b-col>
 			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 my-10">
 				<b-card
-					class="vw-100 shadow-none rounded-20 bg-light card"
+					class="vw-100 shadow-none rounded-20 bg-light card border-0"
 					tag="article"
 				>
 					<b-row align-h="center">
 						<b-col cols="12" class="p-0 ma-0">
 							<b-card
-								class="d-flex justify-content-start shadow-none bg-light"
+								class="d-flex justify-content-start shadow-none bg-light border-0"
 								tag="article"
 								style="min-height: 400px"
 							>
@@ -166,7 +176,7 @@
 								</div>
 
 								<b-card
-									class="container d-flex align-items-center card p-0 m-0"
+									class="container d-flex align-items-center card p-0 m-0 border-0"
 									v-else
 									tag="div"
 								>
@@ -191,7 +201,7 @@
 						</b-col>
 						<b-col cols="12" class="mt-0">
 							<b-card
-								class="card w-auto d-flex align-items-center justify-content-center"
+								class="card w-auto d-flex align-items-center justify-content-center border-0"
 								style="
 									width: 100%;
 									min-height: 150px;
@@ -214,7 +224,7 @@
 				<!-- </div> -->
 			</b-col>
 		</b-row>
-		<b-card class="card card_payment shadow-none bg-primary">
+		<b-card class="card card_payment shadow-none bg-primary border-0" variant="primary">
 			<b-card-text
 				class="h1 font-weight-normal text-center text-white mb-5 mt-3"
 				>Pay with any of our verify payment Gateway</b-card-text
@@ -668,31 +678,33 @@
 		},
 
 		methods: {
+			home(){
+				this.$router.push("/welcome")
+			},
 			resendVerificationMail(resendEmail) {
-				debugger
 				if (this.verificationBtn < 1 || resendEmail) {
-				this.sendingVerificationEmail = true;
+					this.sendingVerificationEmail = true;
 
-				sendEmailVerification(auth?.currentUser)
-					.then((resp) => {
-						this.verificationBtn = this.verificationBtn + 1;
-						this.sendingVerificationEmail = false;
+					sendEmailVerification(auth?.currentUser)
+						.then((resp) => {
+							this.verificationBtn = this.verificationBtn + 1;
+							this.sendingVerificationEmail = false;
 
-						this.verificationMsg =
-							"Now check your mailbox for verification guides";
-						this.$toast({
-							component: ToastificationContent,
-							props: {
-								title: "Success",
-								text: `Please check your email box, Verification instructions sent successfully `,
-								icon: "CheckIcon",
-								variant: "success",
-							},
+							this.verificationMsg =
+								"Now check your mailbox for verification guides";
+							this.$toast({
+								component: ToastificationContent,
+								props: {
+									title: "Success",
+									text: `Please check your email box, Verification instructions sent successfully `,
+									icon: "CheckIcon",
+									variant: "success",
+								},
+							});
+						})
+						.catch((err) => {
+							this.sendingVerificationEmail = false;
 						});
-					})
-					.catch((err) => {
-						this.sendingVerificationEmail = false;
-					});
 				}
 			},
 			makePaymentWithFlutterwave(response) {

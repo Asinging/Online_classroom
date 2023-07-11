@@ -292,7 +292,6 @@
 					this.userEmail = "";
 					this.userName = "";
 					this.password = "";
-
 					this.$router.push({
 						name: "auth-init",
 					});

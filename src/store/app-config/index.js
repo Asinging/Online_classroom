@@ -20,11 +20,15 @@ export default {
             type: $themeConfig.layout.footer.type
          }
       },
-      isAdminIn: null
+      isAdminIn: null,
+      subscribedUser: null
    },
    getters: {
       whoIsinGetter(state) {
          return state.isAdminIn === null ? JSON.parse(localStorage.getItem('isAdminIn')) : state.isAdminIn;
+      },
+      subscribeUserGetter(state) {
+         return state.subscribedUser === null ? JSON.parse(localStorage.getItem('isValid')) : state.subscribedUser;
       }
    },
    mutations: {
@@ -35,6 +39,10 @@ export default {
       UPDATE_WHO_IS_IN(state, val) {
          //  debugger;
          state.isAdminIn = val;
+      },
+      UPDATE_USER_SUBSCRIPTION(state, val) {
+         //  debugger;
+         state.subscribedUser = val;
       },
       UPDATE_SKIN(state, skin) {
          state.layout.skin = skin;

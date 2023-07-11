@@ -88,7 +88,7 @@
 										:to="{
 											name: 'auth-forgot-password',
 										}"
-										class="text-primary text-decoration"
+										class="text-primary text-decoration-none"
 									>
 										<small>Forgot Password?</small>
 									</b-link>
@@ -161,7 +161,10 @@
 
 					<b-card-text class="text-center mt-2">
 						<span>New on our platform? </span>
-						<b-link @click="toCreateAccount" class="text-primary text-decoration-none">
+						<b-link
+							@click="toCreateAccount"
+							class="text-primary text-decoration-none"
+						>
 							<span>&nbsp;Create an account</span>
 						</b-link>
 					</b-card-text>
@@ -268,6 +271,7 @@
 			// this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
 			localStorage.removeItem("userData");
 			localStorage.removeItem("isValid");
+			localStorage.removeItem("isAdminIn");
 		},
 
 		computed: {
@@ -311,6 +315,7 @@
 								text: `You have successfully signed in`,
 							},
 						});
+						console.log(localStorage);
 						this.$router.push({
 							name: "auth-init",
 						});
@@ -337,7 +342,6 @@
 
 				sendEmailVerification(auth?.currentUser)
 					.then((resp) => {
-						debugger;
 						this.sendingVerificationEmail = false;
 						this.emailNotVerified = false;
 						this.errorMessage = null;
@@ -381,37 +385,16 @@
 					this.$store
 						.dispatch("Auth/SIGN_IN", payload)
 						.then((resp) => {
-							this.isLogining = false;
-
 							if (!resp) {
 								return false;
 							}
-
-							// if (!resp.user.emailVerified) {
-							// 	this.errorMessage =
-							// 		"Please Verify email address using the guides sent to your mailbox ";
-							// 	this.emailNotVerified = true;
-							// 	this.$toast({
-							// 		component: ToastificationContent,
-							// 		props: {
-							// 			title: "Oops",
-							// 			text: `Please Verify email before you procceed!`,
-							// 			icon: "XIcon",
-							// 			variant: "danger",
-							// 		},
-							// 	});
-							// 	// this.$store
-							// 	// 	.dispatch("Auth/LOG_OUT")
-							// 	// 	.catch((err) => console.log(er));
-							// 	// debugger;
-							// 	return false;
-							// }
 
 							this.$store
 								.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 									id: resp.user.uid,
 								})
 								.then((resp2) => {
+									this.isLogining = false;
 									let formObject = setLocalstorage(
 										resp.user,
 										resp2
@@ -421,11 +404,15 @@
 										"Auth/mCurrentUser",
 										formObject
 									);
-								});
 
-							this.$router.push({
-								name: "auth-init",
-							});
+									this.$router.push({
+										name: "auth-init",
+									});
+								})
+								.catch((err) => {
+									console.log(err);
+									this.isLogining = false;
+								});
 						})
 						.catch((err) => {
 							this.$toast({

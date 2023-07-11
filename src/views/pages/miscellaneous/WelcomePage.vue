@@ -5,7 +5,7 @@
 			class="navbar navbar-expand-lg navbar-light fixed-top"
 			id="mainNav"
 		>
-			<div class="container px-4 px-lg-5">
+			<div class="container px-4 px-lg-5 ">
 				<a class="navbar-brand" href="#page-top">10FiguresAcademy</a>
 				<button
 					class="navbar-toggler navbar-toggler-right"
@@ -21,6 +21,14 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a
+								class="nav-link"
+								href="javascript:void(0);"
+								@click="toDashboard"
+								>Dashboard</a
+							>
+						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#about">About</a>
 						</li>
@@ -48,8 +56,11 @@
 					<div class="text-center">
 						<h1 class="mx-auto my-0 text-uppercase">WEALTH LINK</h1>
 						<h2 class="text-white mx-auto mt-2 mb-5 text-center">
-						With	$15K Subscription plan, you have full experience of our one to one
-							tutoring, we prioritise your comfort in learning whilst still given  you the neccessary skills needed for making wealth 	</h2>
+							With $15K Subscription plan, you have full
+							experience of our one to one tutoring, we prioritise
+							your comfort in learning whilst still given you the
+							neccessary skills needed for making wealth
+						</h2>
 						<a
 							class="btn btn-white"
 							href="javascript:void(0);"
@@ -68,10 +79,9 @@
 						<h2 class="text-white mb-4">Our sole, Our Soul</h2>
 						<p class="text-white-50">
 							We believe in giving back to the community from
-							which we have benefited from, that the sole
-							drive for this innovative platform, we tutor,
-							mentor, coach with practical lessons on how to grow
-							wealth!.
+							which we have benefited from, that the sole drive
+							for this innovative platform, we tutor, mentor,
+							coach with practical lessons on how to grow wealth!.
 						</p>
 					</div>
 				</div>
@@ -184,7 +194,11 @@
 								<h4 class="text-uppercase m-0">Email</h4>
 								<hr class="my-4 mx-auto" />
 								<div class="small text-black-50 text-primary">
-									<a href="pkpremium6@gmail.com" class="text-primary text-decoration-none">pkpremium6@gmail.com</a>
+									<a
+										href="pkpremium6@gmail.com"
+										class="text-primary text-decoration-none"
+										>pkpremium6@gmail.com</a
+									>
 								</div>
 							</div>
 						</div>
@@ -217,8 +231,6 @@
 </template>
 
 <script>
-
-	
 	/* eslint-disable global-require */
 	import { BLink, BForm, BFormInput, BButton, BImg } from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
@@ -238,28 +250,26 @@
 			};
 		},
 		computed: {},
-		created() { window.addEventListener("DOMContentLoaded", this.runEvent(event))},
+		created() {
+			window.addEventListener("DOMContentLoaded", this.runEvent(event));
+		},
 		mounted() {
 			localStorage.setItem("notFirstTime", true);
-
 		},
 		methods: {
-			navbarShrink(){
+			navbarShrink() {
 				const navbarCollapsible = document.body.querySelector("#mainNav");
 				if (!navbarCollapsible) {
 					return;
 				}
 				if (window.scrollY === 0) {
-				;
 					navbarCollapsible.classList.remove("navbar-shrink");
 				} else {
-				;
 					navbarCollapsible.classList.add("navbar-shrink");
 				}
-			}, 
+			},
 
-			runEvent(event){
-
+			runEvent(event) {
 				this.navbarShrink();
 				// Shrink the navbar when page is scrolled
 				document.addEventListener("scroll", this.navbarShrink);
@@ -274,23 +284,47 @@
 				}
 
 				// Collapse responsive navbar when toggler is visible
-				const navbarToggler = document.body.querySelector(".navbar-toggler");
+				const navbarToggler =
+					document.body.querySelector(".navbar-toggler");
 				const responsiveNavItems = [].slice.call(
 					document.querySelectorAll("#navbarResponsive .nav-link")
 				);
 				responsiveNavItems.map(function (responsiveNavItem) {
 					responsiveNavItem.addEventListener("click", () => {
-						if (window.getComputedStyle(navbarToggler).display !== "none") {
+						if (
+							window.getComputedStyle(navbarToggler).display !==
+							"none"
+						) {
 							navbarToggler.click();
 						}
 					});
-				})
-
+				});
 			},
-			login() {
+
+
+			toDashboard() {
+				let userData = JSON.parse(
+					localStorage.getItem("userData") || "false"
+				);
+				if (userData) {
+					this.$router.push("/");
+					return true;
+				}
 				this.$router.push("/login");
 			},
+
+
+			login() {
+				localStorage.removeItem('userData');
+				localStorage.removeItem('isValid');
+				localStorage.removeItem('isAdminIn');
+				this.$router.push("/login");
+			},
+
 			register() {
+				localStorage.removeItem('userData');
+				localStorage.removeItem('isValid');
+				localStorage.removeItem('isAdminIn');
 				this.$router.push("/register");
 			},
 		},
@@ -300,16 +334,16 @@
 <style lang="scss">
 	@charset "UTF-8";
 	/*!
-		* Start Bootstrap - Grayscale v7.0.6 (https://startbootstrap.com/theme/grayscale)
-		* Copyright 2013-2023 Start Bootstrap
-		* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-grayscale/blob/master/LICENSE)
-		*/
-	/*!
-			* Bootstrap  v5.2.3 (https://getbootstrap.com/)
-			* Copyright 2011-2022 The Bootstrap Authors
-			* Copyright 2011-2022 Twitter, Inc.
-			* Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+			* Start Bootstrap - Grayscale v7.0.6 (https://startbootstrap.com/theme/grayscale)
+			* Copyright 2013-2023 Start Bootstrap
+			* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-grayscale/blob/master/LICENSE)
 			*/
+	/*!
+				* Bootstrap  v5.2.3 (https://getbootstrap.com/)
+				* Copyright 2011-2022 The Bootstrap Authors
+				* Copyright 2011-2022 Twitter, Inc.
+				* Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+				*/
 	:root {
 		--bs-blue: #0d6efd;
 		--bs-indigo: #6610f2;
@@ -786,13 +820,13 @@
 	}
 
 	/* rtl:raw:
-		[type="tel"],
-		[type="url"],
-		[type="email"],
-		[type="number"] {
-				direction: ltr;
-		}
-		*/
+			[type="tel"],
+			[type="url"],
+			[type="email"],
+			[type="number"] {
+					direction: ltr;
+			}
+			*/
 	::-webkit-search-decoration {
 		-webkit-appearance: none;
 	}
@@ -6587,13 +6621,13 @@
 	}
 
 	/* rtl:options: {
-				"autoRename": true,
-				"stringMap":[ {
-						"name"    : "prev-next",
-						"search"  : "prev",
-						"replace" : "next"
-				} ]
-		} */
+					"autoRename": true,
+					"stringMap":[ {
+							"name"    : "prev-next",
+							"search"  : "prev",
+							"replace" : "next"
+					} ]
+			} */
 	.carousel-control-prev-icon {
 		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
 	}
@@ -11816,7 +11850,7 @@
 		.masthead h2,
 		.masthead .h2 {
 			max-width: 50rem;
-			text-align:center;
+			text-align: center;
 			font-size: 1.35rem;
 		}
 	}
