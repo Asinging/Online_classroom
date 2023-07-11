@@ -146,7 +146,7 @@
 					</b-card>
 				</b-col>
 			</b-col>
-			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 my-5">
+			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 ">
 				<b-card
 					class="vw-100 shadow-none rounded-20 bg-light card border-0"
 					tag="article"
@@ -156,20 +156,20 @@
 							<b-card
 								class="d-flex justify-content-center shadow-none bg-light border-0"
 								tag="article"
-								style="min-height: 400px"
+								style="min-height: 300px"
 							>
 								<div
 									v-if="isRequesting"
 									class="align-items-center d-flex justify-content-center"
 								>
-									<div class="containing_container text-center">
+									<div class="containing_container_payment text-center">
 										<b-spinner
 											size="xl"
 											class="text-center text-primary"
 										></b-spinner>
 									</div>
 								</div>
-								<div class="containing_container" v-else-if="course">
+								<div class="containing_container_payment" v-else-if="course">
 									<div
 										v-if="computeCourseDisplay.isIframe"
 										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
@@ -190,7 +190,7 @@
 								</div>
 
 								<b-card
-									class="containing_container d-flex align-items-center card p-0 m-0 border-0"
+									class="containing_container_payment d-flex align-items-center card p-0 m-0 border-0"
 									v-else
 									tag="div"
 								>
@@ -952,11 +952,11 @@
 		// padding: 5px;
 	}
 	.card_payment {
-		margin-top: 100px !important;
+		margin-top: 0px !important;
 		margin-bottom: 100px !important;
 	}
 
-	.containing_container {
+	.containing_container_payment {
 		position: relative;
 		display: flex;
 		justify-content: center;
@@ -976,7 +976,7 @@
 		border-radius: 18px !important;
 		margin: 0px !important;
 		padding: 0px !important;
-		margin-top: 35px !important;
+		margin-top: 10px !important;
 		// margin-bottom:20px !important;
 	}
 	.introCard {
