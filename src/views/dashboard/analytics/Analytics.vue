@@ -25,46 +25,117 @@
 			</b-col>
 		</b-row>
 
-		<b-card
-			v-if="isRequsting"
-			class="align-items-center min-vh-70 d-flex justify-content-center"
-		>
-			<div class="container text-center">
-				<b-spinner
-					size="xl"
-					class="text-center text-primary"
-				></b-spinner>
-			</div>
-		</b-card>
-		<b-card class="container" v-else-if="course">
-			<div id="iframeContainer" v-if="computeCourseDisplay.isIframe">
-				<div
-					class="iframe d-flex"
-					v-html="computeCourseDisplay.video_url"
-				></div>
-			</div>
-			<div v-else class="iframe">
-				<b-embed
-					type="iframe"
-					aspect="16by9"
-					:src="computeCourseDisplay.video_url"
-					allowfullscreen
-				/>
-			</div>
-		</b-card>
+		<b-row class="match-height">
+			<b-col xl="4" md="4" sm="6">
+				<router-link :to="{ name: 'courses-card' }">
+					<b-card class="earnings-card border-0">
+						<b-row>
+							<b-col cols="3">
+								<feather-icon icon="ListIcon" size="50" />
+							</b-col>
+							<b-col cols="9">
+								<b-card-title class="mb-1">
+									List of Courses</b-card-title
+								>
+								<b-card-text class="text-primary h5">
+									<span class=""> View all </span>
+								</b-card-text>
+							</b-col>
+						</b-row>
+					</b-card>
+				</router-link>
+			</b-col>
 
-		<b-card class="container d-flex align-items-center" v-else>
-			<div class="video-container">
-				<b-alert variant="danger" show class="text-center">
-					<div
-						class="alert-body text-center d-flex justify-content-between"
-					>
-						<span>No intro video uploaded yet. </span>
-					
-					</div>
-				</b-alert>
-			</div>
-		</b-card>
+			<b-col xl="4" sm="6" md="4">
+				<router-link :to="{ name: 'app-raise-ticket' }">
+					<b-card class="earnings-card border-0">
+						<b-row>
+							<b-col cols="3">
+								<feather-icon icon="FilePlusIcon" size="50" />
+							</b-col>
+							<b-col cols="9">
+								<b-card-title class="mb-1">
+									Encouter An Issue
+								</b-card-title>
+								<b-card-text class="text-primary h5">
+									<span class=""> Raise Ticket </span>
+								</b-card-text>
+							</b-col>
+						</b-row>
+					</b-card>
+				</router-link>
+			</b-col>
+			<b-col sm="6" xl="4" md="4">
+				<router-link :to="{ name: 'telegram-class' }">
+					<b-card class="earnings-card border-0">
+						<b-row>
+							<b-col cols="3">
+								<feather-icon icon="PackageIcon" size="50" />
+							</b-col>
+							<b-col cols="9">
+								<b-card-title class="mb-1">
+									Webinar
+								</b-card-title>
+								<b-card-text class="text-primary h5">
+									<span class="">
+										Join our extended class</span
+									>
+								</b-card-text>
+							</b-col>
+						</b-row>
+					</b-card>
+				</router-link>
+			</b-col>
+			<b-col sm="6">
+				<router-link :to="{ name: 'support-team' }">
+					<b-card class="earnings-card border-0">
+						<b-row>
+							<b-col cols="3">
+								<feather-icon icon="HelpCircleIcon" size="50" />
+							</b-col>
+							<b-col cols="9">
+								<b-card-title class="mb-1">
+									Need Help
+								</b-card-title>
+								<b-card-text class="text-primary h5">
+									<span class="">
+										Reach out to our support</span
+									>
+								</b-card-text>
+							</b-col>
+						</b-row>
+					</b-card>
+				</router-link>
+			</b-col>
+			<b-col sm="6">
+				<router-link
+					:to="{
+						name: 'view-course',
+						params: {
+							id: 0,
+						},
+					}"
+				>
+					<b-card class="earnings-card border-0">
+						<b-row>
+							<b-col cols="3">
+								<feather-icon icon="TvIcon" size="50" />
+							</b-col>
+							<b-col cols="9">
+								<b-card-title class="mb-1">
+									Premium course
+								</b-card-title>
+								<b-card-text class="text-primary h5">
+									<span class="">
+										Watch Recomended Premium Course</span
+									>
+								</b-card-text>
+							</b-col>
+						</b-row>
+					</b-card>
+				</router-link>
+			</b-col>
+		</b-row>
 	</section>
 </template>
 
@@ -77,6 +148,8 @@
 		BCard,
 		BEmbed,
 		BSpinner,
+		BCardText,
+		BCardTitle,
 	} from "bootstrap-vue";
 
 	import StatisticCardWithAreaChart from "@core/components/statistics-cards/StatisticCardWithAreaChart.vue";
@@ -107,6 +180,8 @@
 			BEmbed,
 			BSpinner,
 			AnalyticsCongratulation,
+			BCardText,
+			BCardTitle,
 
 			StatisticCardWithAreaChart,
 		},
