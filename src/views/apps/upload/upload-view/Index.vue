@@ -1,6 +1,6 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
-	<div style="height: inherit; margin-bottom:10px">
+	<div style="height: inherit; margin-bottom: 10px">
 		<div
 			v-if="!computeCourseDisplay"
 			class="text-center d-flex justify-content-center align-items-center align-content-center"
@@ -57,8 +57,7 @@
 					:settings="perfectScrollbarSettings"
 					class="email-user-list scroll-area"
 				>
-		
-					<!-- <b-card class="container">
+					<!-- <b-card class="containing">
 						<div
 							id="iframeContainer"
 							v-if="computeCourseDisplay.isIframe"
@@ -88,24 +87,24 @@
 					<b-card
 						class="d-flex justify-content-start shadow-none bg-light border-0"
 						tag="article"
-						style="min-height: 400px"
+						style="min-height: 300px"
 					>
 						<div
 							v-if="isRequesting"
 							class="align-items-center d-flex justify-content-start"
 						>
-							<div class="container text-center">
+							<div class="containing_container text-center">
 								<b-spinner
 									size="xl"
 									class="text-center text-primary"
 								></b-spinner>
 							</div>
 						</div>
-						<div class="container" v-else-if="course">
+						<div class="containing_container" v-else-if="course">
 							<div
 								v-if="computeCourseDisplay.isIframe"
 								class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-								style="height: 70vh; width: 100%"
+								style="height: 65vh; width: 100%"
 								v-html="computeCourseDisplay.video_url"
 							></div>
 							<div v-else class="iframe p-0 m-0">
@@ -118,8 +117,6 @@
 								/>
 							</div>
 						</div>
-
-					
 					</b-card>
 				</vue-perfect-scrollbar>
 			</div>
@@ -227,7 +224,7 @@
 			const perPage = ref(50);
 			const course = ref(null);
 			const isServerResponse = ref(false);
-			const isRequsting = ref(true);
+			const isRequesting = ref(true);
 			const courseTitles = [
 				{
 					title: "Personal",
@@ -278,14 +275,14 @@
 			onBeforeMount(() => {
 				let courseId = route.value.params.id;
 				let storage = localStorage.getItem("courseDisplay");
-				isRequsting.value = true;
+				isRequesting.value = true;
 				store
 					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
 						id: courseId,
 					})
 					.then((response) => {
 						isServerResponse.value = true;
-						isRequsting.value = false;
+						isRequesting.value = false;
 						if (response) {
 							courseDisplay.value = storage
 								? JSON.parse(storage)
@@ -296,7 +293,7 @@
 					})
 					.catch((err) => {
 						isServerResponse.value = true;
-						isRequsting.value = false;
+						isRequesting.value = false;
 						console.log(err);
 					});
 			});
@@ -314,7 +311,7 @@
 			});
 
 			return {
-				isRequsting,
+				isRequesting,
 				isServerResponse,
 				courseTitles,
 				markAsWatch,
@@ -339,7 +336,7 @@
 <style lang="scss" scoped>
 </style>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 	@import "~@core/scss/base/pages/app-email.scss";
 	// .container {
 	// 	height: 65vh !important;
@@ -366,7 +363,7 @@
 	// 	border: 0;
 	// }
 
-	.container {
+	.containing_container {
 		position: relative;
 		display: flex;
 		justify-content: center;
@@ -382,7 +379,6 @@
 	}
 	.card {
 		border-radius: 15px !important;
-
 	}
 	.introCard {
 		border-radius: 25px !important;

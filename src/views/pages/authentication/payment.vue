@@ -15,7 +15,7 @@
 						variant="secondary"
 						class="shadow-none rounded-100 mt-3 bg-secondary card border-0"
 					>
-						<div class="d-md-flex justify-content-between border-0">
+						<div class="d-md-flex justify-content-between">
 							<b-img
 								:src="
 									require('@/assets/images/decore-right.png')
@@ -41,24 +41,24 @@
 									>
 								</div>
 							</div>
-							<div
-								class="d-flex justify-content-end text-md-right"
-								v-else
-							>
-								<b-button
-										v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-										variant="outline-white"
-										class="p-0 border-5"
-										@click="toDashboard"
+							<div class="" v-else>
+								<button
+									type="button"
+									class="btn btn-outline-light btn-sm p-auto"
+									v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+									@click="toDashboard"
 								>
-										<feather-icon
-												icon="GridIcon"
-												class="mr-50 text-white"
-												size="20"
-										/>
-										<span class="align-middle text-white font-weight-bold h4">Go to Dashboard</span>
-								</b-button>
-						
+									<feather-icon
+										icon="GridIcon"
+										class="mr-50"
+										size="18"
+									/>
+									<span
+										class="align-middle font-weight-bold"
+										size="sm"
+										>Go to Dashboard</span
+									>
+								</button>
 							</div>
 						</div>
 
@@ -154,7 +154,7 @@
 					<b-row align-h="center">
 						<b-col cols="12" class="p-0 ma-0">
 							<b-card
-								class="d-flex justify-content-start shadow-none bg-light border-0"
+								class="d-flex justify-content-center shadow-none bg-light border-0"
 								tag="article"
 								style="min-height: 400px"
 							>
@@ -162,21 +162,26 @@
 									v-if="isRequesting"
 									class="align-items-center d-flex justify-content-start"
 								>
-									<div class="container text-center">
+									<div
+										class="containing_container text-center"
+									>
 										<b-spinner
 											size="xl"
 											class="text-center text-primary"
 										></b-spinner>
 									</div>
 								</div>
-								<div class="container" v-else-if="course">
+								<div
+									class="containing_container"
+									v-else-if="course"
+								>
 									<div
 										v-if="computeCourseDisplay.isIframe"
-										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-										style="height: 70vh; width: 100%"
+										class="iframe d-flex justify-content-center embed-responsive-item rounded-100 p-0 m-0"
+										style="height: 75vh; width: 100%"
 										v-html="computeCourseDisplay.video_url"
 									></div>
-									<div v-else class="iframe p-0 m-0">
+									<div v-else class="iframe p-0 m-0 d-flex justify-content-center">
 										<b-embed
 											class="embed-responsive-item"
 											type="iframe"
@@ -190,9 +195,10 @@
 								</div>
 
 								<b-card
-									class="container d-flex align-items-center card p-0 m-0 border-0"
+									class="containing_container d-flex align-items-center card p-0 m-0 border-0"
 									v-else
 									tag="div"
+									height="500"
 								>
 									<div class="video-container">
 										<b-alert
@@ -293,8 +299,8 @@
 			</template>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-success h1">
-						{{ numbFormat(1000, "en-US", "USD") }}
+					<div class="font-weight-bold text-primary display-1">
+						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -368,8 +374,8 @@
 			</template>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-success h1">
-						{{ numbFormat(1000, "en-US", "USD") }}
+					<div class="font-weight-bold text-primary display-1">
+						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -424,8 +430,8 @@
 			</div>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-success h1">
-						{{ numbFormat(1000, "en-US", "USD") }}
+					<div class="font-weight-bold text-primary display-1">
+						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -696,13 +702,13 @@
 
 		methods: {
 			toDashboard() {
-				let isAdmin = store.getters['appConfig/whoIsinGetter'];
+				let isAdmin = store.getters["appConfig/whoIsinGetter"];
 				if (isAdmin) {
 					this.$router.push("/admin/dashboard");
 					return true;
 				}
-				
-				this.$router.push('/');
+
+				this.$router.push("/");
 			},
 			home() {
 				this.$router.push("/welcome");
@@ -945,24 +951,22 @@
 	};
 </script>
 
-<style lang="scss">
-	@import "@core/scss/vue/pages/page-auth.scss";
-
+<style lang="scss" >
 	.wrapper {
 		margin: 10px;
-		// padding: 5px;
+		padding: 5px;
 	}
 	.card_payment {
 		margin-top: 100px !important;
 		margin-bottom: 100px !important;
 	}
 
-	.container {
+	.containing_container {
 		position: relative;
 		display: flex;
 		justify-content: center;
-		max-width: 1000px !important; /* Adjust the value as per your preference */
-		margin: 0 auto;
+		max-width: 1200px !important; /* Adjust the value as per your preference */
+		margin: 4px;
 	}
 	.video-container {
 		position: relative;
@@ -972,10 +976,10 @@
 		height: 30vh;
 	}
 	.card {
-		border-radius: 25px !important;
+		border-radius: 20px !important;
 		margin: 0px !important;
 		padding: 0px !important;
-		margin-top: 35px !important;
+		margin-top: 30px !important;
 		// margin-bottom:20px !important;
 	}
 	.introCard {

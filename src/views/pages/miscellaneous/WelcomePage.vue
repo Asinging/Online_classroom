@@ -55,7 +55,7 @@
 				<div class="d-flex justify-content-center">
 					<div class="text-center">
 						<h1 class="mx-auto my-0 text-uppercase">WEALTH LINK</h1>
-						<h2 class="text-white mx-auto mt-2 mb-5 text-center">
+						<h2 class=" mx-auto mt-2 mb-5 text-md-center" style="color:#fff">
 							With $15K Subscription plan, you have full
 							experience of our one to one tutoring, we prioritise
 							your comfort in learning whilst still given you the
@@ -76,8 +76,8 @@
 			<div class="container px-4 px-lg-5">
 				<div class="row gx-4 gx-lg-5 justify-content-center">
 					<div class="col-lg-8">
-						<h2 class="text-white mb-4">Our sole, Our Soul</h2>
-						<p class="text-white-50">
+						<h2 class=" mb-4">Our sole, Our Soul</h2>
+						<p class="">
 							We believe in giving back to the community from
 							which we have benefited from, that the sole drive
 							for this innovative platform, we tutor, mentor,
@@ -230,11 +230,13 @@
 	</body>
 </template>
 
+
 <script>
 	/* eslint-disable global-require */
 	import { BLink, BForm, BFormInput, BButton, BImg } from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
 	import store from "@/store/index";
+	
 
 	export default {
 		components: {
@@ -338,7 +340,7 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	@charset "UTF-8";
 	/*!
 			* Start Bootstrap - Grayscale v7.0.6 (https://startbootstrap.com/theme/grayscale)
@@ -8048,9 +8050,7 @@
 	.border-black {
 		--bs-border-opacity: 1;
 		border-color: rgba(
-			var(--bs-black-rgb),
-			var(--bs-border-opacity)
-		) !important;
+			0, 0, 0) !important;
 	}
 
 	.border-white {
@@ -8920,7 +8920,7 @@
 
 	.text-black {
 		--bs-text-opacity: 1;
-		color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+		color: rgba(0, 0, 0, var(--bs-text-opacity)) !important;
 	}
 
 	.text-white {
@@ -9024,13 +9024,13 @@
 
 	.bg-dark {
 		--bs-bg-opacity: 1;
-		background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+		background-color: rgba(0, 0, 0, var(--bs-bg-opacity)) !important;
 	}
 
 	.bg-black {
 		--bs-bg-opacity: 1;
 		background-color: rgba(
-			var(--bs-black-rgb),
+			0, 0, 0,
 			var(--bs-bg-opacity)
 		) !important;
 	}
