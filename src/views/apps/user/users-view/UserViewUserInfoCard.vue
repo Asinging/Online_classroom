@@ -113,7 +113,7 @@
 			</b-col>
 		</b-row>
 		<b-card-text
-			v-if="!userData.subscribed"
+			v-if="!userData.subscribed && !isAdmin"
 			class="text-danger text-center h3 d-flex justify-content-center"
 		>
 			Subscribe to the platform to enjoy the full benefits</b-card-text
