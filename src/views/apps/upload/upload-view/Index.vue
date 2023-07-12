@@ -283,6 +283,8 @@
 					.then((response) => {
 						
 						courseDisplay.value =JSON.parse(storage)
+						courseModules.value = [JSON.parse(storage)]
+						course.value = {mudules:[JSON.parse(storage)]}
 						isServerResponse.value = true;
 						isRequesting.value = false;
 

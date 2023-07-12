@@ -40,20 +40,17 @@
 								<!-- :class="`bullet-${label.color}`" -->
 								<!-- v-b-tooltip.hover
 								:title="lable.title" -->
-								<p class="text-capitalize  mt-25">{{
+								<p class="text-capitalize mt-25"
+									v-b-tooltip.hover.right
+									:title="label.title"
+								
+								>{{
 									label.title.length > 23
 										? label.title.slice(0, 22) + " .."
 										: label.title
 								}}</p>
 
-								<b-tooltip
-									:target="label.video_url"
-									placement="bottom"
-									triggers="hover"
-									variant="dark"
-								>
-									{{ label.title }}
-								</b-tooltip>
+						
 							</b-list-group-item>
 						</b-list-group>
 					</vue-perfect-scrollbar>
