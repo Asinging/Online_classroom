@@ -104,7 +104,7 @@
 							<div
 								v-if="computeCourseDisplay.isIframe"
 								class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-								style="height: 65vh; width: 100%"
+								style="height: 60vh; width: 100%"
 								v-html="computeCourseDisplay.video_url"
 							></div>
 							<div v-else class="iframe p-0 m-0">
@@ -377,12 +377,8 @@
 	.container_loader {
 		height: 30vh;
 	}
-	.card {
-		border-radius: 15px !important;
-	}
-	.introCard {
-		border-radius: 25px !important;
-	}
+
+	
 	iframe {
 		position: absolute;
 		top: 0;
@@ -391,7 +387,7 @@
 		margin: 0;
 		width: 100%;
 
-		height: 90%;
+		height: 100%;
 
 		border: 0px !important;
 		border-radius: 10px !important;
