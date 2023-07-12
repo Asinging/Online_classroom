@@ -9,11 +9,11 @@
 					>
 						<!-- Labels -->
 						<div>
-							<h6
+							<h5
 								class="section-label bg-secondary-darken py-1 px-2 text-white text-decoration-underline font-weight-bold"
 							>
 								Course Module
-							</h6>
+							</h5>
 						</div>
 
 						<b-list-group
@@ -40,11 +40,11 @@
 								<!-- :class="`bullet-${label.color}`" -->
 								<!-- v-b-tooltip.hover
 								:title="lable.title" -->
-								<span class="text-capitalize">{{
+								<p class="text-capitalize  mt-25">{{
 									label.title.length > 23
 										? label.title.slice(0, 22) + " .."
 										: label.title
-								}}</span>
+								}}</p>
 
 								<b-tooltip
 									:target="label.video_url"
@@ -107,6 +107,7 @@
 			};
 			const prCcourseTitles = props.courseTitles;
 			const courseModuleClick = (item) => {
+				
 				EventBus.$emit("close-left-sidebar", item);
 				EventBus.$emit("courseModuleClick", item);
 			};

@@ -203,7 +203,7 @@
 			EventBus.$on("close-left-sidebar", this.closeLeftSidebar());
 		},
 		beforeDestroy() {
-			localStorage.removeItem("courseDisplay");
+	
 			EventBus.$off();
 		},
 		methods: {
@@ -211,7 +211,7 @@
 				if (!item) return false;
 
 				this.courseDisplay = item;
-				localStorage.getItem("courseDisplay", JSON.stringify(item));
+				localStorage.setItem("courseDisplay", JSON.stringify(item));
 			},
 			closeLeftSidebar(item) {},
 		},
@@ -281,19 +281,23 @@
 						id: courseId,
 					})
 					.then((response) => {
+						
+						courseDisplay.value =JSON.parse(storage)
 						isServerResponse.value = true;
 						isRequesting.value = false;
+
 						if (response) {
-							courseDisplay.value = storage
-								? JSON.parse(storage)
-								: response.mudules[0];
+							courseDisplay.value = response.mudules[0];
 							courseModules.value = response.mudules;
 							course.value = response;
+							localStorage.setItem("courseDisplay", JSON.stringify(response.mudules[0]));
 						}
 					})
 					.catch((err) => {
+						
 						isServerResponse.value = true;
 						isRequesting.value = false;
+						courseDisplay.value =JSON.parse(storage)
 						console.log(err);
 					});
 			});
