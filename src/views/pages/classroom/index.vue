@@ -1,13 +1,17 @@
 <template>
 	<!-- Under maintenance-->
 	<div class="misc-wrapper">
-		<b-link class="brand-logo">
-			<vuexy-logo />
-		</b-link>
+		<!-- <b-link class="brand-logo">
+			<feather-icon
+				icon="ArrowLeftIcon"
+				size="16"
+				class="mr-0 mr-sm-50"
+			/>
+		</b-link> -->
 
 		<div class="misc-inner p-2 p-sm-3">
 			<div class="w-100 text-center">
-				<h2 class="mb-1">Join Global Class room 🛠</h2>
+				<h2 class="mb-1">Join Global Class room 🤝</h2>
 
 				<p class="mb-3">
 					<b-button

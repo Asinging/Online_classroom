@@ -31,7 +31,19 @@
 						</b-breadcrumb>
 					</div>
 				</b-col>
+				
 			</b-row>
+		</b-col>
+
+  
+		<b-col
+				class="content-header-right text-md-right d-md-block d-none mb-1"
+				md="3"
+				cols="12"
+		>
+    
+				<back-button></back-button>
+
 		</b-col>
 	</b-row>
 </template>
@@ -47,6 +59,7 @@
 		BButton,
 	} from "bootstrap-vue";
 	import Ripple from "vue-ripple-directive";
+	import BackButton from "@core/components/back-button/BackButton.vue"
 
 	export default {
 		directives: {
@@ -60,6 +73,7 @@
 			BDropdown,
 			BDropdownItem,
 			BButton,
+			BackButton
 		},
 	};
 </script>

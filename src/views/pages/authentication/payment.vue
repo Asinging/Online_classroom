@@ -973,7 +973,7 @@
 		height: 30vh;
 	}
 	.card {
-		border-radius: 18px !important;
+		border-radius: 12px !important;
 		margin: 0px !important;
 		padding: 0px !important;
 		margin-top: 10px !important;
