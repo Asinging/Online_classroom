@@ -211,7 +211,7 @@
 				if (!item) return false;
 
 				this.courseDisplay = item;
-				localStorage.setItem("courseDisplay", JSON.stringify(item));
+		
 			},
 			closeLeftSidebar(item) {},
 		},
@@ -259,7 +259,15 @@
 				});
 			};
 			const computeCourseDisplay = computed(() => {
-				if (!courseDisplay.value) return null;
+				
+				if (!courseDisplay.value) {
+				let storage = JSON.parse(localStorage.getItem("courseModuleDisplay") || 'null')
+				if(!storage) return null
+					courseDisplay.value =storage?.mudules[0]
+					courseModules.value = storage?.mudules
+					course.value = storage
+					return checkIframe(storage?.mudules[0])
+					}
 				return checkIframe(courseDisplay.value);
 			});
 
@@ -273,8 +281,9 @@
 				useResponsiveAppLeftSidebarVisibility();
 
 			onBeforeMount(() => {
+		
 				let courseId = route.value.params.id;
-				let storage = localStorage.getItem("courseDisplay");
+				let storage = JSON.parse(localStorage.getItem("courseModuleDisplay") || 'null')
 				isRequesting.value = true;
 				store
 					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
@@ -282,24 +291,28 @@
 					})
 					.then((response) => {
 						
-						courseDisplay.value =JSON.parse(storage)
-						courseModules.value = [JSON.parse(storage)]
-						course.value = {mudules:[JSON.parse(storage)]}
 						isServerResponse.value = true;
 						isRequesting.value = false;
+						if (!response) {
+							courseDisplay.value =storage?.mudules[0]
+							courseModules.value = storage?.mudules
+							course.value = storage
+							return false
+						}
+					
 
-						if (response) {
+							localStorage.setItem("courseModuleDisplay", JSON.stringify(response));
+					
 							courseDisplay.value = response.mudules[0];
 							courseModules.value = response.mudules;
 							course.value = response;
-							localStorage.setItem("courseDisplay", JSON.stringify(response.mudules[0]));
-						}
+		
 					})
 					.catch((err) => {
 						
 						isServerResponse.value = true;
 						isRequesting.value = false;
-						courseDisplay.value =JSON.parse(storage)
+				
 						console.log(err);
 					});
 			});

@@ -36,5 +36,7 @@ const _itemManipulate = item => {
    arr.splice(arr.length - 1, 1, lastEle);
    let str = arr.reduce((prev, ele) => prev + '/' + ele);
 
+   // debugger;
+
    return str;
 };
