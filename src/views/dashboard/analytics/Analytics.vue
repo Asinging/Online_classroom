@@ -140,22 +140,30 @@
 	<div>
 		<div class="row">
 			<div class="col col-12">
-				<p class="header_title">
+				<p
+					class="header_title font-weight-bolder text-capitalize m-2 h1"
+				>
 					Welcome Back, {{ currentUser.username }}
 				</p>
 			</div>
 			<div class="col col-12">
 				<div class="row">
 					<div class="col col-9">
-						<b-card>
-							<div>
-								<p class="video_header">Most Engaged Video</p>
-								<p class="video_subheader">
+						<b-card class="card m-1">
+							<div class="my-2 mb-2 pb-1">
+								<p
+									class="video_card_header h3 font-weight-bolder"
+								>
+									Most Engaged Video
+								</p>
+								<p
+									class="video_card_subheader h5 font-weight-bold"
+								>
 									Watch the video people find more interesting
 									in platform
 								</p>
 							</div>
-							<div>
+							<div class="mx-2">
 								<div
 									v-if="isRequesting"
 									class="align-items-center d-flex justify-content-center"
@@ -169,14 +177,10 @@
 										></b-spinner>
 									</div>
 								</div>
-								<div
-									class="containing_container_payment"
-									v-else-if="course"
-								>
+								<div class="" v-else-if="course">
 									<div
 										v-if="computeCourseDisplay.isIframe"
-										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-										style="height: 90vh; width: 100%"
+										class="iframe p-0 my-1"
 										v-html="computeCourseDisplay.video_url"
 									></div>
 									<div v-else class="iframe p-0 m-0">
@@ -192,7 +196,7 @@
 									</div>
 								</div>
 
-								<div class="video-container" v-else>
+								<div class="" v-else>
 									<b-alert
 										variant="danger"
 										show
@@ -208,19 +212,22 @@
 									</b-alert>
 								</div>
 							</div>
-							<div>
+							<div class="mx-2">
 								<b-button
 									@click="toClassroom"
 									class="mt-25"
-									size="lg"
+									size="md"
 									variant="primary"
 								>
 									<feather-icon
-										class=""
-										size="30"
-										icon="BagIcon"
+										class="mr-25"
+										size="18"
+										icon="BookIcon"
 									/>
-									<span>Go To Classroom</span>
+									<span
+										class="font-weight-bolder video_card_button_text"
+										>Go To Classroom</span
+									>
 								</b-button>
 							</div>
 						</b-card>
@@ -246,7 +253,7 @@
 							<div>
 								<b-button
 									@click="toTelegram"
-									class="mt-25 mentorship_button text-center"
+									class="mt-25 mentorship_button text-center font-weight-bold"
 									size="lg"
 									variant="primary"
 								>
@@ -272,6 +279,7 @@
 		BSpinner,
 		BCardText,
 		BCardTitle,
+		BButton,
 	} from "bootstrap-vue";
 
 	import StatisticCardWithAreaChart from "@core/components/statistics-cards/StatisticCardWithAreaChart.vue";
@@ -304,6 +312,7 @@
 			AnalyticsCongratulation,
 			BCardText,
 			BCardTitle,
+			BButton,
 
 			StatisticCardWithAreaChart,
 		},
@@ -411,8 +420,15 @@
 		},
 
 		methods: {
-			toTelegram() {},
-			toClassroom() {},
+			toTelegram() {
+				window.open("https://web.telegram.org/k/", "_blank");
+			},
+			toClassroom() {
+				this.$router.push({
+					name: "courses-card",
+					params: { newUpload: true, edit: false, id: 2 },
+				});
+			},
 			toUpload() {
 				this.$router.push({
 					name: "upload-course",
@@ -422,6 +438,46 @@
 			kFormatter,
 		},
 	};
+	// <style lang="sss" scoped>
 </script>
-<style>
+	<style lang="scss">
+	.header_title {
+		font-weight: 800;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.card {
+		border-radius: 12px !important;
+	}
+	.video_card_header {
+		font-weight: 600;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.video_card_subheader {
+		font-weight: 500;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.iframe {
+		position: relative;
+		overflow: hidden;
+		padding-bottom: 56.25%; /* 16:9 aspect ratio (height / width) */
+		width: 100%;
+		height: 38vh;
+
+		// border: 5px solid red !important;
+	}
+	.iframe iframe {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		// left: 0;
+		right: 1;
+		border-radius: 12px !important;
+
+		border: 0; /* Remove iframe border */
+	}
+	.video_card_button_text {
+		font-weight: 500;
+		font-family: Arial, Helvetica, sans-serif;
+	}
 </style>
