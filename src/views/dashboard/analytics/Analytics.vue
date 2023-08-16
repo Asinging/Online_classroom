@@ -1,5 +1,5 @@
 <template>
-	<section id="dashboard-analytics">
+	<!-- <section id="dashboard-analytics">
 		<b-row class="match-height">
 			<b-col lg="6" md="12">
 				<analytics-congratulation :data="currentUser" />
@@ -136,7 +136,129 @@
 				</router-link>
 			</b-col>
 		</b-row>
-	</section>
+	</section> -->
+	<div>
+		<div class="row">
+			<div class="col col-12">
+				<p class="header_title">
+					Welcome Back, {{ currentUser.username }}
+				</p>
+			</div>
+			<div class="col col-12">
+				<div class="row">
+					<div class="col col-9">
+						<b-card>
+							<div>
+								<p class="video_header">Most Engaged Video</p>
+								<p class="video_subheader">
+									Watch the video people find more interesting
+									in platform
+								</p>
+							</div>
+							<div>
+								<div
+									v-if="isRequesting"
+									class="align-items-center d-flex justify-content-center"
+								>
+									<div
+										class="containing_container_payment text-center"
+									>
+										<b-spinner
+											size="xl"
+											class="text-center text-primary"
+										></b-spinner>
+									</div>
+								</div>
+								<div
+									class="containing_container_payment"
+									v-else-if="course"
+								>
+									<div
+										v-if="computeCourseDisplay.isIframe"
+										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
+										style="height: 90vh; width: 100%"
+										v-html="computeCourseDisplay.video_url"
+									></div>
+									<div v-else class="iframe p-0 m-0">
+										<b-embed
+											class="embed-responsive-item"
+											type="iframe"
+											aspect="16by9"
+											:src="
+												computeCourseDisplay.video_url
+											"
+											allowfullscreen
+										/>
+									</div>
+								</div>
+
+								<div class="video-container" v-else>
+									<b-alert
+										variant="danger"
+										show
+										class="text-center"
+									>
+										<div
+											class="alert-body text-center d-flex justify-content-between"
+										>
+											<span
+												>No intro video uploaded yet.
+											</span>
+										</div>
+									</b-alert>
+								</div>
+							</div>
+							<div>
+								<b-button
+									@click="toClassroom"
+									class="mt-25"
+									size="lg"
+									variant="primary"
+								>
+									<feather-icon
+										class=""
+										size="30"
+										icon="BagIcon"
+									/>
+									<span>Go To Classroom</span>
+								</b-button>
+							</div>
+						</b-card>
+					</div>
+
+					<div class="col col-3">
+						<b-card>
+							<div>
+								<feather-icon
+									class=""
+									size="30"
+									icon="UsersIcon"
+								/>
+								<p class="mentorship_title">Mentorship Group</p>
+							</div>
+							<div>
+								<p class="mentorship_description">
+									More Premium Lessons Join Our Online
+									Communityp
+								</p>
+							</div>
+
+							<div>
+								<b-button
+									@click="toTelegram"
+									class="mt-25 mentorship_button text-center"
+									size="lg"
+									variant="primary"
+								>
+									Join Now
+								</b-button>
+							</div>
+						</b-card>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -210,7 +332,7 @@
 				},
 				courseDisplay: null,
 				course: null,
-				isRequsting: true,
+				isRequesting: true,
 			};
 		},
 		computed: {
@@ -268,14 +390,14 @@
 					mutationName: "mProductCount",
 				})
 				.catch((err) => console.log());
-			this.isRequsting = true;
+			this.isRequesting = true;
 			this.$store
 				.dispatch("Course/GET_SINGLE_COURSE", {
 					field: "intro_video",
 					value: 1,
 				})
 				.then((response) => {
-					this.isRequsting = false;
+					this.isRequesting = false;
 					if (!response) {
 						return false;
 					}
@@ -283,12 +405,14 @@
 					this.course = response;
 				})
 				.catch((err) => {
-					this.isRequsting = false;
+					this.isRequesting = false;
 					console.log(err);
 				});
 		},
 
 		methods: {
+			toTelegram() {},
+			toClassroom() {},
 			toUpload() {
 				this.$router.push({
 					name: "upload-course",
@@ -299,29 +423,5 @@
 		},
 	};
 </script>
-<style scoped>
-	.container {
-		height: 75vh !important;
-		width: 100% !important;
-	}
-	.video-container {
-		position: relative;
-	}
-
-	.container_loader {
-		height: 30vh;
-	}
-	.iframeContainer {
-		position: relative;
-	}
-	.iframe {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 0;
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
+<style>
 </style>
