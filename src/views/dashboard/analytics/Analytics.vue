@@ -138,7 +138,7 @@
 		</b-row>
 	</section> -->
 	<div>
-		<div class="row">
+		<div class="row no-gutters">
 			<div class="col col-12">
 				<p
 					class="header_title font-weight-bolder text-capitalize m-2 h1"
@@ -147,8 +147,8 @@
 				</p>
 			</div>
 			<div class="col col-12">
-				<div class="row">
-					<div class="col col-9">
+				<div class="row no-gutters">
+					<div class="col col-12 col-sm-6 col-md-9">
 						<b-card class="card m-1">
 							<div class="my-2 mb-2 pb-1">
 								<p
@@ -233,31 +233,38 @@
 						</b-card>
 					</div>
 
-					<div class="col col-3">
-						<b-card>
-							<div>
+					<div class="col col-12 col-sm-6 col-md-3">
+						<b-card class="mt-1">
+							<div class="d-flex py-1 justify-content-center">
 								<feather-icon
-									class=""
-									size="30"
+									class="font-weight-bold mr-25"
+									size="25"
 									icon="UsersIcon"
 								/>
-								<p class="mentorship_title">Mentorship Group</p>
+								<p class="mentorship_title h3 font-weight-bold">
+									Mentorship Group
+								</p>
 							</div>
-							<div>
-								<p class="mentorship_description">
+							<div class="d-flex justify-content-center">
+								<p
+									class="mentorship_description font-weight-bold text-center"
+								>
 									More Premium Lessons Join Our Online
 									Communityp
 								</p>
 							</div>
 
-							<div>
+							<div class="d-flex justify-content-center">
 								<b-button
 									@click="toTelegram"
 									class="mt-25 mentorship_button text-center font-weight-bold"
-									size="lg"
+									size="md"
 									variant="primary"
+									block
 								>
-									Join Now
+									<span class="h3 text-white button_text">
+										Join Now</span
+									>
 								</b-button>
 							</div>
 						</b-card>
@@ -421,7 +428,7 @@
 
 		methods: {
 			toTelegram() {
-				window.open("https://web.telegram.org/k/", "_blank");
+				window.open("https://t.me/+i2V9hq_xQrEzNjlk", "_blank");
 			},
 			toClassroom() {
 				this.$router.push({
@@ -479,5 +486,13 @@
 	.video_card_button_text {
 		font-weight: 500;
 		font-family: Arial, Helvetica, sans-serif;
+	}
+
+	.mentorship_title {
+		font-weight: 900 !important;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.button_text {
+		font-weight: 900 !important;
 	}
 </style>
