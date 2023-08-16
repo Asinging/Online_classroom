@@ -146,7 +146,7 @@
 					</b-card>
 				</b-col>
 			</b-col>
-			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 ">
+			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0">
 				<b-card
 					class="vw-100 shadow-none rounded-20 bg-light card border-0"
 					tag="article"
@@ -162,14 +162,19 @@
 									v-if="isRequesting"
 									class="align-items-center d-flex justify-content-center"
 								>
-									<div class="containing_container_payment text-center">
+									<div
+										class="containing_container_payment text-center"
+									>
 										<b-spinner
 											size="xl"
 											class="text-center text-primary"
 										></b-spinner>
 									</div>
 								</div>
-								<div class="containing_container_payment" v-else-if="course">
+								<div
+									class="containing_container_payment"
+									v-else-if="course"
+								>
 									<div
 										v-if="computeCourseDisplay.isIframe"
 										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"

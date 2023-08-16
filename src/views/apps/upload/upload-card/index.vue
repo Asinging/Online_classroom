@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<!-- <div>
 		<b-overlay
 			:show="!isServerResponse"
 			spinner-variant="primary"
@@ -7,7 +7,7 @@
 			spinner-large
 			rounded="lg"
 		>
-			<!-- search input -->
+		
 			<section id="knowledge-base-search">
 				<b-card-body
 					class="card-body d-md-flex justify-content-between"
@@ -28,10 +28,10 @@
 							/>
 						</b-input-group>
 					</b-form>
-					<!-- form -->
+				
 				</b-card-body>
 			</section>
-			<!--/ search input -->
+			
 
 			<section id="knowledge-base-content">
 				<b-row class="kb-search-content-info match-height">
@@ -71,11 +71,54 @@
 				</b-row>
 			</section>
 		</b-overlay>
+	</div> -->
+	<div class="row">
+		<div class="mb-0 pb-0 col col-12">
+			<b-card
+				variant="primary"
+				class="shadow-none bg-primary card border-0"
+			>
+				<div class="d-flex justify-content-between">
+					<b-img
+						:src="require('@/assets/images/decore-left.png')"
+						class="congratulations-img-left"
+					/>
+					<b-avatar size="60" variant="secondary" class="text-center">
+						<feather-icon icon="UserIcon" class="" size="22" />
+					</b-avatar>
+					<b-img
+						:src="require('@/assets/images/decore-right.png')"
+						class="congratulations-img-right"
+					/>
+				</div>
+				<div class="card-title d-flex justify-content-center">
+					<p
+						class="class-title-text text-center h2 font-weight-bolder text-white"
+					>
+						Welcome Here, Our No. 1 Site For Video Content That
+						Could Make You A Millionaire In The Next 6 Months.
+					</p>
+				</div>
+			</b-card>
+		</div>
+		<div class="course-intro mt-0 pt-0 col-12">
+			<div
+				class="mt-0 pt-0 d-flex d-flex justify-content-between my-0 py-0"
+			>
+				<p class="course-intro-text font-weight-bolder h2 pt-0 pt-0">
+					Available Courses
+				</p>
+				<p>Click on the card to view course</p>
+			</div>
+			<div class="divider py-1 bg-red" variant="red"></div>
+		</div>
+		<div></div>
 	</div>
 </template>
 
 <script>
 	import {
+		BImg,
 		BOverlay,
 		BRow,
 		BCol,
@@ -86,11 +129,14 @@
 		BFormInput,
 		BCardText,
 		BInputGroupPrepend,
+		BAvatar,
 	} from "bootstrap-vue";
 	import { getRandomFromArray } from "@core/utils/utils";
+	import FeatherIcon from "@/@core/components/feather-icon/FeatherIcon.vue";
 
 	export default {
 		components: {
+			BImg,
 			BOverlay,
 			BRow,
 			BCol,
@@ -101,6 +147,8 @@
 			BInputGroup,
 			BInputGroupPrepend,
 			BFormInput,
+			FeatherIcon,
+			BAvatar,
 		},
 		data() {
 			return {
