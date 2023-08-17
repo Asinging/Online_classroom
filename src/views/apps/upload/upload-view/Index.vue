@@ -57,33 +57,6 @@
 					:settings="perfectScrollbarSettings"
 					class="email-user-list scroll-area"
 				>
-					<!-- <b-card class="containing">
-						<div
-							id="iframeContainer"
-							v-if="computeCourseDisplay.isIframe"
-						>
-							<div
-								class="video-container d-flex justify-content-center align-center iframe"
-								v-html="computeCourseDisplay.video_url"
-							></div>
-						</div>
-						<div v-else class="iframe">
-							<b-embed
-								type="iframe"
-								aspect="16by9"
-								:src="computeCourseDisplay.video_url"
-								allowfullscreen
-							/>
-						</div>
-						<div class="d-flex justify-content-between controls">
-							<div class="d-flex justify-content-start">
-								<b-form-checkbox :checked="markAsWatch">
-									Mark as watched
-								</b-form-checkbox>
-							</div>
-						</div>
-					</b-card> -->
-
 					<b-card
 						class="d-flex justify-content-start shadow-none bg-light border-0"
 						tag="article"
@@ -203,7 +176,6 @@
 			EventBus.$on("close-left-sidebar", this.closeLeftSidebar());
 		},
 		beforeDestroy() {
-	
 			EventBus.$off();
 		},
 		methods: {
@@ -211,7 +183,6 @@
 				if (!item) return false;
 
 				this.courseDisplay = item;
-		
 			},
 			closeLeftSidebar(item) {},
 		},
@@ -259,15 +230,17 @@
 				});
 			};
 			const computeCourseDisplay = computed(() => {
-				
+				let counter = 1;
 				if (!courseDisplay.value) {
-				let storage = JSON.parse(localStorage.getItem("courseModuleDisplay") || 'null')
-				if(!storage) return null
-					courseDisplay.value =storage?.mudules[0]
-					courseModules.value = storage?.mudules
-					course.value = storage
-					return checkIframe(storage?.mudules[0])
-					}
+					let storage = JSON.parse(
+						localStorage.getItem("courseModuleDisplay") || "null"
+					);
+					if (!storage) return null;
+					courseDisplay.value = storage.mudules[counter][0];
+					courseModules.value = storage?.mudules;
+					course.value = storage;
+					return checkIframe(storage?.mudules[counter][0]);
+				}
 				return checkIframe(courseDisplay.value);
 			});
 
@@ -281,38 +254,40 @@
 				useResponsiveAppLeftSidebarVisibility();
 
 			onBeforeMount(() => {
-		
 				let courseId = route.value.params.id;
-				let storage = JSON.parse(localStorage.getItem("courseModuleDisplay") || 'null')
+				let storage = JSON.parse(
+					localStorage.getItem("courseModuleDisplay") || "null"
+				);
 				isRequesting.value = true;
 				store
 					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
 						id: courseId,
 					})
 					.then((response) => {
-						
+						debugger;
 						isServerResponse.value = true;
 						isRequesting.value = false;
+						let counter = 1;
 						if (!response) {
-							courseDisplay.value =storage?.mudules[0]
-							courseModules.value = storage?.mudules
-							course.value = storage
-							return false
+							courseDisplay.value = storage.mudules[counter][0];
+							courseModules.value = storage?.mudules;
+							course.value = storage;
+							return false;
 						}
-					
 
-							localStorage.setItem("courseModuleDisplay", JSON.stringify(response));
-					
-							courseDisplay.value = response.mudules[0];
-							courseModules.value = response.mudules;
-							course.value = response;
-		
+						localStorage.setItem(
+							"courseModuleDisplay",
+							JSON.stringify(response)
+						);
+
+						courseDisplay.value = storage.mudules[counter][0];
+						courseModules.value = response.mudules;
+						course.value = response;
 					})
 					.catch((err) => {
-						
 						isServerResponse.value = true;
 						isRequesting.value = false;
-				
+
 						console.log(err);
 					});
 			});
@@ -397,7 +372,6 @@
 		height: 30vh;
 	}
 
-	
 	iframe {
 		position: absolute;
 		top: 0;
