@@ -74,45 +74,78 @@
 	</div> -->
 	<div class="row">
 		<div class="mb-0 pb-0 col col-12">
-			<b-card
-				variant="primary"
-				class="shadow-none bg-primary card border-0"
-			>
-				<div class="d-flex justify-content-between">
-					<b-img
-						:src="require('@/assets/images/decore-left.png')"
-						class="congratulations-img-left"
-					/>
-					<b-avatar size="60" variant="secondary" class="text-center">
-						<feather-icon icon="UserIcon" class="" size="22" />
-					</b-avatar>
-					<b-img
-						:src="require('@/assets/images/decore-right.png')"
-						class="congratulations-img-right"
-					/>
-				</div>
-				<div class="card-title d-flex justify-content-center">
-					<p
-						class="class-title-text text-center h2 font-weight-bolder text-white"
-					>
-						Welcome Here, Our No. 1 Site For Video Content That
-						Could Make You A Millionaire In The Next 6 Months.
-					</p>
-				</div>
+			<b-card text-variant="center" class="card card-congratulations">
+				<b-img
+					:src="require('@/assets/images/decore-left.png')"
+					class="congratulations-img-left"
+				/>
+				<b-img
+					:src="require('@/assets/images/decore-right.png')"
+					class="congratulations-img-right"
+				/>
+				<!--/ images -->
+
+				<b-avatar variant="primary" size="70" class="shadow mb-2">
+					<feather-icon size="28" icon="AwardIcon" />
+				</b-avatar>
+				<h2
+					class="mb-1 mt-50 text-white font-weight-bold course-list-title px-2 text-center"
+				>
+					Welcome Here, Our No. 1 Site For Video Content That Could
+					Make You A Millionaire In The Next 6 Months.
+				</h2>
 			</b-card>
 		</div>
 		<div class="course-intro mt-0 pt-0 col-12">
 			<div
 				class="mt-0 pt-0 d-flex d-flex justify-content-between my-0 py-0"
 			>
-				<p class="course-intro-text font-weight-bolder h2 pt-0 pt-0">
+				<p class="course-intro-text font-weight-bolder h3 pt-0 pt-0">
 					Available Courses
 				</p>
-				<p>Click on the card to view course</p>
+				<p class="font-weight-bold h5">
+					Click on the card to view course
+				</p>
 			</div>
-			<div class="divider py-1 bg-red" variant="red"></div>
+			<div class="divider pt-25 bg-primary w-100"></div>
 		</div>
-		<div></div>
+		<div class="col col-12">
+			<b-row class="">
+				<b-col
+					v-for="item in computeCourses"
+					:key="item.id"
+					md="4"
+					sm="6"
+					class=""
+				>
+					<b-card
+						img-height="250"
+						class="text-center cursor-pointer"
+						:img-src="item.cover_photo_url"
+						:img-alt="item.title.slice(5)"
+						img-top
+						@click="
+							$router.push({
+								name: 'view-course',
+								params: { id: item.id },
+							})
+						"
+					>
+						<h4>{{ item.title }}</h4>
+						<b-card-text class="mt-1">
+							{{ item.description.slice(0, 80) }}
+						</b-card-text>
+					</b-card>
+				</b-col>
+				<b-col
+					v-show="!computeCourses.length"
+					cols="12"
+					class="text-center"
+				>
+					<h4 class="mt-4">Search result not found!!</h4>
+				</b-col>
+			</b-row>
+		</div>
 	</div>
 </template>
 
@@ -230,6 +263,11 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 	@import "@core/scss/vue/pages/page-knowledge-base.scss";
+	.course-list-title {
+		// font-family: Arial sans-serif !important;
+		font-family: Georgia, sans-serif;
+		font-weight: 900 !important;
+	}
 </style>
