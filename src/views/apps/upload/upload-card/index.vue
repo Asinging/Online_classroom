@@ -74,7 +74,10 @@
 	</div> -->
 	<div class="row">
 		<div class="mb-0 pb-0 col col-12">
-			<b-card text-variant="center" class="card card-congratulations">
+			<b-card
+				text-variant="center"
+				class="card card-congratulations pb-0 mb-0"
+			>
 				<b-img
 					:src="require('@/assets/images/decore-left.png')"
 					class="congratulations-img-left"
@@ -119,7 +122,7 @@
 					class=""
 				>
 					<b-card
-						img-height="250"
+						img-height="270"
 						class="text-center cursor-pointer"
 						:img-src="item.cover_photo_url"
 						:img-alt="item.title.slice(5)"
@@ -131,10 +134,52 @@
 							})
 						"
 					>
-						<h4>{{ item.title }}</h4>
-						<b-card-text class="mt-1">
-							{{ item.description.slice(0, 80) }}
-						</b-card-text>
+						<div
+							class="card-title d-flex justify-content-md-start py-0"
+						>
+							<h2
+								class="card-title-text text-capitalize font-weight-bolder"
+							>
+								{{ item.title }}
+							</h2>
+						</div>
+						<div class="card-description-text my-0 py-0">
+							<h4
+								class="card-description-text text-capitalize font-weight-bolder text-left py-0 mt-0"
+							>
+								{{ item.description.slice(0, 80) }}
+							</h4>
+						</div>
+						<div class="mt-1">
+							<p class="text-muted h5 text-left pb-1">
+								<span> Created By Super Admin </span>
+								<feather-icon icon="UserIcon" size="18" />
+							</p>
+							<div class="d-flex justify-content-start">
+								<ul class="text-left">
+									<li class="font-weight-bolder">
+										{{ item.tracks }} Modules
+									</li>
+									<li class="font-weight-bolder">
+										Life time access
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="d-flex justify-content-center">
+							<b-button
+								class="mt-25 mentorship_button text-center font-weight-bolder"
+								size="md"
+								variant="primary"
+								block
+							>
+								<span
+									class="h4 font-weight-bolder text-white button_text"
+								>
+									View Course</span
+								>
+							</b-button>
+						</div>
 					</b-card>
 				</b-col>
 				<b-col
@@ -163,6 +208,7 @@
 		BCardText,
 		BInputGroupPrepend,
 		BAvatar,
+		BButton,
 	} from "bootstrap-vue";
 	import { getRandomFromArray } from "@core/utils/utils";
 	import FeatherIcon from "@/@core/components/feather-icon/FeatherIcon.vue";
@@ -182,6 +228,7 @@
 			BFormInput,
 			FeatherIcon,
 			BAvatar,
+			BButton,
 		},
 		data() {
 			return {
@@ -269,5 +316,8 @@
 		// font-family: Arial sans-serif !important;
 		font-family: Georgia, sans-serif;
 		font-weight: 900 !important;
+	}
+	.card {
+		border-radius: 15px;
 	}
 </style>
