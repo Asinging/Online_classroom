@@ -950,25 +950,25 @@
 	};
 </script>
 
-<style lang="scss" >
+<style lang="scss" scope >
 	.wrapper {
 		margin: 10px;
 		// background:red
 		// padding: 5px;
 	}
 	.card_payment {
-		margin-top: 0px !important;
-		margin-bottom: 100px !important;
+		margin-top: 0px;
+		margin-bottom: 100px;
 	}
 
 	.containing_container_payment {
 		position: relative;
 		display: flex;
 		justify-content: center;
-		max-width: 1600px !important; /* Adjust the value as per your preference */
+		max-width: 1600px; /* Adjust the value as per your preference */
 		margin-left: 7px;
 		margin-right: 7px;
-		margin-right: 0px !important;
+		margin-right: 0px;
 	}
 	.video-container {
 		position: relative;
@@ -985,7 +985,7 @@
 		// margin-bottom:20px !important;
 	}
 	.introCard {
-		border-radius: 25px !important;
+		border-radius: 25px;
 	}
 	iframe {
 		position: absolute;
@@ -997,7 +997,7 @@
 
 		height: 100%;
 
-		border: 0px !important;
-		border-radius: 30px !important;
+		border: 0px;
+		border-radius: 30px;
 	}
 </style>

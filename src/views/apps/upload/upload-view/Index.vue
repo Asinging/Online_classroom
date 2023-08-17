@@ -1,14 +1,14 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
-	<div class="row">
-		<div class="col col-12 col-lg-2">
+	<div class="row no-gutters">
+		<div class="col col-12 col-md-3 col-lg-2">
 			<b-sidebar
 				id="sidebar-1"
 				shadow
-				bg-variant="dark"
+				bg-variant="secondary"
 				text-variant="light"
 				width="230px"
-				visible
+				:visible="sidebarVisible"
 				no-header
 			>
 				<template #default="{ hide }">
@@ -34,64 +34,46 @@
 			</b-sidebar>
 		</div>
 
-		<div class="col col-12 col-lg-10">
-			<div class="d-flex align-items-center bg-dark p-1">
-				<div class="mr-1 d-flex p-25 d-block d-lg-none">
-					<feather-icon
-						v-b-toggle.sidebar-1
-						icon="ListIcon"
-						size="21"
-						aria-controls="sidebar-1"
-						:aria-expanded="'true'"
-						class="cursor-pointer text-white"
-					/>
+		<div class="col col-12 col-md-9 col-lg-10">
+			<div class="mx-1 ml-lg-3">
+				<div
+					class="d-flex align-items-center bg-light py-1 rounded-10 mb-25"
+				>
+					<div class="mr-1 mr-md-2 d-flex d-block d-lg-none">
+						<feather-icon
+							v-b-toggle.sidebar-1
+							icon="ListIcon"
+							size="21"
+							aria-controls="sidebar-1"
+							:aria-expanded="'true'"
+							class="cursor-pointer text-dark"
+						/>
+					</div>
+					<b-card-text
+						class="text-capitalize h3 font-weight-bold text-dark video_title"
+					>
+						{{ `${computeCourseDisplay.title}` }}
+					</b-card-text>
 				</div>
-				<b-card-text
-					class="text-capitalize h3 font-weight-bold text-white"
-					>{{ `${computeCourseDisplay.title}` }}</b-card-text
-				>
-			</div>
 
-			<!-- Emails List -->
-			<vue-perfect-scrollbar
-				:settings="perfectScrollbarSettings"
-				class="email-user-list scroll-area"
-			>
-				<b-card
-					class="d-flex justify-content-start shadow-none bg-light border-0"
-					tag="article"
-					style="min-height: 300px"
-				>
+				<div>
 					<div
 						v-if="isRequesting"
-						class="align-items-center d-flex justify-content-start"
+						class="align-items-center d-flex justify-content-center mt-2"
 					>
-						<div class="containing_container text-center">
-							<b-spinner
-								size="xl"
-								class="text-center text-primary"
-							></b-spinner>
-						</div>
+						<b-spinner
+							size="xl"
+							class="text-center text-primary"
+						></b-spinner>
 					</div>
-					<div class="containing_container" v-else-if="course">
-						<div
-							v-if="computeCourseDisplay.isIframe"
-							class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-							style="height: 60vh; width: 100%"
-							v-html="computeCourseDisplay.video_url"
-						></div>
-						<div v-else class="iframe p-0 m-0">
-							<b-embed
-								class="embed-responsive-item"
-								type="iframe"
-								aspect="16by9"
-								:src="computeCourseDisplay.video_url"
-								allowfullscreen
-							/>
-						</div>
-					</div>
-				</b-card>
-			</vue-perfect-scrollbar>
+
+					<div
+						v-else-if="course && computeCourseDisplay.isIframe"
+						class="iframe2 p-0 m-0 embed-responsive embed-responsive-16by9"
+						v-html="computeCourseDisplay.video_url"
+					></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -102,6 +84,7 @@
 	import {
 		ref,
 		onUnmounted,
+		onMounted,
 		computed,
 		watch,
 		onBeforeMount,
@@ -199,6 +182,10 @@
 			const course = ref(null);
 			const isServerResponse = ref(false);
 			const isRequesting = ref(true);
+			const sidebarVisible = ref(true);
+
+			const windowWidth = ref(window.innerWidth);
+
 			const courseTitles = [
 				{
 					title: "Personal",
@@ -217,13 +204,33 @@
 					color: "danger",
 				},
 			];
+			onMounted(() => {
+				if (windowWidth.value > 780) {
+					sidebarVisible.value = true;
+				} else {
+					sidebarVisible.value = false;
+				}
+				window.addEventListener("resize", handleResize);
+			});
+
+			onUnmounted(() => {
+				window.removeEventListener("resize", handleResize);
+			});
 
 			// Route Params
 
 			const perfectScrollbarSettings = {
 				maxScrollbarLength: 150,
 			};
+			const handleResize = () => {
+				windowWidth.value = window.innerWidth;
 
+				if (windowWidth.value > 780) {
+					sidebarVisible.value = true;
+				} else {
+					sidebarVisible.value = false;
+				}
+			};
 			const courseList = () => {
 				let isAdmin = JSON.parse(
 					localStorage.getItem("isAdminIn") || "false"
@@ -352,6 +359,7 @@
 				courseDisplay,
 				courseModulesTotal,
 				courseList,
+				sidebarVisible,
 
 				// Left Sidebar Responsiveness
 				mqShallShowLeftSidebar,
@@ -360,62 +368,30 @@
 	};
 </script>
 
+
+
 <style lang="scss" scoped>
-</style>
+	// @import "~@core/scss/base/pages/app-email.scss";
+	.video_title {
+		font-family: Arial, Helvetica, sans-serif;
+		font-weight: 700;
+	}
 
-<style lang="scss" >
-	@import "~@core/scss/base/pages/app-email.scss";
-	// .container {
-	// 	height: 65vh !important;
-	// 	width: 100% !important;
-	// }
-	// .video-container {
-	// 	position: relative;
-	// }
-
-	// .container_loader {
-	// 	height: 30vh;
-	// }
-	// .iframeContainer {
-	// 	position: relative;
-	// }
-	// .iframe {
-	// 	position: absolute;
-	// 	top: 0;
-	// 	right: 0;
-	// 	padding: 0;
-	// 	margin: 0;
-	// 	width: 100%;
-	// 	height: 100%;
-	// 	border: 0;
-	// }
-
-	.containing_container {
+	.iframe2 {
 		position: relative;
-		display: flex;
-		justify-content: center;
-		max-width: 1000px !important; /* Adjust the value as per your preference */
-		margin: 0 auto;
-	}
-	.video-container {
-		position: relative;
-	}
+		overflow: hidden;
+		padding-top: 56.25%;
 
-	.container_loader {
-		height: 30vh;
+		max-height: 520px;
 	}
-
-	iframe {
+	.iframe2 iframe {
 		position: absolute;
 		top: 0;
-		right: 0;
-		padding: 0;
-		margin: 0;
+		left: 0;
 		width: 100%;
+		height: 30px;
+		// border-radius: 12px !important;
 
-		height: 100%;
-
-		border: 0px !important;
-		border-radius: 10px !important;
+		border: 0; /* Remove iframe border */
 	}
 </style>

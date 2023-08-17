@@ -19,13 +19,15 @@ export const checkIframe = item => {
             return item;
         });
     // arr.splice(2, 0, 'width="1200"');
+
+    arr.splice(2, 0, 'class="embed-responsive-item"');
     str = arr.reduce((prev, curr) => {
         return prev + ' ' + curr;
     });
     item.isIframe = true;
     item.video_url = str;
 
-
+    console.log(item)
     return item;
 };
 
