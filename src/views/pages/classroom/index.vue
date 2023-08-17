@@ -86,7 +86,7 @@
 		},
 		methods: {
 			toTelegram() {
-				window.open("https://web.telegram.org/k/", "_blank");
+				window.open("https://t.me/+i2V9hq_xQrEzNjlk", "_blank");
 			},
 		},
 	};
