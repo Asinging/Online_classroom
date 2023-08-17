@@ -103,8 +103,8 @@
 												"
 												rows="2"
 												placeholder="Title of Course"
-											lazy-formatter
-											:formatter="formatter"
+												lazy-formatter
+												:formatter="formatter"
 											/>
 										</b-form-group>
 									</b-col>
@@ -278,6 +278,7 @@
 		directives: { "b-toggle": VBToggle, "b-tooltip": VBTooltip, Ripple },
 
 		setup(props) {
+			debugger;
 			const toast = useToast();
 			const { route } = useRouter();
 
@@ -405,11 +406,10 @@
 				trTrimHeight(row.value.offsetHeight);
 			};
 
-
-			const formatter = (value) =>{
-				if(!value) return ''
-					return value.toLowerCase().trim()
-			}
+			const formatter = (value) => {
+				if (!value) return "";
+				return value.toLowerCase().trim();
+			};
 
 			const _uploadRecord = async (course) => {
 				try {
@@ -488,7 +488,9 @@
 				let serverItem = items.value.map((item) => {
 					return {
 						status: 1,
-						title: item.courseTitle?item.courseTitle.toLowerCase():item.courseTitle,
+						title: item.courseTitle
+							? item.courseTitle.toLowerCase()
+							: item.courseTitle,
 						description: item.courseDescriptions,
 						video_url: item.videoUrl,
 						duration: 0,
@@ -621,7 +623,7 @@
 				isUploading,
 				isEditPage,
 				introVideo,
-				formatter, 
+				formatter,
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
 				refPreviewEl,

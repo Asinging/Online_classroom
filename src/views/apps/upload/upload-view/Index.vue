@@ -27,6 +27,9 @@
 							/>
 						</span>
 					</div>
+					<div class="primary">
+						<Menu :menu="computeCourseModules" />
+					</div>
 				</template>
 			</b-sidebar>
 		</div>
@@ -130,11 +133,12 @@
 
 	import { useRouter } from "@core/utils/utils";
 	import { useResponsiveAppLeftSidebarVisibility } from "@core/comp-functions/ui/app";
-	import ModuleSideBarTitle from "./moduleSideBarTitle.vue";
+
 	import { checkIframe } from "@/helpers/iframe-helpers";
 	import EventBus from "@/helpers/eventBus";
 	import router from "@/router";
 	import Ripple from "vue-ripple-directive";
+	import Menu from "./Menu.vue";
 
 	export default {
 		directives: {
@@ -142,6 +146,7 @@
 			Ripple,
 		},
 		components: {
+			Menu,
 			BAlert,
 			BLink,
 			BPagination,
@@ -168,7 +173,6 @@
 			VuePerfectScrollbar,
 
 			// App SFC
-			ModuleSideBarTitle,
 		},
 		created() {
 			EventBus.$on("courseModuleClick", this.courseModuleClick);
@@ -236,7 +240,7 @@
 					);
 					if (!storage) return null;
 					courseDisplay.value = storage.mudules[counter][0];
-					courseModules.value = storage?.mudules;
+
 					course.value = storage;
 					return checkIframe(storage?.mudules[counter][0]);
 				}
@@ -246,6 +250,12 @@
 			const courseModulesTotal = computed(() => {
 				if (!courseDisplay.value) return 0;
 				return courseDisplay.value.length;
+			});
+
+			const computeCourseModules = computed(() => {
+				if (!courseModules.value) return [];
+
+				return courseModules.value;
 			});
 
 			// Left Sidebar Responsiveness
@@ -263,13 +273,24 @@
 						id: courseId,
 					})
 					.then((response) => {
-						debugger;
 						isServerResponse.value = true;
 						isRequesting.value = false;
 						let counter = 1;
 						if (!response) {
 							courseDisplay.value = storage.mudules[counter][0];
-							courseModules.value = storage?.mudules;
+							let x = Object.values(storage.mudules);
+
+							courseModules.value = x.map((item, index) => {
+								return {
+									title: index + 1,
+
+									children: item.map((i) => {
+										i.index = index;
+										return i;
+									}),
+								};
+							});
+
 							course.value = storage;
 							return false;
 						}
@@ -280,7 +301,19 @@
 						);
 
 						courseDisplay.value = storage.mudules[counter][0];
-						courseModules.value = response.mudules;
+						let x = Object.values(storage.mudules);
+
+						courseModules.value = x.map((item, index) => {
+							return {
+								title: index + 1,
+								index: index + 1,
+								children: item.map((i) => {
+									i.index = index;
+									return i;
+								}),
+							};
+						});
+						console.log(courseModules.value);
 						course.value = response;
 					})
 					.catch((err) => {
@@ -304,6 +337,7 @@
 			});
 
 			return {
+				computeCourseModules,
 				isRequesting,
 				isServerResponse,
 				courseTitles,

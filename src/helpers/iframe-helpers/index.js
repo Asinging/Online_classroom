@@ -24,8 +24,8 @@ export const checkIframe = item => {
     });
     item.isIframe = true;
     item.video_url = str;
-    console.log(item)
-    debugger
+
+
     return item;
 };
 
