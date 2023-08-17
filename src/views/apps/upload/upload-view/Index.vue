@@ -5,14 +5,17 @@
 			<b-sidebar
 				id="sidebar-1"
 				shadow
-				bg-variant="secondary"
+				bg-variant="dark"
 				text-variant="light"
-				width="230px"
+				sidebar-class="bg"
+				width="250px"
 				:visible="sidebarVisible"
 				no-header
 			>
 				<template #default="{ hide }">
-					<div class="p-25 my-1 d-flex justify-content-between">
+					<div
+						class="p-25 my-1 mx-25 d-flex justify-content-between primary"
+					>
 						<span class="font-weight-bolder h3 text-light pr-25">
 							Course Modules
 						</span>
@@ -262,7 +265,7 @@
 			const computeCourseModules = computed(() => {
 				if (!courseModules.value) return [];
 
-				return courseModules.value;
+				return courseModules.value || [];
 			});
 
 			// Left Sidebar Responsiveness
@@ -320,7 +323,7 @@
 								}),
 							};
 						});
-						console.log(courseModules.value);
+
 						course.value = response;
 					})
 					.catch((err) => {
@@ -382,7 +385,7 @@
 		overflow: hidden;
 		padding-top: 56.25%;
 
-		max-height: 520px;
+		max-height: 500px;
 	}
 	.iframe2 iframe {
 		position: absolute;

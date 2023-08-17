@@ -8,35 +8,46 @@
 			<b-spinner class="text-white" small />
 		</div>
 
-		<ul v-else>
+		<ul v-else class="mr-1">
 			<template v-for="(item, index) in menu">
 				<li :key="index + Date.now()" class="">
-					<div class="cursor-pointer">
-						<span class="d-flex justify-content-between">
-							<span class="font-weight-bold h4 text-white">
+					<div class="cursor-pointer list-item">
+						<span class="d-flex justify-content-between h5">
+							<span
+								class="font-weight-bold text-white text-capitalize"
+							>
 								{{ "Module " + item.title }}
 							</span>
-							<button
+							<span
 								v-if="item.children"
 								v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-								class="btn mx-1 p-25"
+								class="mx-1 p-25"
 								@click="updateExpansion(item.title)"
 							>
 								<span
-									class="font-weight-bold h3 text-white cursor-pointer rounded-2"
+									class="h3 text-white cursor-pointer rounded-2"
 									>{{
-										expansionState[item.title] ? "-" : "+"
+										computeExpansionState[item.title]
+											? "-"
+											: "+"
 									}}</span
 								>
-							</button>
+							</span>
 						</span>
-						<!-- v-if="item.children && expansionState[item.title]" -->
-						<Menu :menu="item.children"></Menu>
+
+						<Menu
+							v-if="item.children && expansionState[item.title]"
+							:menu="item.children"
+						></Menu>
 					</div>
+
+					<hr
+						v-if="!item.children"
+						class="divider py-0 pb-0 bg-white"
+					/>
 				</li>
 			</template>
 		</ul>
-		<!-- <div class="divider pt-25 bg-primary w-100"></div> -->
 	</div>
 </template>
 <script>
@@ -44,6 +55,7 @@
 	import Ripple from "vue-ripple-directive";
 	import { BButton, BSpinner } from "bootstrap-vue";
 	export default {
+		name: "Menu",
 		components: {
 			BButton,
 			BSpinner,
@@ -63,12 +75,45 @@
 				expansionState: {},
 			};
 		},
+
+		computed: {
+			computeExpansionState() {
+				return this.expansionState;
+			},
+			computeMenu() {
+				if (!this.menu || !this.menu.length) return [];
+				return this.menu;
+			},
+		},
 		methods: {
 			updateExpansion(node) {
+				debugger;
+				// this.$nextTick(() => {
 				this.expansionState[node] = !this.expansionState[node];
+				console.log(this.expansionState[node]);
+				// });
 			},
 		},
 	};
 </script>
+
+
+<style>
+	ul,
+	ol {
+		margin-right: 10px;
+		padding: 5px;
+		list-style-type: none;
+	}
+	li {
+		/* padding: 10px; */
+		transition: background-color 0.3s ease; /* Adding a smooth transition effect */
+	}
+
+	li:hover {
+		/* background-color: #f0f0f0; */
+		/* Change to the desired hover background color */
+	}
+</style>
 
 
