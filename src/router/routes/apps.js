@@ -72,8 +72,7 @@ export default [{
         component: () =>
             import ('@/views/apps/upload/upload-view/admin/Index.vue'),
         meta: {
-            contentRenderer: 'sidebar-left',
-            contentClass: 'email-application',
+            layout: 'full',
             // navActiveLink: 'apps-email',
             resource: 'Auth'
         }
@@ -84,8 +83,7 @@ export default [{
         component: () =>
             import ('@/views/apps/upload/upload-view/client/Index.vue'),
         meta: {
-            contentRenderer: 'sidebar-left',
-            contentClass: 'email-application',
+            layout: 'full',
             // navActiveLink: 'apps-email',
             resource: 'Auth'
         }

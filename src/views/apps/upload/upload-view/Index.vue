@@ -1,106 +1,94 @@
 <template>
 	<!-- Need to add height inherit because Vue 2 don't support multiple root ele -->
-	<div style="height: inherit; margin-bottom: 10px">
-		<div
-			v-if="!computeCourseDisplay"
-			class="text-center d-flex justify-content-center align-items-center align-content-center"
-			style="height: 100%"
-		>
-			<b-alert variant="danger" v-if="isServerResponse" show>
-				<h4 class="alert-heading">Error fetching Video Data</h4>
-				<div class="alert-body">
-					No Video found with this data. please Check
-					<b-link class="alert-link" @click="courseList">
-						Video List
-					</b-link>
-				</div>
-			</b-alert>
-			<div
-				v-else
-				class="text-center d-flex justify-content-center align-items-center"
-				style="height: 100%"
+	<div class="row">
+		<div class="col col-12 col-lg-2">
+			<b-sidebar
+				id="sidebar-1"
+				shadow
+				bg-variant="dark"
+				text-variant="light"
+				width="230px"
+				visible
+				no-header
 			>
-				<b-spinner size="xl" class="text-center text-primary" />
-			</div>
-		</div>
-		<div v-else>
-			<div
-				class="body-content-overlay"
-				:class="{ show: mqShallShowLeftSidebar }"
-				@click="mqShallShowLeftSidebar = false"
-			/>
-
-			<!-- Email List -->
-			<div class="email-app-list">
-				<!-- App Searchbar Header -->
-				<div class="app-fixed-search d-flex align-items-center bg-dark">
-					<div class="sidebar-toggle d-block d-lg-none ml-1">
-						<feather-icon
-							icon="ListIcon"
-							size="21"
-							class="cursor-pointer text-white"
-							@click="mqShallShowLeftSidebar = true"
-						/>
-					</div>
-				</div>
-
-				<!-- App Action Bar -->
-				<div class="app-action bg-dark">
-					<b-card-text
-						class="text-capitalize h3 font-weight-bold text-white"
-						>{{ `${computeCourseDisplay.title}` }}</b-card-text
-					>
-				</div>
-
-				<!-- Emails List -->
-				<vue-perfect-scrollbar
-					:settings="perfectScrollbarSettings"
-					class="email-user-list scroll-area"
-				>
-					<b-card
-						class="d-flex justify-content-start shadow-none bg-light border-0"
-						tag="article"
-						style="min-height: 300px"
-					>
-						<div
-							v-if="isRequesting"
-							class="align-items-center d-flex justify-content-start"
+				<template #default="{ hide }">
+					<div class="p-25 my-1 d-flex justify-content-between">
+						<span class="font-weight-bolder h3 text-light pr-25">
+							Course Modules
+						</span>
+						<span
+							class="d-flex justify-content-end text-right align-items-center d-block d-lg-none"
 						>
-							<div class="containing_container text-center">
-								<b-spinner
-									size="xl"
-									class="text-center text-primary"
-								></b-spinner>
-							</div>
-						</div>
-						<div class="containing_container" v-else-if="course">
-							<div
-								v-if="computeCourseDisplay.isIframe"
-								class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-								style="height: 60vh; width: 100%"
-								v-html="computeCourseDisplay.video_url"
-							></div>
-							<div v-else class="iframe p-0 m-0">
-								<b-embed
-									class="embed-responsive-item"
-									type="iframe"
-									aspect="16by9"
-									:src="computeCourseDisplay.video_url"
-									allowfullscreen
-								/>
-							</div>
-						</div>
-					</b-card>
-				</vue-perfect-scrollbar>
+							<feather-icon
+								icon="XIcon"
+								size="15"
+								@click="hide"
+								class="cursor-pointer text-white font-weight-bolder"
+							/>
+						</span>
+					</div>
+				</template>
+			</b-sidebar>
+		</div>
+
+		<div class="col col-12 col-lg-10">
+			<div class="d-flex align-items-center bg-dark p-1">
+				<div class="mr-1 d-flex p-25 d-block d-lg-none">
+					<feather-icon
+						v-b-toggle.sidebar-1
+						icon="ListIcon"
+						size="21"
+						aria-controls="sidebar-1"
+						:aria-expanded="'true'"
+						class="cursor-pointer text-white"
+					/>
+				</div>
+				<b-card-text
+					class="text-capitalize h3 font-weight-bold text-white"
+					>{{ `${computeCourseDisplay.title}` }}</b-card-text
+				>
 			</div>
 
-			<portal to="content-renderer-sidebar-left">
-				<module-side-bar-title
-					:class="{ show: mqShallShowLeftSidebar }"
-					:courseTitles="courseModules"
-				/>
-				<!-- @close-left-sidebar="mqShallShowLeftSidebar = false" -->
-			</portal>
+			<!-- Emails List -->
+			<vue-perfect-scrollbar
+				:settings="perfectScrollbarSettings"
+				class="email-user-list scroll-area"
+			>
+				<b-card
+					class="d-flex justify-content-start shadow-none bg-light border-0"
+					tag="article"
+					style="min-height: 300px"
+				>
+					<div
+						v-if="isRequesting"
+						class="align-items-center d-flex justify-content-start"
+					>
+						<div class="containing_container text-center">
+							<b-spinner
+								size="xl"
+								class="text-center text-primary"
+							></b-spinner>
+						</div>
+					</div>
+					<div class="containing_container" v-else-if="course">
+						<div
+							v-if="computeCourseDisplay.isIframe"
+							class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
+							style="height: 60vh; width: 100%"
+							v-html="computeCourseDisplay.video_url"
+						></div>
+						<div v-else class="iframe p-0 m-0">
+							<b-embed
+								class="embed-responsive-item"
+								type="iframe"
+								aspect="16by9"
+								:src="computeCourseDisplay.video_url"
+								allowfullscreen
+							/>
+						</div>
+					</div>
+				</b-card>
+			</vue-perfect-scrollbar>
 		</div>
 	</div>
 </template>
@@ -134,6 +122,9 @@
 		BCard,
 		BCardTitle,
 		BCardText,
+		BSidebar,
+		BButton,
+		VBToggle,
 	} from "bootstrap-vue";
 	import VuePerfectScrollbar from "vue-perfect-scrollbar";
 
@@ -143,8 +134,13 @@
 	import { checkIframe } from "@/helpers/iframe-helpers";
 	import EventBus from "@/helpers/eventBus";
 	import router from "@/router";
+	import Ripple from "vue-ripple-directive";
 
 	export default {
+		directives: {
+			"b-toggle": VBToggle,
+			Ripple,
+		},
 		components: {
 			BAlert,
 			BLink,
@@ -164,6 +160,9 @@
 			BCard,
 			BCardTitle,
 			BCardText,
+			BSidebar,
+			BButton,
+			VBToggle,
 
 			// 3rd Party
 			VuePerfectScrollbar,
