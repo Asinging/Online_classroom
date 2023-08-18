@@ -51,17 +51,36 @@
 				</div>
 			</app-timeline-item>
 
+			<app-timeline-item icon="Edit2Icon" class="mb-10">
+				<div
+					class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-10 mb-sm-0"
+				>
+					<h4>Course Title</h4>
+				</div>
+				<div>
+					<b-form-group>
+						<b-form-textarea
+							v-model="courseTitle"
+							rows="1"
+							placeholder="Course Title"
+							lazy-formatter
+							:formatter="formatter"
+						/>
+					</b-form-group>
+				</div>
+			</app-timeline-item>
+
 			<app-timeline-item
 				variant="secondary"
 				icon="LinkIcon"
-				class="mt-md-5"
+				class="mt-md-1"
 			>
 				<!-- <div
 					class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-1 mb-sm-0"
 				>	 -->
 				<div class="mb-1 mb-sm-1">
 					<div class="d-flex justify-content-between">
-						<h4>Course Propertise</h4>
+						<h4>Course Modules</h4>
 
 						<b-form-group v-if="!isEditPage">
 							<b-form-checkbox
@@ -73,103 +92,154 @@
 							</b-form-checkbox>
 						</b-form-group>
 					</div>
-					<p class="text-primary">
-						Go to the YouTube video or playlist you want to add.
-						From the list of Share options, click Embed. From the
-						box that appears, copy the HTML code. Paste the code
-						into the Below marked for youtube video.
-					</p>
+
 					<div>
 						<div class="pl-md-3 pl-0 mb-2 mb-md-0">
 							<b-form
 								ref="form"
 								:style="{ height: trHeight }"
 								class="repeater-form"
-								@submit.prevent="repeateAgain"
+								@submit.prevent="addModule || addSubMenu"
 							>
-								<!-- Row Loop -->
-								<b-row
-									v-for="(item, index) in items"
-									:id="item.id"
-									:key="item.id"
-									ref="row"
+								<div
+									v-for="(parentItem, parentIndex) in items"
+									:id="parentItem.idx"
+									:key="parentIndex"
+									ref="parentRow"
 								>
-									<!-- Course Title-->
-									<b-col md="4">
-										<b-form-group>
+									<b-row
+										v-for="(
+											item, index
+										) in parentItem.module"
+										:id="item.id"
+										:key="item.id"
+										ref="row"
+									>
+										<b-col md="4">
+											<b-form-group>
+												<b-form-textarea
+													v-model="
+														parentItem.module[index]
+															.title
+													"
+													rows="1"
+													placeholder="Title of Course"
+													lazy-formatter
+													:formatter="formatter"
+												/>
+											</b-form-group>
+										</b-col>
+
+										<b-col md="4" class="mb-0 mb-sm-1">
 											<b-form-textarea
 												v-model="
-													items[index].courseTitle
+													parentItem.module[index]
+														.courseDescriptions
 												"
-												rows="2"
-												placeholder="Title of Course"
-												lazy-formatter
-												:formatter="formatter"
+												rows="1"
+												placeholder="Brief Description "
 											/>
-										</b-form-group>
-									</b-col>
+											<!-- :state=" items[index].courseDescription
+											.length <= 100 " -->
+										</b-col>
 
-									<!-- Cost -->
-									<b-col md="4" class="mb-0 mb-sm-1">
-										<b-form-textarea
-											v-model="
-												items[index].courseDescriptions
-											"
-											rows="2"
-											placeholder="Brief Description "
-										/>
-										<!-- :state=" items[index].courseDescription
-										.length <= 100 " -->
-									</b-col>
+										<b-col md="4">
+											<b-form-textarea
+												v-model="
+													parentItem.module[index]
+														.videoUrl
+												"
+												rows="1"
+												placeholder="Youtube video Id"
+											/>
+										</b-col>
 
-									<!-- Quantity -->
-									<b-col md="4">
-										<b-form-textarea
-											v-model="items[index].videoUrl"
-											rows="2"
-											placeholder="Youtube video Id"
-										/>
-									</b-col>
-
-									<b-col
-										cols="12"
-										class="mx-1 mb-25 mb-md-3 mt-sm-25 mt-md-0 d-flex justify-content-end"
-									>
-										<b-button
-											v-ripple.400="
-												'rgba(255, 255, 255, 0.15)'
-											"
-											variant="primary"
-											@click="repeateAgain"
-											class="sm mr-25"
-											size="sm"
-											v-if="items.length === index + 1"
-											:disabled="introVideo"
+										<b-col
+											cols="12"
+											class="mx-1 mb-md-25 my-25 mt-md-0 d-flex justify-content-end pt-md-0"
 										>
-											<feather-icon
-												icon="PlusIcon"
-												class="mr-25"
-											/>
-											<span>Add course module</span>
-										</b-button>
-										<b-button
-											v-ripple.400="
-												'rgba(234, 84, 85, 0.15)'
-											"
-											variant="outline-danger"
-											class="mt-0 text-right d-flex justify-content-end mr-2"
-											@click="removeItem(index)"
-											size="sm"
-										>
-											<feather-icon
-												icon="XIcon"
-												class=""
-											/>
-											<span>Delete</span>
-										</b-button>
-									</b-col>
-								</b-row>
+											<b-button
+												v-b-tooltip.hover.bottom
+												title="Add submodule"
+												v-ripple.400="
+													'rgba(255, 255, 255, 0.15)'
+												"
+												variant="primary"
+												@click="
+													addSubModule(parentIndex)
+												"
+												class="sm mr-25 btn-icon"
+												size="sm"
+												:disabled="introVideo"
+												v-if="
+													index ==
+													parentItem.module.length - 1
+												"
+											>
+												<feather-icon
+													icon="PlusIcon"
+													class="mr-25"
+												/>
+											</b-button>
+											<b-button
+												v-b-tooltip.hover.bottom
+												title="Remove submodule"
+												v-ripple.400="
+													'rgba(234, 84, 85, 0.15)'
+												"
+												variant="outline-danger"
+												class="mt-0 text-right d-flex justify-content-end mr-2 btn-icon"
+												@click="removeSubmodule(index)"
+												size="sm"
+												:disabled="
+													parentItem.module.length < 2
+												"
+											>
+												<feather-icon
+													icon="XIcon"
+													class=""
+												/>
+											</b-button>
+										</b-col>
+									</b-row>
+									<div
+										v-if="
+											items.length > 1 &&
+											parentIndex != items.length - 1
+										"
+										class="primary pt-25 bg-primary divider"
+									/>
+								</div>
 							</b-form>
+							<div class="d-flex justify-content-center">
+								<b-button
+									v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+									variant="secondary"
+									@click="addModule(parentIndex)"
+									class="sm mr-25"
+									size="md"
+									:disabled="introVideo"
+								>
+									<feather-icon
+										icon="PlusIcon"
+										class="mr-25"
+									/>
+									<span>Add Module</span>
+								</b-button>
+
+								<b-button
+									v-if="items.length > 1"
+									v-b-tooltip.hover.bottom
+									title="Remove Module"
+									v-ripple.400="'rgba(234, 84, 85, 0.15)'"
+									variant="outline-danger"
+									class="mt-0 text-right d-flex justify-content-end mr-2 btn-icon"
+									@click="removeModule(parentIndex)"
+									size="md"
+								>
+									<feather-icon icon="XIcon" class="" />
+								</b-button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -278,7 +348,6 @@
 		directives: { "b-toggle": VBToggle, "b-tooltip": VBTooltip, Ripple },
 
 		setup(props) {
-			debugger;
 			const toast = useToast();
 			const { route } = useRouter();
 
@@ -286,15 +355,25 @@
 			const isUploading = ref(false);
 			const isEditPage = ref(false);
 			const introVideo = ref(false);
-			const nextTodoId = ref(2);
+			const parentNextTodoId = ref(1);
+			const nextTodoId = ref(1);
 			const blogEdit = ref({});
 			const blogFile = ref(null);
 			const refPreviewEl = ref(null);
+			const courseTitle = ref("");
 			const items = ref([
 				{
-					courseTitle: "",
+					title: "",
 					courseDescriptions: "",
 					videoUrl: "",
+					idx: 0,
+					module: [
+						{
+							title: "",
+							courseDescriptions: "",
+							videoUrl: "",
+						},
+					],
 				},
 			]);
 
@@ -303,6 +382,7 @@
 			const refInputEl = ref(null);
 			const previewEl = ref(null);
 			const row = ref(null);
+			const parentRow = ref(null);
 			const form = ref(null);
 			const coverArtUrl = ref(null);
 
@@ -381,8 +461,27 @@
 				else trHeight.value = `${Number(val)}px`;
 			};
 
-			const repeateAgain = () => {
+			const addModule = () => {
 				items.value.push({
+					idx: (parentNextTodoId.value += parentNextTodoId.value),
+					title: "",
+					courseDescriptions: "",
+					videoUrl: "",
+					module: [
+						{
+							title: "",
+							courseDescriptions: "",
+							videoUrl: "",
+						},
+					],
+				});
+
+				nextTick(() => {
+					trAddHeight(parentRow.value.offsetHeight);
+				});
+			};
+			const addSubModule = (index) => {
+				items.value[index].module.push({
 					id: (nextTodoId.value += nextTodoId.value),
 				});
 
@@ -391,14 +490,28 @@
 				});
 			};
 
-			const removeItem = (index) => {
+			const removeModule = (index) => {
 				items.value.splice(index, 1);
 
 				toast({
 					component: ToastificationContent,
 					props: {
 						title: "Good",
-						text: `A course Module has been removed`,
+						text: `A Module is removed`,
+						icon: "CheckIcon",
+						variant: "success",
+					},
+				});
+				trTrimHeight(parentRow.value.offsetHeight);
+			};
+			const removeSubmodule = (index) => {
+				items.value.module.splice(index, 1);
+
+				toast({
+					component: ToastificationContent,
+					props: {
+						title: "Good",
+						text: `A submodule is  removed`,
 						icon: "CheckIcon",
 						variant: "success",
 					},
@@ -441,7 +554,7 @@
 					});
 					items.value = [
 						{
-							courseTitle: "",
+							title: "",
 							courseDescriptions: "",
 							videoUrl: "",
 						},
@@ -488,9 +601,7 @@
 				let serverItem = items.value.map((item) => {
 					return {
 						status: 1,
-						title: item.courseTitle
-							? item.courseTitle.toLowerCase()
-							: item.courseTitle,
+						title: item.title ? item.title.toLowerCase() : item.title,
 						description: item.courseDescriptions,
 						video_url: item.videoUrl,
 						duration: 0,
@@ -500,7 +611,7 @@
 				let course = {
 					created_at: serverTimestamp(),
 					cover_photo_url: coverArtUrl.value,
-					title: data[0].courseTitle,
+					title: data[0].title,
 					description: data[0].courseDescriptions,
 					status: 1,
 					tracks: items.value.length || 1,
@@ -543,7 +654,6 @@
 										},
 									})
 									.then((res) => {
-										debugger;
 										_uploadRecord(course);
 									})
 									.catch((err) => {
@@ -614,10 +724,10 @@
 				inputImageRenderer,
 				avatarText,
 				form,
-				removeItem,
-				repeateAgain,
+				removeSubmodule,
+				addSubModule,
 				items,
-				nextTodoId,
+
 				pickingImage,
 
 				isUploading,
@@ -628,6 +738,9 @@
 				refInputEl,
 				refPreviewEl,
 				previewEl,
+				addModule,
+				courseTitle,
+				removeModule,
 			};
 		},
 	};
