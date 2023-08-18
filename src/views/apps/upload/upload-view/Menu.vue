@@ -8,13 +8,30 @@
 			<b-spinner class="text-white" small />
 		</div>
 
-		<ul v-else class="mr-1">
+		<ul v-else class="menu">
 			<template v-for="(item, index) in menu">
-				<li :key="index + Date.now()" class="">
+				<li
+					:key="index"
+					class="py-0"
+					:class="{
+						'menu-item': item.children,
+						'submenu-item': !item.children,
+						'p-25': !item.children,
+					}"
+				>
 					<div class="cursor-pointer list-item">
-						<span class="d-flex justify-content-between h5">
+						<span
+							class="d-flex justify-content-between"
+							@click="updateExpansion(item.title, item)"
+						>
 							<span
-								class="font-weight-bold text-white text-capitalize"
+								class="text-white text-capitalize"
+								:class="{
+									h5: item.children,
+									'font-weight-bolder': item.children,
+									h4: !item.children,
+									h6: !item.children,
+								}"
 							>
 								{{ "Module " + item.title }}
 							</span>
@@ -22,29 +39,22 @@
 								v-if="item.children"
 								v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 								class="mx-1 p-25"
-								@click="updateExpansion(item.title)"
 							>
 								<span
 									class="h3 text-white cursor-pointer rounded-2"
 									>{{
-										computeExpansionState[item.title]
-											? "-"
-											: "+"
+										expansionState[item.title] ? "-" : "+"
 									}}</span
 								>
 							</span>
 						</span>
 
 						<Menu
+							class="submenu"
 							v-if="item.children && expansionState[item.title]"
 							:menu="item.children"
 						></Menu>
 					</div>
-
-					<hr
-						v-if="!item.children"
-						class="divider py-0 pb-0 bg-white"
-					/>
 				</li>
 			</template>
 		</ul>
@@ -54,6 +64,7 @@
 	import { ref } from "@vue/composition-api";
 	import Ripple from "vue-ripple-directive";
 	import { BButton, BSpinner } from "bootstrap-vue";
+	import EventBus from "@/helpers/eventBus";
 	export default {
 		name: "Menu",
 		components: {
@@ -72,26 +83,49 @@
 		},
 		data() {
 			return {
-				expansionState: {},
+				expansionState: {
+					1: false,
+					2: false,
+					3: false,
+					4: false,
+					5: false,
+					6: false,
+					7: false,
+					8: false,
+					9: false,
+					10: false,
+				},
 			};
 		},
-
-		computed: {
-			computeExpansionState() {
-				return this.expansionState;
+		watch: {
+			menu: {
+				deep: true,
+				handler: (val) => {
+					if (!val || !val.length) return false;
+					let x = {};
+				},
 			},
+		},
+		computed: {
 			computeMenu() {
 				if (!this.menu || !this.menu.length) return [];
+
 				return this.menu;
 			},
 		},
 		methods: {
-			updateExpansion(node) {
-				debugger;
-				// this.$nextTick(() => {
-				this.expansionState[node] = !this.expansionState[node];
-				console.log(this.expansionState[node]);
+			updateExpansion(node, item) {
+				if (!item.children) {
+					EventBus.$emit("courseModuleClick", item);
+					return false;
+				}
+				// let x = {};
+				// Object.entries(this.expansionState).forEach((item, index) => {
+				// 	x[item[0]] = false;
 				// });
+				// this.expansionState = x;
+
+				this.expansionState[node] = !this.expansionState[node];
 			},
 		},
 	};
@@ -99,20 +133,28 @@
 
 
 <style>
-	ul,
-	ol {
-		margin-right: 10px;
+	ul {
+		margin-right: 3px;
+		margin-left: 3px;
 		padding: 5px;
 		list-style-type: none;
+		/* transition: max-height 0.3s ease-in-out; */
 	}
-	li {
-		/* padding: 10px; */
-		transition: background-color 0.3s ease; /* Adding a smooth transition effect */
+	.menu-item {
+		transition: background-color 0.3s ease;
 	}
-
-	li:hover {
-		/* background-color: #f0f0f0; */
-		/* Change to the desired hover background color */
+	.submenu-item {
+		transition: background-color 0.3s ease;
+		padding-top: 30px;
+		padding-bottom: 10px;
+		border-radius: 3px;
+		font-weight: 900;
+	}
+	.submenu-item:hover {
+		background-color: #008080;
+	}
+	.submenu-item:active {
+		background-color: #051d1d;
 	}
 </style>
 

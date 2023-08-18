@@ -14,7 +14,7 @@
 			>
 				<template #default="{ hide }">
 					<div
-						class="p-25 my-1 mx-25 d-flex justify-content-between primary"
+						class="p-25 mt-1 mb-25 mx-25 d-flex justify-content-between primary"
 					>
 						<span class="font-weight-bolder h3 text-light pr-25">
 							Course Modules
@@ -31,7 +31,7 @@
 						</span>
 					</div>
 					<div class="primary">
-						<Menu :menu="computeCourseModules" />
+						<Menu :menu="computeCourseModules || []" />
 					</div>
 				</template>
 			</b-sidebar>
@@ -186,6 +186,32 @@
 			const isServerResponse = ref(false);
 			const isRequesting = ref(true);
 			const sidebarVisible = ref(true);
+			const menu = [
+				{
+					title: "Item 1",
+					children: [
+						{
+							title: "Item 1.1",
+							children: [
+								{
+									title: "Item 1.1.1",
+								},
+							],
+						},
+						{
+							title: "Item 1.2",
+						},
+					],
+				},
+				{
+					title: "Item 2",
+					children: [
+						{
+							title: "Item 2.1",
+						},
+					],
+				},
+			];
 
 			const windowWidth = ref(window.innerWidth);
 
@@ -256,16 +282,18 @@
 				}
 				return checkIframe(courseDisplay.value);
 			});
-
+			courseModules.value;
 			const courseModulesTotal = computed(() => {
 				if (!courseDisplay.value) return 0;
 				return courseDisplay.value.length;
+				courseModules.value;
 			});
 
 			const computeCourseModules = computed(() => {
 				if (!courseModules.value) return [];
 
-				return courseModules.value || [];
+				return courseModules.value;
+				// return menu;
 			});
 
 			// Left Sidebar Responsiveness
