@@ -256,10 +256,10 @@
 		computed: {},
 		created() {
 			window.addEventListener("DOMContentLoaded", this.runEvent(event));
-			this.userData = JSON.parse(localStorage.getItem('userData') || 'false');
+			this.userData = JSON.parse(sessionStorage.getItem('userData') || 'false');
 		},
 		mounted() {
-			localStorage.setItem("notFirstTime", true);
+			sessionStorage.setItem("notFirstTime", true);
 		},
 		methods: {
 			navbarShrink() {
@@ -321,18 +321,18 @@
 
 
 			login() {
-				localStorage.removeItem('userData');
-				localStorage.removeItem('isValid');
-				localStorage.removeItem('isAdminIn');
+				sessionStorage.removeItem('userData');
+				sessionStorage.removeItem('isValid');
+				sessionStorage.removeItem('isAdminIn');
 				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 				this.$router.push("/login");
 			},
 
 			register() {
 
-				localStorage.removeItem('userData');
-				localStorage.removeItem('isValid');
-				localStorage.removeItem('isAdminIn');
+				sessionStorage.removeItem('userData');
+				sessionStorage.removeItem('isValid');
+				sessionStorage.removeItem('isAdminIn');
 				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 				this.$router.push("/register");
 			},

@@ -143,7 +143,7 @@
 
 						this.$store.commit("appConfig/UPDATE_WHO_IS_IN", isAdminIn);
 
-						localStorage.setItem(
+						sessionStorage.setItem(
 							"isAdminIn",
 							JSON.stringify(isAdminIn)
 						);
@@ -175,7 +175,7 @@
 								"appConfig/UPDATE_USER_SUBSCRIPTION",
 								false
 							);
-							localStorage.setItem("isValid", "false");
+							sessionStorage.setItem("isValid", "false");
 							this.$router.push({
 								name: "payment",
 							});
@@ -185,7 +185,7 @@
 							"appConfig/UPDATE_USER_SUBSCRIPTION",
 							true
 						);
-						localStorage.setItem("isValid", "true");
+						sessionStorage.setItem("isValid", "true");
 						// this.$router.push("/dashboard");
 						this.$router.push({
 							name: "payment",

@@ -88,7 +88,7 @@
 
 			const listClick = () => {
 				let isAdmin = JSON.parse(
-					localStorage.getItem("isAdminIn") || "false"
+					sessionStorage.getItem("isAdminIn") || "false"
 				);
 				router.push({
 					name: isAdmin ? "apps-users-list" : "/dashboard-analytics",

@@ -299,7 +299,7 @@
 		beforeRouteEnter(to, from, next) {
 			next((vm) => {
 				let isAdmin = JSON.parse(
-					localStorage.getItem("isAdminIn") || "false"
+					sessionStorage.getItem("isAdminIn") || "false"
 				);
 				if (isAdmin) {
 					vm.$router.push("/admin/dashboard");

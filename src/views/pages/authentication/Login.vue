@@ -269,9 +269,9 @@
 		},
 		mounted() {
 			// this.$store.dispatch("Auth/LOG_OUT").catch((err) => {});
-			localStorage.removeItem("userData");
-			localStorage.removeItem("isValid");
-			localStorage.removeItem("isAdminIn");
+			sessionStorage.removeItem("userData");
+			sessionStorage.removeItem("isValid");
+			sessionStorage.removeItem("isAdminIn");
 		},
 
 		computed: {
@@ -315,7 +315,7 @@
 								text: `You have successfully signed in`,
 							},
 						});
-						console.log(localStorage);
+						console.log(sessionStorage);
 						this.$router.push({
 							name: "auth-init",
 						});

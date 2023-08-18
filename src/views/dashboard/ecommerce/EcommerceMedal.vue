@@ -49,7 +49,7 @@
 		methods: {
 			kFormatter,
 			toStudentPortal() {
-				localStorage.setItem("isAdminIn", "false");
+				sessionStorage.setItem("isAdminIn", "false");
 				this.$store.commit("appConfig/UPDATE_WHO_IS_IN", true);
 
 				this.$store.commit("appConfig/UPDATE_SKIN", "light");

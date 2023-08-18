@@ -50,7 +50,7 @@
 		},
 
 		beforeCreate() {
-			// localStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
+			// sessionStorage.setItem("signInUser", "3C8tguIQdKYrR7WqcaL2");
 
 			// Set colors in theme
 			const colors = [

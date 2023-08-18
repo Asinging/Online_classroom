@@ -27,24 +27,23 @@
 <script>
 	import { BRow, BCol, BCard } from "bootstrap-vue";
 
-
 	import EcommerceMedal from "./EcommerceMedal.vue";
 	import EcommerceStatistics from "./EcommerceStatistics.vue";
 	import Users from "@/views/apps/user/users-list/UsersList.vue";
 	import { kFormatter } from "@/@core/utils/filter";
 
-
 	export default {
-		beforeRouteEnter (to, from, next) {
-				next(vm => {
-						let isAdmin = JSON.parse(localStorage.getItem('isAdminIn') || 'false');
-						if (!isAdmin) {
-					
-										vm.$router.push('/dashboard');
-										return
-						}
-						// access to component public instance via `vm`
-				})
+		beforeRouteEnter(to, from, next) {
+			next((vm) => {
+				let isAdmin = JSON.parse(
+					sessionStorage.getItem("isAdminIn") || "false"
+				);
+				if (!isAdmin) {
+					vm.$router.push("/dashboard");
+					return;
+				}
+				// access to component public instance via `vm`
+			});
 		},
 
 		components: {
@@ -152,7 +151,9 @@
 			statisticalData() {
 				return this.statisticsItems.map((item) => {
 					if (item.id === 1) {
-						item.title = kFormatter(this.$store.getters["Counter/adminCounterGetter"] || 0)
+						item.title = kFormatter(
+							this.$store.getters["Counter/adminCounterGetter"] || 0
+						);
 						return item;
 					}
 

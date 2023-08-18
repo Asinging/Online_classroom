@@ -762,7 +762,7 @@
 				});
 
 				if (val.status === "success") {
-					localStorage.setItem("isValid", 1);
+					sessionStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -899,7 +899,7 @@
 				}
 
 				if (val.status === "success") {
-					localStorage.setItem("isValid", 1);
+					sessionStorage.setItem("isValid", 1);
 					this.$toast({
 						component: ToastificationContent,
 						props: {

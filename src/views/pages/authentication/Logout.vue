@@ -46,10 +46,10 @@
 		mounted() {
 			this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
 
-			// Remove userData from localStorage
-			localStorage.removeItem("userData");
-			localStorage.removeItem("isValid");
-			localStorage.removeItem("isAdminIn");
+			// Remove userData from sessionStorage
+			sessionStorage.removeItem("userData");
+			sessionStorage.removeItem("isValid");
+			sessionStorage.removeItem("isAdminIn");
 
 			// Reset ability
 			// this.$ability.update(initialAbility);

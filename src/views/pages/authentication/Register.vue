@@ -332,7 +332,7 @@
 		},
 		methods: {
 			toLogin() {
-				localStorage.removeItem("userData");
+				sessionStorage.removeItem("userData");
 				this.$router.push("/login");
 			},
 			formatter(value) {
