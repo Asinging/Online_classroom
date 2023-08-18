@@ -131,27 +131,31 @@
 										</b-col>
 
 										<b-col md="4" class="mb-0 mb-sm-1">
-											<b-form-textarea
-												v-model="
-													parentItem.module[index]
-														.courseDescriptions
-												"
-												rows="1"
-												placeholder="Brief Description "
-											/>
+											<b-form-group>
+												<b-form-textarea
+													v-model="
+														parentItem.module[index]
+															.courseDescriptions
+													"
+													rows="1"
+													placeholder="Brief Description "
+												/>
+											</b-form-group>
 											<!-- :state=" items[index].courseDescription
 											.length <= 100 " -->
 										</b-col>
 
 										<b-col md="4">
-											<b-form-textarea
-												v-model="
-													parentItem.module[index]
-														.videoUrl
-												"
-												rows="1"
-												placeholder="Youtube video Id"
-											/>
+											<b-form-group>
+												<b-form-textarea
+													v-model="
+														parentItem.module[index]
+															.videoUrl
+													"
+													rows="1"
+													placeholder="Youtube video Id"
+												/>
+											</b-form-group>
 										</b-col>
 
 										<b-col
@@ -175,6 +179,7 @@
 													index ==
 													parentItem.module.length - 1
 												"
+												:disable="isUploading"
 											>
 												<feather-icon
 													icon="PlusIcon"
@@ -189,10 +194,18 @@
 												"
 												variant="outline-danger"
 												class="mt-0 text-right d-flex justify-content-end mr-2 btn-icon"
-												@click="removeSubmodule(index)"
+												@click="
+													removeSubmodule(
+														parentIndex,
+														index
+													)
+												"
 												size="sm"
 												:disabled="
-													parentItem.module.length < 2
+													isUploading ||
+													(items.length < 2 &&
+														parentItem.module
+															.length < 2)
 												"
 											>
 												<feather-icon
@@ -215,10 +228,10 @@
 								<b-button
 									v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 									variant="secondary"
-									@click="addModule(parentIndex)"
+									@click="addModule"
 									class="sm mr-25"
 									size="md"
-									:disabled="introVideo"
+									:disabled="introVideo || isUploading"
 								>
 									<feather-icon
 										icon="PlusIcon"
@@ -227,7 +240,7 @@
 									<span>Add Module</span>
 								</b-button>
 
-								<b-button
+								<!-- <b-button
 									v-if="items.length > 1"
 									v-b-tooltip.hover.bottom
 									title="Remove Module"
@@ -238,7 +251,7 @@
 									size="md"
 								>
 									<feather-icon icon="XIcon" class="" />
-								</b-button>
+								</b-button> -->
 							</div>
 						</div>
 					</div>
@@ -385,6 +398,7 @@
 			const parentRow = ref(null);
 			const form = ref(null);
 			const coverArtUrl = ref(null);
+			const imgBlobFile = ref(null);
 
 			onBeforeMount(async () => {
 				window.addEventListener("resize", initTrHeight());
@@ -504,8 +518,11 @@
 				});
 				trTrimHeight(parentRow.value.offsetHeight);
 			};
-			const removeSubmodule = (index) => {
-				items.value.module.splice(index, 1);
+			const removeSubmodule = (parentIndex, index) => {
+				if (items.value[parentIndex].module.length < 2) {
+					items.value.splice(parentIndex, 1);
+				}
+				items.value[parentIndex].module.splice(index, 1);
 
 				toast({
 					component: ToastificationContent,
@@ -526,12 +543,16 @@
 
 			const _uploadRecord = async (course) => {
 				try {
-					let responses = await store.dispatch("Course/UPLOAD_VIDEO", {
-						course,
-					});
+					let courseUploadId = await store.dispatch(
+						"Course/UPLOAD_VIDEO",
+						{
+							course,
+						}
+					);
+
 					isUploading.value = false;
 
-					if (!responses) {
+					if (!courseUploadId) {
 						toast({
 							component: ToastificationContent,
 							props: {
@@ -543,6 +564,37 @@
 						});
 						return false;
 					}
+
+					let payload = {
+						image: imgBlobFile.value,
+						courseId: courseUploadId.id,
+					};
+
+					store
+						.dispatch("Course/UPLOAD_COVER_PICTURE", payload)
+						.then(async (response) => {
+							coverArtUrl.value = await getDownloadURL(response.ref);
+							let payload = {
+								data: {
+									id: courseUploadId,
+									cover_photo_url: coverArtUrl.value,
+								},
+							};
+							store
+								.dispatch("Course/UPDATE_SINGLE_COURSE", payload)
+								.catch((err) => {
+									console.log(err);
+								});
+						});
+
+					items.value = [
+						{
+							title: "",
+							courseDescriptions: "",
+							videoUrl: "",
+						},
+					];
+
 					toast({
 						component: ToastificationContent,
 						props: {
@@ -552,13 +604,6 @@
 							variant: "success",
 						},
 					});
-					items.value = [
-						{
-							title: "",
-							courseDescriptions: "",
-							videoUrl: "",
-						},
-					];
 				} catch (err) {
 					isUploading.value = false;
 					console.error(err);
@@ -575,12 +620,26 @@
 			};
 
 			const saveRecord = async () => {
+				if (!courseTitle.value) {
+					toast({
+						component: ToastificationContent,
+						props: {
+							title: "Course title field is required",
+							text: `Title is left black`,
+							icon: "AlertTriangleIcon",
+							variant: "warning",
+						},
+					});
+					return false;
+				}
 				let itemFieldIsEmpty = false;
-				items.value.forEach((item) => {
-					Object.values(item).forEach((field) => {
-						if (!field) {
-							itemFieldIsEmpty = true;
-						}
+				items.value.forEach((field) => {
+					field.module.forEach((field2) => {
+						Object.values(field2).forEach((item) => {
+							if (!item) {
+								itemFieldIsEmpty = true;
+							}
+						});
 					});
 				});
 
@@ -596,22 +655,23 @@
 					});
 					return false;
 				}
-
+				let serverItem = {};
 				let data = Object.assign({}, items.value);
-				let serverItem = items.value.map((item) => {
-					return {
-						status: 1,
-						title: item.title ? item.title.toLowerCase() : item.title,
-						description: item.courseDescriptions,
-						video_url: item.videoUrl,
-						duration: 0,
-					};
+				items.value.forEach((item, index) => {
+					serverItem[index] = item.module.map((ii) => {
+						return {
+							title: ii.title || "No title",
+							description: ii.courseDescriptions,
+							video_url: ii.videoUrl,
+							duration: 0,
+						};
+					});
 				});
 
 				let course = {
 					created_at: serverTimestamp(),
 					cover_photo_url: coverArtUrl.value,
-					title: data[0].title,
+					title: courseTitle.value,
 					description: data[0].courseDescriptions,
 					status: 1,
 					tracks: items.value.length || 1,
@@ -686,33 +746,8 @@
 								variant: "warning",
 							},
 						});
+						imgBlobFile.value = file;
 						return false;
-					}
-
-					pickingImage.value = true;
-					let payload = {
-						image: file,
-					};
-					try {
-						let response = await store.dispatch(
-							"Course/UPLOAD_COVER_PICTURE",
-							payload
-						);
-
-						pickingImage.value = false;
-						coverArtUrl.value = await getDownloadURL(response.ref);
-					} catch (err) {
-						console.log(err);
-						pickingImage.value = false;
-						toast({
-							component: ToastificationContent,
-							props: {
-								title: "Error",
-								text: `An Error Occured`,
-								icon: "XIcon",
-								variant: "danger",
-							},
-						});
 					}
 				}
 			);
