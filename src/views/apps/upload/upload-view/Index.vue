@@ -78,7 +78,7 @@
 
 					<div>
 						<b-card-text
-							class="text-uppercase h4 font-weight-bolder text-dark video_title"
+							class="text-uppercase h4 font-weight-bolder text-dark video_title text-center text-md-left"
 						>
 							{{ `${computeCourseDisplay.title}` }}
 						</b-card-text>
