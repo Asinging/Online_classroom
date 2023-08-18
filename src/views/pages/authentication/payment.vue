@@ -7,13 +7,12 @@
 				lg="12"
 				class="d-flex align-items-center mt-0 pt-0"
 			>
+				<!-- v-if="currentUser" -->
 				<b-col sm="12" md="12" lg="12" class="mx-auto pt-0">
 					<b-card
 						tag="article"
-						v-if="currentUser"
 						text-variant="center"
-						variant="secondary"
-						class="shadow-none rounded-100 mt-3 bg-secondary card border-0"
+						class="shadow-none rounded-100 mt-1 bg-secondary card border-0 header-card"
 					>
 						<div class="d-md-flex justify-content-between">
 							<b-img
@@ -22,11 +21,10 @@
 								"
 								class="congratulations-img-left d-flex"
 							/>
-							<div
-								class="text-danger d-flex justify-content-end text-md-right"
-								v-if="notSubscribed"
-							>
-								<div class="d-flex">
+							<div class="text-md-right" v-if="notSubscribed">
+								<div
+									class="d-flex bg-light px-25 rounded-4 subscription-alert"
+								>
 									<span class="pr-1">
 										<feather-icon
 											icon="AlertTriangleIcon"
@@ -64,7 +62,7 @@
 
 						<div>
 							<b-card-text
-								class="mb-1 text-capitalize display-4 font-weight-bold text-white"
+								class="mb-1 text-capitalize display-2 font-weight-bold text-white"
 								style=""
 							>
 								{{
@@ -72,7 +70,7 @@
 										? "Good Day"
 										: "Good Morning"
 								}}
-								{{ currentUser.username }}
+								{{ currentUser ? currentUser.username : "" }}
 							</b-card-text>
 							<b-card-text
 								class="mb-1 text-capitalize h1 text-white"
@@ -131,116 +129,126 @@
 								<div
 									class="d-flex justify-content-end align-items-center"
 								>
-									<feather-icon
-										size="28"
-										icon="HomeIcon"
-										color="white"
-										@click="home"
-										class="cursor-pointer"
+									<b-avatar
+										variant="secondary"
 										v-b-tooltip.hover.bottom
 										title="Go to home"
-									/>
+										@click="home"
+										class="cursor-pointer"
+									>
+										<feather-icon
+											size="18"
+											icon="HomeIcon"
+											color="white"
+										/>
+									</b-avatar>
 								</div>
 							</div>
 						</div>
 					</b-card>
 				</b-col>
 			</b-col>
-			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0">
+			<b-col lg="12" cols="12" md="12" class="d-flex p-0 m-0 mx-auto">
 				<b-card
-					class="vw-100 shadow-none rounded-20 bg-light card border-0"
+					class="shadow-none rounded-20 bg-light card border-0 body-card mx-2"
 					tag="article"
 				>
 					<b-row align-h="center">
+						<b-col col="12">
+							<div class="body-card-div my-3 mb-5">
+								<p
+									class="display-4 font-weight-normal body-card-div text-dark text-center"
+								>
+									This is the best platform you can be at the
+									moment, You can watch our Introduction video
+								</p>
+							</div>
+						</b-col>
+
 						<b-col cols="12" class="p-0 ma-0">
-							<b-card
-								class="d-flex justify-content-center shadow-none bg-light border-0"
-								tag="article"
-								style="min-height: 300px"
-							>
-								<div
-									v-if="isRequesting"
-									class="align-items-center d-flex justify-content-center"
-								>
-									<div
-										class="containing_container_payment text-center"
-									>
-										<b-spinner
-											size="xl"
-											class="text-center text-primary"
-										></b-spinner>
-									</div>
-								</div>
-								<div
-									class="containing_container_payment"
-									v-else-if="course"
-								>
-									<div
-										v-if="computeCourseDisplay.isIframe"
-										class="iframe d-flex embed-responsive-item rounded-100 p-0 m-0"
-										style="height: 90vh; width: 100%"
-										v-html="computeCourseDisplay.video_url"
-									></div>
-									<div v-else class="iframe p-0 m-0">
-										<b-embed
-											class="embed-responsive-item"
-											type="iframe"
-											aspect="16by9"
+							<b-row>
+								<b-col cols="12" md="6">
+									<div class="human-intro d-flex">
+										<b-img
 											:src="
-												computeCourseDisplay.video_url
+												require('@/assets/images/introducevideo.ac68531f.png')
 											"
-											allowfullscreen
+											class="img-responsive"
 										/>
 									</div>
-								</div>
-
-								<b-card
-									class="containing_container_payment d-flex align-items-center card p-0 m-0 border-0"
-									v-else
-									tag="div"
-								>
-									<div class="video-container">
-										<b-alert
-											variant="danger"
-											show
-											class="text-center"
+								</b-col>
+								<b-col cols="12" md="6">
+									<div
+										style="hieght: 100%"
+										class="align-items-md-center my-1 my-md-0"
+									>
+										<div
+											v-if="isRequesting"
+											class="align-items-center d-flex justify-content-center mt-2"
 										>
-											<div
-												class="alert-body text-center d-flex justify-content-between"
-											>
-												<span
-													>No intro video uploaded
-													yet.
-												</span>
-											</div>
-										</b-alert>
+											<b-spinner
+												size="xl"
+												class="text-center text-primary"
+											></b-spinner>
+										</div>
+
+										<div
+											v-else-if="
+												course &&
+												computeCourseDisplay.isIframe
+											"
+											class="iframe2 p-0 m-0 embed-responsive embed-responsive-16by9"
+											v-html="
+												computeCourseDisplay.video_url
+											"
+										></div>
 									</div>
-								</b-card>
-							</b-card>
+								</b-col>
+							</b-row>
 						</b-col>
-						<b-col cols="12" class="mt-0">
-							<b-card
-								class="card w-auto d-flex align-items-center justify-content-center border-0"
-								style="
-									width: 100%;
-									min-height: 150px;
-									background-color: #acb3d9;
-									margin-top: 0px;
-								"
-							>
-								<b-card-text
-									class="h2 font-weight-normal text-center text-white"
-									>Watch Introduction and have a test of what
-									we offer. This introduce you our effective
-									training, teaching and mentorship on
-									financial freedom</b-card-text
-								>
-							</b-card>
+						<b-col cols="12" class="my-2">
+							<b-row>
+								<b-col cols="12" md="6">
+									<div
+										class="footer-card d-flex justify-content-center"
+									>
+										<div
+											style="hieght: 100%"
+											class="d-flex align-items-center justify-content-center"
+										>
+											<p
+												class="footer-card-text text-center font-weight-bold text-dark h2"
+											>
+												One of the greatest ways, our
+												students optimally utilized our
+												platform is by ensuring they
+												learn from the comfort of their
+												study space! With this the
+												platform has welcome more
+												student that we can mention!
+											</p>
+										</div>
+									</div>
+								</b-col>
+								<b-col cols="12" md="6">
+									<div
+										class="footer-card d-flex my-1 justify-content-center justify-content-md-end"
+									>
+										<div class="people_reading">
+											<b-img
+												:src="
+													require('@/assets/images/peopleLearning.webp')
+												"
+												style="max-height: 270px"
+												class="img-responsive"
+											/>
+										</div>
+									</div>
+								</b-col>
+							</b-row>
 						</b-col>
 					</b-row>
 				</b-card>
-
-				<!-- </div> -->
 			</b-col>
 		</b-row>
 		<b-card
@@ -248,7 +256,7 @@
 			variant="primary"
 		>
 			<b-card-text
-				class="h1 font-weight-normal text-center text-white mb-5 mt-3"
+				class="h1 font-weight-normal text-center text-white mb-5 mt-3 payment-text"
 				>Pay with any of our verify payment Gateway</b-card-text
 			>
 			<div class="row">
@@ -298,7 +306,7 @@
 			</template>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-primary display-1">
+					<div class="font-weight-bold text-primary display-4">
 						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
@@ -312,11 +320,6 @@
 							name="Full Name"
 							rules="required"
 						>
-							<b-form-input
-								v-model="fulName"
-								:state="errors.length > 0 ? false : null"
-								placeholder="Agba John Doe"
-							/>
 							<small class="text-danger">{{ errors[0] }}</small>
 						</validation-provider>
 					</b-form-group>
@@ -373,7 +376,7 @@
 			</template>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-primary display-1">
+					<div class="font-weight-bold text-primary display-4">
 						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
@@ -423,13 +426,13 @@
 					<span>Ok</span>
 				</b-button>
 			</template>
-			<div class="alert alert-success pa-2 my-2 text-center">
+			<div class="alert alert-primary pa-2 my-2 text-center">
 				Payment using transfers may take a while before confirmation,
 				please bear with us as we resolve this issues
 			</div>
 			<div class="d-flex justify-content-center my-3">
 				<div>
-					<div class="font-weight-bold text-primary display-1">
+					<div class="font-weight-bold text-primary display-4">
 						{{ numbFormat(15000, "en-US", "USD") }}
 					</div>
 				</div>
@@ -500,8 +503,6 @@
 			</validation-observer>
 		</b-modal>
 	</div>
-
-	<!-- / Under maintenance-->
 </template>
 
 <script>
@@ -950,54 +951,62 @@
 	};
 </script>
 
-<style lang="scss" scope >
+<style lang="scss"  >
 	.wrapper {
 		margin: 10px;
+		margin-top: 0px;
 		// background:red
 		// padding: 5px;
+	}
+
+	.header-card {
+		background-image: url("../../../assets/images/cardBackgound.jpg");
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: cover;
+	}
+	.body-card {
+		background-image: url("../../../assets/images/background4.4ab67b51.jpg");
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: cover;
+	}
+	// .people_reading {
+	// 	background-image: url("../../../assets/images/peopleLearning.webp");
+	// 	background-repeat: no-repeat;
+	// 	background-position: center center;
+	// 	background-size: cover;
+	// }
+
+	.footer-card-text {
+		line-height: 2;
+		font-weight: 800 !important;
+		font-family: Arial, Helvetica, sans-serif;
 	}
 	.card_payment {
 		margin-top: 0px;
 		margin-bottom: 100px;
 	}
 
-	.containing_container_payment {
+	.iframe2 {
 		position: relative;
-		display: flex;
-		justify-content: center;
-		max-width: 1600px; /* Adjust the value as per your preference */
-		margin-left: 7px;
-		margin-right: 7px;
-		margin-right: 0px;
-	}
-	.video-container {
-		position: relative;
-	}
+		overflow: hidden;
+		padding-top: 56.25%;
 
-	.container_loader {
-		height: 30vh;
+		max-height: 500px;
 	}
-	.card {
-		border-radius: 12px !important;
-		margin: 0px !important;
-		padding: 0px !important;
-		margin-top: 10px !important;
-		// margin-bottom:20px !important;
-	}
-	.introCard {
-		border-radius: 25px;
-	}
-	iframe {
+	.iframe2 iframe {
 		position: absolute;
 		top: 0;
-		right: 0;
-		padding: 0;
-		margin: 0;
+		left: 0;
 		width: 100%;
+		height: 30px;
+		// border-radius: 12px !important;
 
-		height: 100%;
-
-		border: 0px;
-		border-radius: 30px;
+		border: 0; /* Remove iframe border */
+	}
+	.payment-text {
+		font-weight: 800 !important;
+		font-family: Arial, Helvetica, sans-serif;
 	}
 </style>

@@ -82,7 +82,8 @@
 						<td class="pb-50 text-capitalize">
 							{{ userData.username }}
 						</td>
-					</tr>	<tr>
+					</tr>
+					<tr>
 						<th class="pb-50">
 							<feather-icon icon="UserIcon" class="mr-75" />
 							<span class="font-weight-bold">Phone</span>
