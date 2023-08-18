@@ -30,13 +30,17 @@ export default {
     },
     actions: {
         UPLOAD_COVER_PICTURE({ commit }, payload) {
+            console.log(payload)
+
             return new Promise(async(resolve, reject) => {
                 try {
                     const storageRef = ref(storage, `course/coverArt/${payload.courseId}/${payload.image.name + v4()}`);
                     let response = await uploadBytes(storageRef, payload.image);
 
+                    console.log(response)
                     resolve(response);
                 } catch (err) {
+                    console.log(err)
                     reject(err);
                 }
             });
@@ -94,13 +98,11 @@ export default {
                         where('title', '>=', payload.searchString),
                         where('title', '<', payload.searchString + '\uf8ff')
                     );
-                    let fetcheData = await getDocs(q);
-                    debugger;
+                    let fetcheData = await getDocs(q);;
                     let filteredUserObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
 
                     resolve(filteredUserObject);
-                } catch (err) {
-                    debugger;
+                } catch (err) {;
                     console.log(err);
                     reject(err);
                 }
@@ -108,10 +110,12 @@ export default {
         },
         // UPDATE_COURSE
         UPDATE_SINGLE_COURSE({ commit }, payload) {
+
             return new Promise(async(resolve, reject) => {
                 const docRef = doc(db, 'courses', payload.id);
                 try {
                     const docSnap = updateDoc(docRef, payload.data);
+
                     resolve(docSnap);
                 } catch (err) {
                     console.log(err);

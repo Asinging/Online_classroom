@@ -549,7 +549,6 @@
 							course,
 						}
 					);
-
 					isUploading.value = false;
 
 					if (!courseUploadId) {
@@ -574,9 +573,10 @@
 						.dispatch("Course/UPLOAD_COVER_PICTURE", payload)
 						.then(async (response) => {
 							coverArtUrl.value = await getDownloadURL(response.ref);
+							console.log(coverArtUrl.value);
 							let payload = {
+								id: courseUploadId.id,
 								data: {
-									id: courseUploadId,
 									cover_photo_url: coverArtUrl.value,
 								},
 							};
@@ -592,8 +592,19 @@
 							title: "",
 							courseDescriptions: "",
 							videoUrl: "",
+							idx: 0,
+							module: [
+								{
+									title: "",
+									courseDescriptions: "",
+									videoUrl: "",
+								},
+							],
 						},
 					];
+					coverArtUrl.value = null;
+					imgBlobFile.value = null;
+					courseTitle.value = "";
 
 					toast({
 						component: ToastificationContent,
@@ -672,7 +683,7 @@
 					created_at: serverTimestamp(),
 					cover_photo_url: coverArtUrl.value,
 					title: courseTitle.value,
-					description: data[0].courseDescriptions,
+					description: items.value[0].courseDescriptions,
 					status: 1,
 					tracks: items.value.length || 1,
 					user_id: store.getters["Users/signInUserId"] || 1,
@@ -704,6 +715,7 @@
 							value: 1,
 						})
 						.then((response) => {
+							debugger;
 							if (response) {
 								store
 									.dispatch("Course/UPDATE_SINGLE_COURSE", {
@@ -714,6 +726,7 @@
 										},
 									})
 									.then((res) => {
+										debugger;
 										_uploadRecord(course);
 									})
 									.catch((err) => {
@@ -746,9 +759,9 @@
 								variant: "warning",
 							},
 						});
-						imgBlobFile.value = file;
 						return false;
 					}
+					imgBlobFile.value = file;
 				}
 			);
 
