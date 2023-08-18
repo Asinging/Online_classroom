@@ -33,7 +33,10 @@
 									h6: !item.children,
 								}"
 							>
-								{{ "Module " + item.title }}
+								{{
+									`${item.children ? "Module" : ""}` +
+									item.title
+								}}
 							</span>
 							<span
 								v-if="item.children"

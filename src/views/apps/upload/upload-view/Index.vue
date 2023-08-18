@@ -20,7 +20,7 @@
 							Course Modules
 						</span>
 						<span
-							class="d-flex justify-content-end text-right align-items-center d-block d-lg-none"
+							class="d-flex justify-content-end text-right align-items-center d-block d-md-none"
 						>
 							<feather-icon
 								icon="XIcon"
@@ -39,24 +39,50 @@
 
 		<div class="col col-12 col-md-9 col-lg-10">
 			<div class="mx-1 ml-lg-3">
-				<div
-					class="d-flex align-items-center bg-light py-1 rounded-10 mb-25"
-				>
-					<div class="mr-1 mr-md-2 d-flex d-block d-lg-none">
+				<div class="align-items-center bg-light py-1 rounded-10 mb-25">
+					<div
+						class="pb-0 mt-0 mb-1 d-flex justify-content-start justify-content-md-between"
+					>
 						<feather-icon
 							v-b-toggle.sidebar-1
 							icon="ListIcon"
 							size="21"
 							aria-controls="sidebar-1"
 							:aria-expanded="'true'"
-							class="cursor-pointer text-dark"
+							class="cursor-pointer text-dark mr-1 mr-md-2 d-flex d-block d-md-none d-flex justify-content-start"
 						/>
+
+						<b-button
+							v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+							variant="outline-primary"
+							class="mr-1"
+							size="sm"
+							@click="previousItem"
+						>
+							<feather-icon icon="RewindIcon" class="mr-50" />
+							<span class="align-middle">Previous</span>
+						</b-button>
+						<b-button
+							v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+							variant="outline-primary"
+							size="sm"
+							@click="nextItem"
+						>
+							<feather-icon
+								icon="FastForwardIcon"
+								class="mr-50"
+							/>
+							<span class="align-middle">Next</span>
+						</b-button>
 					</div>
-					<b-card-text
-						class="text-capitalize h3 font-weight-bold text-dark video_title"
-					>
-						{{ `${computeCourseDisplay.title}` }}
-					</b-card-text>
+
+					<div>
+						<b-card-text
+							class="text-uppercase h4 font-weight-bolder text-dark video_title"
+						>
+							{{ `${computeCourseDisplay.title}` }}
+						</b-card-text>
+					</div>
 				</div>
 
 				<div>
@@ -170,7 +196,14 @@
 		methods: {
 			courseModuleClick(item) {
 				if (!item) return false;
-
+				this.courseModules.forEach((ite, index) => {
+					ite.children.forEach((i, ind) => {
+						if (i.timeStamp === item.timeStamp) {
+							this.parentIndex = index;
+							this.childIndex = ind;
+						}
+					});
+				});
 				this.courseDisplay = item;
 			},
 			closeLeftSidebar(item) {},
@@ -186,6 +219,9 @@
 			const isServerResponse = ref(false);
 			const isRequesting = ref(true);
 			const sidebarVisible = ref(true);
+			const parentIndex = ref(0);
+			const childIndex = ref(0);
+
 			const menu = [
 				{
 					title: "Item 1",
@@ -234,7 +270,7 @@
 				},
 			];
 			onMounted(() => {
-				if (windowWidth.value > 780) {
+				if (windowWidth.value > 768) {
 					sidebarVisible.value = true;
 				} else {
 					sidebarVisible.value = false;
@@ -254,12 +290,43 @@
 			const handleResize = () => {
 				windowWidth.value = window.innerWidth;
 
-				if (windowWidth.value > 780) {
+				if (windowWidth.value > 768) {
 					sidebarVisible.value = true;
 				} else {
 					sidebarVisible.value = false;
 				}
 			};
+
+			const previousItem = () => {
+				if (childIndex.value > 0) {
+					childIndex.value--;
+				} else if (parentIndex.value > 0) {
+					parentIndex.value--;
+					childIndex.value =
+						courseModules.value[parentIndex.value].children.length - 1;
+				}
+				runFunx();
+			};
+			const nextItem = () => {
+				if (
+					childIndex.value <=
+					courseModules.value[parentIndex.value].children.length - 1
+				) {
+					childIndex.value++;
+				} else if (parentIndex.value <= courseModules.value.length - 1) {
+					parentIndex.value++;
+					childIndex.value = 0;
+				}
+				runFunx();
+			};
+
+			const runFunx = () => {
+				courseDisplay.value =
+					courseModules.value[parentIndex.value].children[
+						childIndex.value
+					];
+			};
+
 			const courseList = () => {
 				let isAdmin = JSON.parse(
 					localStorage.getItem("isAdminIn") || "false"
@@ -321,9 +388,11 @@
 							courseModules.value = x.map((item, index) => {
 								return {
 									title: index + 1,
-
-									children: item.map((i) => {
+									index: index + 1,
+									timeStamp: `${Date.now() + index}`,
+									children: item.map((i, ii) => {
 										i.index = index;
+										i.timeStamp = `${Date.now()}${ii}`;
 										return i;
 									}),
 								};
@@ -345,12 +414,15 @@
 							return {
 								title: index + 1,
 								index: index + 1,
-								children: item.map((i) => {
+								timeStamp: `${Date.now() + index}`,
+								children: item.map((i, ii) => {
 									i.index = index;
+									i.timeStamp = `${Date.now()}${ii}`;
 									return i;
 								}),
 							};
 						});
+						console.log(courseModules.value);
 
 						course.value = response;
 					})
@@ -391,6 +463,9 @@
 				courseModulesTotal,
 				courseList,
 				sidebarVisible,
+
+				nextItem,
+				previousItem,
 
 				// Left Sidebar Responsiveness
 				mqShallShowLeftSidebar,
