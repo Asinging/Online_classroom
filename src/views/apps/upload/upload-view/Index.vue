@@ -80,7 +80,13 @@
 						<b-card-text
 							class="text-uppercase h4 font-weight-bolder text-dark video_title text-center text-md-left"
 						>
-							{{ `${computeCourseDisplay.title}` }}
+							{{
+								`${
+									computeCourseDisplay
+										? computeCourseDisplay.title
+										: ""
+								}`
+							}}
 						</b-card-text>
 					</div>
 				</div>
