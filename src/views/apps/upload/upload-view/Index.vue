@@ -83,8 +83,8 @@
 							{{
 								`${
 									computeCourseDisplay
-										? computeCourseDisplay.title
-										: ""
+										? computeCourseDisplay.title || ""
+										: "Video Title"
 								}`
 							}}
 						</b-card-text>
@@ -344,18 +344,18 @@
 			const computeCourseDisplay = computed(() => {
 				let counter = 1;
 				if (!courseDisplay.value) {
-					let storage = JSON.parse(
-						sessionStorage.getItem("courseModuleDisplay") || "null"
-					);
-					if (!storage) return null;
-					courseDisplay.value = storage.mudules[counter][0];
+					// let storage = JSON.parse(
+					// 	sessionStorage.getItem("courseModuleDisplay") || "null"
+					// );
+					// if (!storage) return null;
+					// courseDisplay.value = storage.mudules[counter][0];
 
-					course.value = storage;
-					return checkIframe(storage?.mudules[counter][0]);
+					// course.value = storage;
+					return {};
+					// return checkIframe(storage?.mudules[counter][0]);
 				}
 				return checkIframe(courseDisplay.value) || {};
 			});
-			courseModules.value;
 
 			const courseModulesTotal = computed(() => {
 				if (!courseDisplay.value) {
@@ -384,9 +384,7 @@
 
 			onBeforeMount(() => {
 				let courseId = route.value.params.id;
-				let storage = JSON.parse(
-					sessionStorage.getItem("courseModuleDisplay") || "null"
-				);
+
 				isRequesting.value = true;
 				store
 					.dispatch("Course/GET_SINGLE_COURSE_BY_Id", {
@@ -396,8 +394,15 @@
 						isServerResponse.value = true;
 						isRequesting.value = false;
 						let counter = 1;
+
 						if (!response) {
-							courseDisplay.value = storage.mudules[counter][0];
+							let storage = JSON.parse(
+								sessionStorage.getItem("courseModuleDisplay") ||
+									"null"
+							);
+							courseDisplay.value = storage.mudules
+								? storage.mudules[counter][0]
+								: {};
 							let x = Object.values(storage.mudules);
 
 							courseModules.value = x.map((item, index) => {
@@ -417,13 +422,8 @@
 							return false;
 						}
 
-						sessionStorage.setItem(
-							"courseModuleDisplay",
-							JSON.stringify(response)
-						);
-
-						courseDisplay.value = storage.mudules[counter][0];
-						let x = Object.values(storage.mudules);
+						courseDisplay.value = response.mudules[counter][0];
+						let x = Object.values(response.mudules);
 
 						courseModules.value = x.map((item, index) => {
 							return {
@@ -437,12 +437,12 @@
 								}),
 							};
 						});
-						sessionStorage.setItem(
-							"courseModules",
-							JSON.stringify(courseModules.value)
-						);
 
 						course.value = response;
+						sessionStorage.setItem(
+							"courseModuleDisplay",
+							JSON.stringify(response)
+						);
 					})
 					.catch((err) => {
 						isServerResponse.value = true;
