@@ -94,7 +94,7 @@
 				<h2
 					class="mb-1 mt-50 text-white font-weight-bold course-list-title px-2 text-center"
 				>
-					Welcome Here, Our No. 1 Site For Video Content That Could
+					Welcome Here, Our No. 1 Site For Video Content That Will
 					Make You A Millionaire In The Next 6 Months.
 				</h2>
 			</b-card>
