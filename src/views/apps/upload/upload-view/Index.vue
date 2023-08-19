@@ -242,32 +242,7 @@
 			const childIndex = ref(0);
 			const courseNotExist = ref(false);
 
-			const menu = [
-				{
-					title: "Item 1",
-					children: [
-						{
-							title: "Item 1.1",
-							children: [
-								{
-									title: "Item 1.1.1",
-								},
-							],
-						},
-						{
-							title: "Item 1.2",
-						},
-					],
-				},
-				{
-					title: "Item 2",
-					children: [
-						{
-							title: "Item 2.1",
-						},
-					],
-				},
-			];
+	
 
 			const windowWidth = ref(window.innerWidth);
 
