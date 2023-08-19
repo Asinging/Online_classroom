@@ -92,6 +92,19 @@
 				</div>
 
 				<div>
+					<b-alert variant="danger" v-if="courseNotExist" show>
+						<h4 class="alert-heading">
+							Error fetching Course Data.
+						</h4>
+						<div class="alert-body">
+							An intended error fetching this course, please visit
+							the
+							<b-link class="alert-link" @click="courseListClick">
+								Course list
+							</b-link>
+							to select another user
+						</div>
+					</b-alert>
 					<div
 						v-if="isRequesting"
 						class="align-items-center d-flex justify-content-center mt-2"
@@ -227,6 +240,7 @@
 			const sidebarVisible = ref(true);
 			const parentIndex = ref(0);
 			const childIndex = ref(0);
+			const courseNotExist = ref(false);
 
 			const menu = [
 				{
@@ -333,7 +347,7 @@
 					];
 			};
 
-			const courseList = () => {
+			const courseListClick = () => {
 				let isAdmin = JSON.parse(
 					sessionStorage.getItem("isAdminIn") || "false"
 				);
@@ -445,6 +459,7 @@
 						);
 					})
 					.catch((err) => {
+						courseNotExist.value = true;
 						isServerResponse.value = true;
 						isRequesting.value = false;
 
@@ -479,8 +494,9 @@
 				courseModules,
 				courseDisplay,
 				courseModulesTotal,
-				courseList,
+				courseListClick,
 				sidebarVisible,
+				courseNotExist,
 
 				nextItem,
 				previousItem,
