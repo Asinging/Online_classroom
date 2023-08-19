@@ -129,7 +129,7 @@
 
 					<template #cell(actions)="data">
 						<div class="text-nowrap">
-							<!-- <feather-icon
+							<feather-icon
 								:id="`invoice-row-${data.item.id}-send-icon`"
 								icon="EditIcon"
 								class="cursor-pointer text-primary"
@@ -137,11 +137,7 @@
 								size="16"
 								title="Edit Course"
 								@click="editCourse(data.item)"
-							/> -->
-							<!-- <b-tooltip
-								title="Edit Course"
-								:target="`invoice-row-${data.item.id}-preview-icon`"
-							/> -->
+							/>
 
 							<feather-icon
 								v-b-tooltip.hover

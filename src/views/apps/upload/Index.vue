@@ -11,18 +11,26 @@
 
 				<div class="border rounded p-2">
 					<h4 class="mb-1">Featured Image</h4>
+
 					<b-media
 						no-body
 						vertical-align="center"
 						class="flex-column flex-md-row"
 					>
 						<b-media-aside>
+							<!-- <b-img
+									:src="coverArtUrl"
+									class="i img-fluid"
+									height="170"
+									width="180"
+								/> -->
+							<!-- computeImageSrc -->
 							<b-img
+								:src="computeImageSrc"
 								ref="refPreviewEl"
-								:src="blogEdit.featuredImage"
 								height="110"
 								width="170"
-								class="rounded mr-2 mb-1 mb-md-0"
+								class="rounded mr-2 mb-1 mb-md-0 img-fluid img-responsive"
 							/>
 						</b-media-aside>
 						<b-media-body>
@@ -33,7 +41,9 @@
 							<b-card-text class="my-50">
 								<b-link id="blog-image-text">
 									\{{
-										blogFile ? blogFile.name : "banner.jpg"
+										blogFile
+											? blogFile.name
+											: "video cover image.jpg"
 									}}
 								</b-link>
 							</b-card-text>
@@ -41,8 +51,8 @@
 								<b-form-file
 									ref="refInputEl"
 									v-model="blogFile"
-									accept=".jpg, .png, .gif"
-									placeholder="Choose file"
+									accept=".jpg, .png, .gif, jpeg"
+									placeholder="Choose file from disk"
 									@input="inputImageRenderer"
 								/>
 							</div>
@@ -317,6 +327,7 @@
 	import ToastificationContent from "@core/components/toastification/ToastificationContent.vue";
 	import { getDownloadURL } from "firebase/storage";
 	import { useRouter } from "@core/utils/utils";
+	import router from "@/router";
 
 	import {
 		ref,
@@ -325,6 +336,7 @@
 		onUnmounted,
 		nextTick,
 		watch,
+		computed,
 	} from "@vue/composition-api";
 	import { serverTimestamp } from "@firebase/firestore";
 
@@ -399,6 +411,7 @@
 			const form = ref(null);
 			const coverArtUrl = ref(null);
 			const imgBlobFile = ref(null);
+			const imgBase64 = ref(null);
 
 			onBeforeMount(async () => {
 				window.addEventListener("resize", initTrHeight());
@@ -406,27 +419,41 @@
 				if (JSON.parse(route.value.params.edit)) {
 					isEditPage.value = true;
 					courseId = route.value.params.id;
-				}
-				try {
-					let response = await store.dispatch(
-						"Course/GET_SINGLE_COURSE_BY_Id",
-						{
-							id: courseId,
-						}
-					);
 
-					if (!response || !response.mudules) return false;
+					try {
+						let response = await store.dispatch(
+							"Course/GET_SINGLE_COURSE_BY_Id",
+							{
+								id: courseId,
+							}
+						);
 
-					let courseModules = response.mudules.map((item) => {
-						return {
-							courseTitle: item.title,
-							courseDescriptions: item.description,
-							videoUrl: item.video_url,
-						};
-					});
-					items.value = [...courseModules];
-				} catch (err) {
-					console.log(err);
+						if (!response || !response.mudules) return false;
+						courseTitle.value = response.title;
+						coverArtUrl.value = response.cover_photo_url;
+						let x = Object.entries(response.mudules);
+
+						let courseModules = x.map((item) => {
+							let innerArr = item[1].map((ele) => {
+								return {
+									title: ele.title,
+									courseDescriptions: ele.description,
+									videoUrl: ele.video_url,
+								};
+							});
+
+							return {
+								title: response.title,
+								courseDescriptions: response.description,
+								videoUrl: innerArr[0].video_url,
+								idx: 0,
+								module: [...innerArr],
+							};
+						});
+						items.value = [...courseModules];
+					} catch (err) {
+						console.log(err);
+					}
 				}
 			});
 			onMounted(() => {
@@ -436,6 +463,12 @@
 				window.removeEventListener("resize", initTrHeight());
 			});
 
+			const computeImageSrc = computed(() => {
+				let x = imgBlobFile.value
+					? (refPreviewEl.value.src = imgBase64.value)
+					: coverArtUrl.value;
+				return x;
+			});
 			const trAddHeight = (val) => {
 				const heightValue = Number(
 					trHeightv.value.substring(0, trHeight.value.length - 2)
@@ -540,6 +573,43 @@
 				if (!value) return "";
 				return value.toLowerCase().trim();
 			};
+			const _clearvaribles = () => {
+				items.value = [
+					{
+						title: "",
+						courseDescriptions: "",
+						videoUrl: "",
+						idx: 0,
+						module: [
+							{
+								title: "",
+								courseDescriptions: "",
+								videoUrl: "",
+							},
+						],
+					},
+				];
+				coverArtUrl.value = null;
+				imgBlobFile.value = null;
+				courseTitle.value = "";
+
+				toast({
+					component: ToastificationContent,
+					props: {
+						title: "Good Job!",
+						text: `Upload successfull done"`,
+						icon: "CheckIcon",
+						variant: "success",
+					},
+				});
+				let isAdmin = JSON.parse(
+					sessionStorage.getItem("isAdminIn") || "false"
+				);
+				router.push({
+					name: isAdmin ? "course-list" : "courses-card",
+				});
+				isUploading.value = false;
+			};
 
 			const _uploadRecord = async (course) => {
 				try {
@@ -549,7 +619,6 @@
 							course,
 						}
 					);
-					isUploading.value = false;
 
 					if (!courseUploadId) {
 						toast({
@@ -563,58 +632,44 @@
 						});
 						return false;
 					}
+					// check if a new image is created
 
-					let payload = {
-						image: imgBlobFile.value,
-						courseId: courseUploadId.id,
-					};
+					if (imgBlobFile.value) {
+						let payload = {
+							image: imgBlobFile.value,
+							courseId: courseUploadId.id,
+						};
 
-					store
-						.dispatch("Course/UPLOAD_COVER_PICTURE", payload)
-						.then(async (response) => {
-							coverArtUrl.value = await getDownloadURL(response.ref);
-							console.log(coverArtUrl.value);
-							let payload = {
-								id: courseUploadId.id,
-								data: {
-									cover_photo_url: coverArtUrl.value,
-								},
-							};
-							store
-								.dispatch("Course/UPDATE_SINGLE_COURSE", payload)
-								.catch((err) => {
-									console.log(err);
-								});
-						});
-
-					items.value = [
-						{
-							title: "",
-							courseDescriptions: "",
-							videoUrl: "",
-							idx: 0,
-							module: [
-								{
-									title: "",
-									courseDescriptions: "",
-									videoUrl: "",
-								},
-							],
-						},
-					];
-					coverArtUrl.value = null;
-					imgBlobFile.value = null;
-					courseTitle.value = "";
-
-					toast({
-						component: ToastificationContent,
-						props: {
-							title: "Good Job!",
-							text: `Upload successfull done"`,
-							icon: "CheckIcon",
-							variant: "success",
-						},
-					});
+						store
+							.dispatch("Course/UPLOAD_COVER_PICTURE", payload)
+							.then(async (response) => {
+								coverArtUrl.value = await getDownloadURL(
+									response.ref
+								);
+								let payload = {
+									id: courseUploadId.id,
+									data: {
+										cover_photo_url: coverArtUrl.value,
+									},
+								};
+								store
+									.dispatch(
+										"Course/UPDATE_SINGLE_COURSE",
+										payload
+									)
+									.then((resp) => {
+										_clearvaribles();
+									})
+									.catch((err) => {
+										console.log(err);
+									});
+							})
+							.catch((err) => {
+								console.log(err);
+							});
+						return false;
+					}
+					_clearvaribles();
 				} catch (err) {
 					isUploading.value = false;
 					console.error(err);
@@ -715,7 +770,6 @@
 							value: 1,
 						})
 						.then((response) => {
-							debugger;
 							if (response) {
 								store
 									.dispatch("Course/UPDATE_SINGLE_COURSE", {
@@ -726,7 +780,6 @@
 										},
 									})
 									.then((res) => {
-										debugger;
 										_uploadRecord(course);
 									})
 									.catch((err) => {
@@ -748,6 +801,7 @@
 				refInputEl,
 				async (file, base64) => {
 					refPreviewEl.value.src = base64;
+					imgBase64.value = base64;
 
 					if (file.size > 10000000) {
 						toast({
@@ -775,6 +829,7 @@
 				removeSubmodule,
 				addSubModule,
 				items,
+				coverArtUrl,
 
 				pickingImage,
 
@@ -789,6 +844,7 @@
 				addModule,
 				courseTitle,
 				removeModule,
+				computeImageSrc,
 			};
 		},
 	};
