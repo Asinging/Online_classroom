@@ -123,7 +123,7 @@
 				>
 					<b-card
 						img-height="270"
-						class="text-center cursor-pointer"
+						class="text-center cursor-pointer h-100"
 						:img-src="item.cover_photo_url"
 						:img-alt="item.title.slice(5)"
 						img-top
@@ -146,6 +146,8 @@
 						<div class="card-description-text my-0 py-0">
 							<h4
 								class="card-description-text text-capitalize font-weight-bolder text-left py-0 mt-0"
+								v-b-tooltip.hover.bottom
+								:title="item.description"
 							>
 								{{ item.description.slice(0, 80) }}
 							</h4>
@@ -166,7 +168,9 @@
 								</ul>
 							</div>
 						</div>
-						<div class="d-flex justify-content-center">
+						<div
+							class="d-flex justify-content-center align-items-end mx-25 my-25 card_button"
+						>
 							<b-button
 								class="mt-25 mentorship_button text-center font-weight-bolder"
 								size="md"
@@ -209,11 +213,15 @@
 		BInputGroupPrepend,
 		BAvatar,
 		BButton,
+		VBTooltip,
 	} from "bootstrap-vue";
 	import { getRandomFromArray } from "@core/utils/utils";
 	import FeatherIcon from "@/@core/components/feather-icon/FeatherIcon.vue";
 
 	export default {
+		directives: {
+			"b-tooltip": VBTooltip,
+		},
 		components: {
 			BImg,
 			BOverlay,
@@ -310,7 +318,7 @@
 	};
 </script>
 
-<style lang="scss" >
+<style lang="scss"  >
 	@import "@core/scss/vue/pages/page-knowledge-base.scss";
 	.course-list-title {
 		// font-family: Arial sans-serif !important;
@@ -319,5 +327,13 @@
 	}
 	.card {
 		border-radius: 15px;
+	}
+	.card_button {
+		height: inherit;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		border-radius: 20px;
 	}
 </style>
