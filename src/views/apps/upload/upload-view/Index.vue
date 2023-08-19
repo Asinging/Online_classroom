@@ -359,14 +359,14 @@
 			});
 
 			const computeCourseModules = computed(() => {
-				let courseModule = JSON.parse(
-					sessionStorage.getItem("courseModules")
-				);
+				// let courseModule = JSON.parse(
+				// 	sessionStorage.getItem("courseModules")
+				// );
 
-				if (!courseModules.value && !courseModule) [];
-				if (!courseModules.value) {
-					return courseModule || [];
-				}
+				if (!courseModules.valu) [];
+				// if (!courseModules.value) {
+				// 	return courseModule || [];
+				// }
 
 				return courseModules.value;
 				// return menu;
