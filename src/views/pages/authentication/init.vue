@@ -127,6 +127,10 @@
 			initUser(val) {
 				if (!val) return false;
 
+				sessionStorage.setItem(
+					"emailVerified",
+					JSON.stringify(val.emailVerified)
+				);
 				this.$store
 					.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 						id: val.uid,
@@ -186,10 +190,8 @@
 							true
 						);
 						sessionStorage.setItem("isValid", "true");
-						// this.$router.push("/dashboard");
-						this.$router.push({
-							name: "payment",
-						});
+
+						this.$router.push("/");
 					})
 					.catch((err) => {
 						console.log(err);

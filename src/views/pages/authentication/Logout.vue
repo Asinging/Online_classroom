@@ -50,6 +50,7 @@
 			sessionStorage.removeItem("userData");
 			sessionStorage.removeItem("isValid");
 			sessionStorage.removeItem("isAdminIn");
+			sessionStorage.removeItem("emailVerified");
 
 			// Reset ability
 			// this.$ability.update(initialAbility);

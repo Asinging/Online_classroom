@@ -5,7 +5,7 @@
 			class="navbar navbar-expand-lg navbar-light fixed-top"
 			id="mainNav"
 		>
-			<div class="container px-4 px-lg-5 ">
+			<div class="container px-4 px-lg-5">
 				<a class="navbar-brand" href="#page-top">10FiguresAcademy</a>
 				<button
 					class="navbar-toggler navbar-toggler-right"
@@ -40,7 +40,7 @@
 								class="nav-link"
 								href="javascript:void(0);"
 								@click="login"
-								>{{!userData?'Login' : 'Logout'}}</a
+								>{{ !userData ? "Login" : "Logout" }}</a
 							>
 						</li>
 					</ul>
@@ -55,7 +55,10 @@
 				<div class="d-flex justify-content-center">
 					<div class="text-center">
 						<h1 class="mx-auto my-0 text-uppercase">WEALTH LINK</h1>
-						<h2 class=" mx-auto mt-2 mb-5 text-md-center" style="color:#fff">
+						<h2
+							class="mx-auto mt-2 mb-5 text-md-center"
+							style="color: #fff"
+						>
 							With $15K Subscription plan, you have full
 							experience of our one to one tutoring, we prioritise
 							your comfort in learning whilst still given you the
@@ -76,7 +79,7 @@
 			<div class="container px-4 px-lg-5">
 				<div class="row gx-4 gx-lg-5 justify-content-center">
 					<div class="col-lg-8">
-						<h2 class=" mb-4">Our sole, Our Soul</h2>
+						<h2 class="mb-4">Our sole, Our Soul</h2>
 						<p class="">
 							We believe in giving back to the community from
 							which we have benefited from, that the sole drive
@@ -236,7 +239,6 @@
 	import { BLink, BForm, BFormInput, BButton, BImg } from "bootstrap-vue";
 	import VuexyLogo from "@core/layouts/components/Logo.vue";
 	import store from "@/store/index";
-	
 
 	export default {
 		components: {
@@ -250,13 +252,15 @@
 		data() {
 			return {
 				downImg: require("@/assets/images/pages/coming-soon.svg"),
-				userData:null
+				userData: null,
 			};
 		},
 		computed: {},
 		created() {
 			window.addEventListener("DOMContentLoaded", this.runEvent(event));
-			this.userData = JSON.parse(sessionStorage.getItem('userData') || 'false');
+			this.userData = JSON.parse(
+				sessionStorage.getItem("userData") || "false"
+			);
 		},
 		mounted() {
 			sessionStorage.setItem("notFirstTime", true);
@@ -306,34 +310,39 @@
 				});
 			},
 
-
 			toDashboard() {
-				let isAdmin = this.$store.getters['appConfig/whoIsinGetter'];
+				let isAdmin = this.$store.getters["appConfig/whoIsinGetter"];
 				if (isAdmin) {
 					this.$router.push("/admin/dashboard");
 					return true;
 				}
-				
-				this.$router.push({
-					name: "payment",
-				});
+				let userSubcribed = JSON.parse(sessionStorage.getItem("isValid"));
+				if (!userSubcribed) {
+					this.$router.push({ name: "payment" });
+					return false;
+				}
+
+				this.$router.push("/");
 			},
 
-
 			login() {
-				sessionStorage.removeItem('userData');
-				sessionStorage.removeItem('isValid');
-				sessionStorage.removeItem('isAdminIn');
-				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
+				sessionStorage.removeItem("userData");
+				sessionStorage.removeItem("isValid");
+				sessionStorage.removeItem("isAdminIn");
+				sessionStorage.removeItem("emailVerified");
+				this.$store
+					.dispatch("Auth/LOG_OUT")
+					.catch((err) => console.log(er));
 				this.$router.push("/login");
 			},
 
 			register() {
-
-				sessionStorage.removeItem('userData');
-				sessionStorage.removeItem('isValid');
-				sessionStorage.removeItem('isAdminIn');
-				this.$store.dispatch("Auth/LOG_OUT").catch((err) => console.log(er));
+				sessionStorage.removeItem("userData");
+				sessionStorage.removeItem("isValid");
+				sessionStorage.removeItem("isAdminIn");
+				this.$store
+					.dispatch("Auth/LOG_OUT")
+					.catch((err) => console.log(er));
 				this.$router.push("/register");
 			},
 		},
@@ -343,16 +352,16 @@
 <style lang="scss" scoped>
 	@charset "UTF-8";
 	/*!
-			* Start Bootstrap - Grayscale v7.0.6 (https://startbootstrap.com/theme/grayscale)
-			* Copyright 2013-2023 Start Bootstrap
-			* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-grayscale/blob/master/LICENSE)
-			*/
+						* Start Bootstrap - Grayscale v7.0.6 (https://startbootstrap.com/theme/grayscale)
+						* Copyright 2013-2023 Start Bootstrap
+						* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-grayscale/blob/master/LICENSE)
+						*/
 	/*!
-				* Bootstrap  v5.2.3 (https://getbootstrap.com/)
-				* Copyright 2011-2022 The Bootstrap Authors
-				* Copyright 2011-2022 Twitter, Inc.
-				* Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-				*/
+							* Bootstrap  v5.2.3 (https://getbootstrap.com/)
+							* Copyright 2011-2022 The Bootstrap Authors
+							* Copyright 2011-2022 Twitter, Inc.
+							* Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+							*/
 	:root {
 		--bs-blue: #0d6efd;
 		--bs-indigo: #6610f2;
@@ -829,13 +838,13 @@
 	}
 
 	/* rtl:raw:
-			[type="tel"],
-			[type="url"],
-			[type="email"],
-			[type="number"] {
-					direction: ltr;
-			}
-			*/
+						[type="tel"],
+						[type="url"],
+						[type="email"],
+						[type="number"] {
+								direction: ltr;
+						}
+						*/
 	::-webkit-search-decoration {
 		-webkit-appearance: none;
 	}
@@ -6630,13 +6639,13 @@
 	}
 
 	/* rtl:options: {
-					"autoRename": true,
-					"stringMap":[ {
-							"name"    : "prev-next",
-							"search"  : "prev",
-							"replace" : "next"
-					} ]
-			} */
+								"autoRename": true,
+								"stringMap":[ {
+										"name"    : "prev-next",
+										"search"  : "prev",
+										"replace" : "next"
+								} ]
+						} */
 	.carousel-control-prev-icon {
 		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
 	}
@@ -8049,8 +8058,7 @@
 
 	.border-black {
 		--bs-border-opacity: 1;
-		border-color: rgba(
-			0, 0, 0) !important;
+		border-color: rgba(0, 0, 0) !important;
 	}
 
 	.border-white {
@@ -9029,10 +9037,7 @@
 
 	.bg-black {
 		--bs-bg-opacity: 1;
-		background-color: rgba(
-			0, 0, 0,
-			var(--bs-bg-opacity)
-		) !important;
+		background-color: rgba(0, 0, 0, var(--bs-bg-opacity)) !important;
 	}
 
 	.bg-white {

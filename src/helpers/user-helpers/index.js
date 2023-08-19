@@ -14,7 +14,7 @@ export const setLocalstorage = (user, userType) => {
             subject: 'all'
         }]
     }
-    localStorage.setItem(
+    sessionStorage.setItem(
         'userData',
         JSON.stringify(localData)
     );
