@@ -329,7 +329,7 @@
 
 			const courseList = () => {
 				let isAdmin = JSON.parse(
-					localStorage.getItem("isAdminIn") || "false"
+					sessionStorage.getItem("isAdminIn") || "false"
 				);
 				router.push({
 					name: isAdmin ? "course-list" : "courses-card",
@@ -339,7 +339,7 @@
 				let counter = 1;
 				if (!courseDisplay.value) {
 					let storage = JSON.parse(
-						localStorage.getItem("courseModuleDisplay") || "null"
+						sessionStorage.getItem("courseModuleDisplay") || "null"
 					);
 					if (!storage) return null;
 					courseDisplay.value = storage.mudules[counter][0];
@@ -347,17 +347,26 @@
 					course.value = storage;
 					return checkIframe(storage?.mudules[counter][0]);
 				}
-				return checkIframe(courseDisplay.value);
+				return checkIframe(courseDisplay.value) || {};
 			});
 			courseModules.value;
+
 			const courseModulesTotal = computed(() => {
-				if (!courseDisplay.value) return 0;
+				if (!courseDisplay.value) {
+				}
 				return courseDisplay.value.length;
 				courseModules.value;
 			});
 
 			const computeCourseModules = computed(() => {
-				if (!courseModules.value) return [];
+				let courseModule = JSON.parse(
+					sessionStorage.getItem("courseModules")
+				);
+
+				if (!courseModules.value && !courseModule) [];
+				if (!courseModules.value) {
+					return courseModule || [];
+				}
 
 				return courseModules.value;
 				// return menu;
@@ -370,7 +379,7 @@
 			onBeforeMount(() => {
 				let courseId = route.value.params.id;
 				let storage = JSON.parse(
-					localStorage.getItem("courseModuleDisplay") || "null"
+					sessionStorage.getItem("courseModuleDisplay") || "null"
 				);
 				isRequesting.value = true;
 				store
@@ -402,7 +411,7 @@
 							return false;
 						}
 
-						localStorage.setItem(
+						sessionStorage.setItem(
 							"courseModuleDisplay",
 							JSON.stringify(response)
 						);
@@ -422,7 +431,10 @@
 								}),
 							};
 						});
-						console.log(courseModules.value);
+						sessionStorage.setItem(
+							"courseModules",
+							JSON.stringify(courseModules.value)
+						);
 
 						course.value = response;
 					})
@@ -488,7 +500,7 @@
 		overflow: hidden;
 		padding-top: 56.25%;
 
-		max-height: 500px;
+		max-height: 480px;
 	}
 	.iframe2 iframe {
 		position: absolute;

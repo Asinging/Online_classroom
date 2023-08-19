@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
     let userSubscriptionCheck = store.getters['appConfig/subscribeUserGetter'];
     let notFirstTime = JSON.parse(sessionStorage.getItem('notFirstTime') || 'false');
 
-    debugger
+
     if (to.path !== '/welcome' && !notFirstTime) {
         return next('/welcome');
     }
