@@ -157,7 +157,7 @@
 						<b-col col="12">
 							<div class="body-card-div my-3 mb-5">
 								<p
-									class="display-4 font-weight-normal body-card-div text-dark text-center"
+									class="display-4 font-weight-bold body-card-div-text text-dark text-black text-center"
 								>
 									This is the best platform you can be at the
 									moment, You can watch our Introduction video
@@ -165,7 +165,7 @@
 							</div>
 						</b-col>
 
-						<b-col cols="12" class="p-0 ma-0">
+						<b-col cols="12" class="p-0 ma-0 my-5 mt-5">
 							<b-row>
 								<b-col cols="12" md="6">
 									<div class="human-intro d-flex">
@@ -173,14 +173,14 @@
 											:src="
 												require('@/assets/images/introducevideo.ac68531f.png')
 											"
-											class="img-responsive"
+											class="img-responsive img-fluid"
 										/>
 									</div>
 								</b-col>
 								<b-col cols="12" md="6">
 									<div
 										style="hieght: 100%"
-										class="align-items-md-center my-1 my-md-0"
+										class="align-items-md-center my-1 my-md-0 mx-1"
 									>
 										<div
 											v-if="isRequesting"
@@ -206,7 +206,7 @@
 								</b-col>
 							</b-row>
 						</b-col>
-						<b-col cols="12" class="my-2">
+						<b-col cols="12" class="my-2 mt-md-5">
 							<b-row>
 								<b-col cols="12" md="6">
 									<div
@@ -240,7 +240,7 @@
 													require('@/assets/images/peopleLearning.webp')
 												"
 												style="max-height: 270px"
-												class="img-responsive"
+												class="img-responsive img-fluid"
 											/>
 										</div>
 									</div>
@@ -257,7 +257,7 @@
 		>
 			<b-card-text
 				class="h1 font-weight-normal text-center text-white mb-5 mt-3 payment-text"
-				>Pay with any of our verify payment Gateway</b-card-text
+				>Pay with any of our verified payment Gateway</b-card-text
 			>
 			<div class="row">
 				<div class="col-12 col-md-4">
@@ -951,7 +951,7 @@
 	};
 </script>
 
-<style lang="scss"  >
+<style lang="scss" scoped  >
 	.wrapper {
 		margin: 10px;
 		margin-top: 0px;
@@ -981,6 +981,10 @@
 	.footer-card-text {
 		line-height: 2;
 		font-weight: 800 !important;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	.body-card-div-text {
+		font-weight: 500 !important;
 		font-family: Arial, Helvetica, sans-serif;
 	}
 	.card_payment {
