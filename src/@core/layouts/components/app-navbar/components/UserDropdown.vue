@@ -64,7 +64,7 @@
 		},
 		data() {
 			return {
-				// currentUser: JSON.parse(localStorage.getItem("userData") || "{}"),
+				// currentUser: JSON.parse(sessionStorage.getItem("userData") || "{}"),
 				avatarText,
 			};
 		},
@@ -86,22 +86,19 @@
 				});
 			},
 			logout() {
-				// Remove userData from localStorage
-				// ? You just removed token from localStorage. If you like, you can also make API call to backend to blacklist used token
+				// Remove userData from sessionStorage
+				// ? You just removed token from sessionStorage. If you like, you can also make API call to backend to blacklist used token
 
 				this.$store
 					.dispatch("Auth/LOG_OUT")
 					.catch((err) => console.log(er));
 
-				// Remove userData from localStorage
-				localStorage.removeItem("userData");
-				localStorage.removeItem("isValid");
-				localStorage.removeItem("isAdminIn");
+				// Remove userData from sessionStorage
+				sessionStorage.removeItem("userData");
+				sessionStorage.removeItem("isValid");
+				sessionStorage.removeItem("isAdminIn");
+				sessionStorage.removeItem("emailVerified");
 
-				// Reset ability
-				// this.$ability.update(initialAbility);
-
-				// Redirect to login page
 				this.$router.push({ name: "auth-login" });
 			},
 		},
