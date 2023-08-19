@@ -34,7 +34,7 @@
 								}"
 							>
 								{{
-									`${item.children ? "Module" : ""}` +
+									`${item.children ? "Module " : ""}` +
 									item.title
 								}}
 							</span>
