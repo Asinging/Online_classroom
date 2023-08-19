@@ -121,7 +121,7 @@
 										:variant="'light'"
 									>
 										<span
-											class="font-weight-bold h4 text-dark"
+											class="font-weight-bold h5 text-dark"
 											>Resend</span
 										>
 									</b-button>
@@ -133,13 +133,16 @@
 										variant="secondary"
 										v-b-tooltip.hover.bottom
 										title="Go to home"
-										@click="home"
 										class="cursor-pointer"
 									>
 										<feather-icon
 											size="18"
 											icon="HomeIcon"
 											color="white"
+											v-ripple.400="
+												'rgba(234, 84, 85, 0.15)'
+											"
+											@click="home"
 										/>
 									</b-avatar>
 								</div>
@@ -253,6 +256,7 @@
 		</b-row>
 		<b-card
 			class="card card_payment shadow-none bg-primary border-0"
+			v-if="notSubscribed"
 			variant="primary"
 		>
 			<b-card-text
@@ -307,7 +311,7 @@
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
-						{{ numbFormat(15000, "en-US", "USD") }}
+						{{ numbFormat(15, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -377,7 +381,7 @@
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
-						{{ numbFormat(15000, "en-US", "USD") }}
+						{{ numbFormat(15, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -433,7 +437,7 @@
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
-						{{ numbFormat(15000, "en-US", "USD") }}
+						{{ numbFormat(15, "en-US", "USD") }}
 					</div>
 				</div>
 			</div>
@@ -586,12 +590,12 @@
 		},
 		data() {
 			return {
-				notSubscribed: false,
+				notSubscribed: true,
 				sendingVerificationEmail: false,
 				verificationMsg: "Please verify your email",
 				verificationBtn: 0,
 
-				emailVerified: true,
+				emailVerified: false,
 				courseDisplay: null,
 				course: null,
 				isRequesting: true,
@@ -601,37 +605,15 @@
 				numbFormat,
 				fulName: "",
 				email: "",
-				amount: 15000,
+				amount: 15,
 				paystackPublicKey:
-					"pk_test_2682ed4a145e5a19e2ebe0d09c6ed25230130cad",
+					// "pk_test_2682ed4a145e5a19e2ebe0d09c6ed25230130cad", demo
+					"pk_live_2b9a5b4f237c04ace3b3f328950d078a0a41f67a",
 				transRef: "",
 				phone: "",
 				nameState: null,
 				isSendingTransfer: false,
 				body: "",
-				flutterwavePaymentData: {
-					tx_ref: this.generateReference(),
-					amount: 15000,
-					currency: "NGN",
-					payment_options: "card,ussd",
-					redirect_url: "",
-					meta: {
-						counsumer_id: "7898",
-						consumer_mac: "kjs9s8ss7dd",
-					},
-					customer: {
-						name: "10figuresacademy",
-						email: "10figuresacademy@mail.com",
-						phone_number: "0818450***44",
-					},
-					customizations: {
-						title: "Payment testing",
-						description: "Use this as payment testing",
-						logo: "https://flutterwave.com/images/logo-colored.svg",
-					},
-					callback: this.makePaymentWithFlutterwave,
-					onclose: this.closedPaymentModal,
-				},
 			};
 		},
 		created() {
@@ -654,10 +636,11 @@
 					this.isRequesting = false;
 					console.log(err);
 				});
+			let id = this.$store.getters["Auth/currentUserGetter"].id;
 
 			this.$store
 				.dispatch("Users/GET_SINGLE_USER_BY_Id", {
-					id: this.$store.getters["Auth/currentUserGetter"].id,
+					id: id,
 				})
 				.then((resp) => {
 					if (!resp.subscribed) {
@@ -672,18 +655,44 @@
 		},
 
 		computed: {
+			flutterwavePaymentData() {
+				return {
+					tx_ref: this.generateReference(),
+					amount: 15,
+					currency: "USD",
+					payment_options: "card,ussd",
+					redirect_url: "",
+					meta: {
+						counsumer_id: this.currenUserId,
+						consumer_mac: "kjs9s8ss7dd",
+					},
+					customer: {
+						name: "Our Highly esteem customer",
+						email: this.email,
+						phone_number: this.phone,
+					},
+					customizations: {
+						title: "Wealth Link Platform Payment",
+						description:
+							"This payment allows you acces to the Wealth link platform",
+						logo: "https://flutterwave.com/images/logo-colored.svg",
+					},
+					callback: this.makePaymentWithFlutterwave,
+					onclose: this.closedPaymentModal,
+				};
+			},
 			computeCourseDisplay() {
 				return this.courseDisplay ? checkIframe(this.courseDisplay) : null;
 			},
 
 			currentUser() {
 				let x = this.$store.getters["Auth/currentUserGetter"];
-
 				return x;
 			},
 
 			currenUserId() {
-				return this.$store.getters["Auth/currentUserGetter"].id;
+				let x = this.$store.getters["Auth/currentUserGetter"];
+				return x ? x.id : "1111";
 			},
 
 			reference() {

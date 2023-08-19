@@ -91,7 +91,8 @@ export default {
 
     getters: {
         currentUserGetter(state) {
-            return state.currentUser ? state.currentUser : JSON.parse(sessionStorage.getItem('userData'));
+            let user = state.currentUser ? state.currentUser : JSON.parse(sessionStorage.getItem('userData'));
+            return user ? user : {}
         }
     }
 };

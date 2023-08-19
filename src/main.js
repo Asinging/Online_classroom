@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { ToastPlugin, ModalPlugin } from 'bootstrap-vue';
 import VueCompositionAPI from '@vue/composition-api';
 import Flutterwave from 'flutterwave-vue-v3';
-Vue.use(Flutterwave, { publicKey: 'FLWPUBK-e3c0e42eb9cc810e941700e39ced392c-X' });
+Vue.use(Flutterwave, { publicKey: 'FLWPUBK-0e97d2c362ed7362fd20f2b19c1cc01f-X' });
 
 import i18n from '@/libs/i18n';
 import router from './router';

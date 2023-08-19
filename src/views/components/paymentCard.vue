@@ -4,7 +4,6 @@
 		class="card card-congratulations bg-white"
 		v-ripple.400="'rgba(255, 255, 255, 0.15)'"
 		style="cursor: pointer"
-		
 	>
 		<!--/ images -->
 
@@ -12,7 +11,9 @@
 			<feather-icon size="28" icon="AwardIcon" />
 		</b-avatar>
 		<h2 class="mb-1 mt-50 text-white">{{ title }}</h2>
-		<b-card-text class="m-auto w-75">
+		<b-card-text
+			class="m-auto w-75 font-weight-bold h5 font-italic text-white"
+		>
 			{{ text }}
 		</b-card-text>
 	</b-card>
