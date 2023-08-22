@@ -19,11 +19,14 @@
 								:src="
 									require('@/assets/images/decore-right.png')
 								"
-								class="congratulations-img-left d-flex"
+								class="congratulations-img-left d-none d-md-block"
 							/>
-							<div class="text-md-right" v-if="notSubscribed">
+							<div
+								class="text-md-right my-1 mt-md-0"
+								v-if="notSubscribed"
+							>
 								<div
-									class="d-flex bg-light px-25 rounded-4 subscription-alert"
+									class="d-flex bg-light px-25 rounded-5 subscription-alert justify-content-start"
 								>
 									<span class="pr-1">
 										<feather-icon
@@ -33,7 +36,7 @@
 										/>
 									</span>
 									<span
-										class="font-weight-bold h4 text-danger"
+										class="font-weight-bold h4 text-danger text-left"
 										>Please Upgrade Account to access our
 										premium services</span
 									>
@@ -60,9 +63,9 @@
 							</div>
 						</div>
 
-						<div>
+						<div class="my-3 my-md-0">
 							<b-card-text
-								class="mb-1 text-capitalize display-2 font-weight-bold text-white"
+								class="mb-1 text-capitalize display-3 text-responsive font-weight-bold text-white"
 								style=""
 							>
 								{{
@@ -96,8 +99,8 @@
 										:variant="
 											verificationMsg ==
 											'Please verify your email'
-												? 'success'
-												: 'danger'
+												? 'danger'
+												: 'success'
 										"
 									>
 										<span
@@ -127,7 +130,7 @@
 									</b-button>
 								</div>
 								<div
-									class="d-flex justify-content-end align-items-center"
+									class="d-flex justify-content-end align-items-center px-1"
 								>
 									<b-avatar
 										variant="secondary"
@@ -157,10 +160,10 @@
 					tag="article"
 				>
 					<b-row align-h="center">
-						<b-col col="12">
+						<b-col cols="12">
 							<div class="body-card-div my-3 mb-5">
 								<p
-									class="display-4 font-weight-bold body-card-div-text text-dark text-black text-center"
+									class="display-4 body-card-div-text text-dark text-black text-center"
 								>
 									This is the best platform you can be at the
 									moment, You can watch our Introduction video
@@ -805,7 +808,7 @@
 				});
 
 				if (val.status === "success") {
-					sessionStorage.setItem("isValid", 1);
+					sessionStorage.setItem("isValid", true);
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -830,6 +833,10 @@
 					this.$store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
+							this.$store.commit(
+								"appConfig/UPDATE_USER_SUBSCRIPTION",
+								true
+							);
 							this.$router.push("/");
 						})
 						.cath((err) => {
@@ -942,7 +949,7 @@
 				}
 
 				if (val.status === "success") {
-					sessionStorage.setItem("isValid", 1);
+					sessionStorage.setItem("isValid", true);
 					this.$toast({
 						component: ToastificationContent,
 						props: {
@@ -967,7 +974,11 @@
 					this.$store
 						.dispatch("Users/UPDATE_SINGLE_USER", payload)
 						.then((resp) => {
-							this.$router.push({ name: "dashboard-analytics" });
+							this.$store.commit(
+								"appConfig/UPDATE_USER_SUBSCRIPTION",
+								true
+							);
+							this.$router.push("/");
 						})
 						.cath((err) => {
 							console.log(err);
@@ -1012,6 +1023,9 @@
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
+	}
+	.subscription-alert {
+		border-radius: 5px;
 	}
 	// .people_reading {
 	// 	background-image: url("../../../assets/images/peopleLearning.webp");

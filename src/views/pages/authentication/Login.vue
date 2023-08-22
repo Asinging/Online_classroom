@@ -302,7 +302,7 @@
 							"Users/GET_SINGLE_USER_BY_Id",
 							{ id: response.user.uid }
 						);
-
+						debugger;
 						let formObject = setLocalstorage(response.user, resp2);
 						this.$store.commit("Auth/mCurrentUser", formObject);
 						this.$toast({

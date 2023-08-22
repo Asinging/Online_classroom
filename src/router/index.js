@@ -40,7 +40,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     let isAdmin = store.getters['appConfig/whoIsinGetter'];
     let userData = JSON.parse(sessionStorage.getItem('userData') || 'false');
-    let userSubscriptionCheck = store.getters['appConfig/subscribeUserGetter'];
+    // let userSubscriptionCheck = store.getters['appConfig/subscribeUserGetter']
+
+    let userSubscriptionCheck = JSON.parse(sessionStorage.getItem("isValid"))
     let notFirstTime = JSON.parse(sessionStorage.getItem('notFirstTime') || 'false');
 
 
@@ -51,6 +53,11 @@ router.beforeEach((to, from, next) => {
     if (to.path !== '/welcome' && !userData && to.path !== '/login' && to.path !== '/register') {
         return next('/welcome');
     }
+
+    if (to.path !== '/welcome' && to.path !== '/payment-methods' && to.path !== "/account-init" && !userSubscriptionCheck && to.path !== '/login' && to.path !== '/register') {
+        return next('/payment-methods');
+    }
+
     if (to.path === '/login' && userData) {
         return next('/');
     }
