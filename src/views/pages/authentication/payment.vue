@@ -414,8 +414,9 @@
 			id="modal-transfer"
 			cancel-variant="outline-secondary"
 			title="Submit Your Details"
+			class="md"
 			ok-title="Submit"
-			size="md"
+			with="md"
 			v-b-modal.modal-md
 			@ok="handleOk"
 		>
