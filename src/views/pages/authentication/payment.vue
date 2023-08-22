@@ -436,27 +436,42 @@
 				Payment using transfers may take a while before confirmation,
 				please bear with us as we resolve this issues
 			</div>
-			<div class="d-flex justify-content-center primary bg-primary py-1 rounded-1 card">
-				<div class="mx-1">
-					<p class="d-flex font-weight-bold">
-						<span class="text-white font-weight-bold"> Account Name :</span>
-						<span class="pl-1 text-white font-weight-bold"> Pounds Klassik Premium Project </span>
-					</p>
-					<p class="d-flex font-weight-bold">
-						<span class="text-white font-weight-bold"> Account Number :</span>
-						<span class="text-white font-weight-bold pl-1"> 1015469540 </span>
-					</p>
-					<p class="d-flex font-weight-bold">
-						<span class="text-white font-weight-bold"> Bank Name :</span>
-						<span class="text-white font-weight-bold pl-1"> Zenith Bank </span>
-					</p>
-				</div>
-			</div>
+
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
 						{{ numbFormat(15, "en-US", "USD") }}
 					</div>
+				</div>
+			</div>
+			<div
+				class="d-flex justify-content-center primary bg-primary py-1 rounded-1 card"
+			>
+				<div class="mx-1">
+					<p class="d-flex font-weight-bold">
+						<span class="text-white font-weight-bold">
+							Account Name :</span
+						>
+						<span class="pl-1 text-white font-weight-bold">
+							Pounds Klassik Premium Project
+						</span>
+					</p>
+					<p class="d-flex font-weight-bold">
+						<span class="text-white font-weight-bold">
+							Account Number :</span
+						>
+						<span class="text-white font-weight-bold pl-1">
+							1015469540
+						</span>
+					</p>
+					<p class="d-flex font-weight-bold">
+						<span class="text-white font-weight-bold">
+							Bank Name :</span
+						>
+						<span class="text-white font-weight-bold pl-1">
+							Zenith Bank
+						</span>
+					</p>
 				</div>
 			</div>
 			<validation-observer ref="transfersCash">
