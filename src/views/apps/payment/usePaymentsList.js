@@ -23,9 +23,9 @@ export default function useUsersList() {
 
     const responseObject = ref(null);
 
-    const refUserListTable = ref(null);
+    const refPaymentListTable = ref(null);
     const refreshCard = ref(null);
-    const navUserDiff = ref(0);
+
 
     // Table Handlers
     const tableColumns = [
@@ -50,18 +50,14 @@ export default function useUsersList() {
     const sortBy = ref('count');
     const isSortDirDesc = ref(false);
     const isSortDirAsc = ref(true);
-    const roleFilter = ref(null);
-    const planFilter = ref(null);
-    const statusFilter = ref(null);
-    const companyContactType = ref(null);
-    const isAddNewUserSidebarActive = ref(false);
+
+
 
     const isBusy = ref(true);
-    const countries = ref([]);
-    const contactType = { name: 'Customers', value: 1 };
-    const returnSearchedUser = ref([]);
 
-    const roleOptions = [{ label: 'Admin', value: 1 }, { label: 'Student', value: 2 }];
+    const returnSearchedPayment = ref([]);
+
+
 
     const statusOptions = [
         { label: 'Confirmed', value: 2 },
@@ -76,7 +72,7 @@ export default function useUsersList() {
     //*************************************************************** */
     // ********************** COMPUTED ********************************//
     const dataMeta = computed(() => {
-        const localItemsCount = refUserListTable.value ? refUserListTable.value.localItems.length : 0;
+        const localItemsCount = refPaymentListTable.value ? refPaymentListTable.value.localItems.length : 0;
 
         return {
             from: perPage.value * (currentPage.value - 1) + (localItemsCount ? 1 : 0),
@@ -87,7 +83,7 @@ export default function useUsersList() {
 
     const computePayments = computed(() => {
         let getPaymentObj = store.getters['TransferPayment/allPaymentGetter'];
-        let payments = searchQuery.value ? returnSearchedUser.value : getPaymentObj;
+        let payments = searchQuery.value ? returnSearchedPayment.value : getPaymentObj;
 
         responseObject.value = getPaymentObj;
 
@@ -110,16 +106,18 @@ export default function useUsersList() {
         searchQuery,
         async val => {
             if (!val) {
-                returnSearchedUser.value = [];
+                returnSearchedPayment.value = [];
                 return false;
             }
             isBusy.value = true;
             let payload = {
                 searchString: val.toLocaleLowerCase()
             };
+
             try {
-                let response = await store.dispatch('TransferPayment/SEARCH_USERS', payload);
-                returnSearchedUser.value = response;
+                let response = await store.dispatch('TransferPayment/SEARCH_PAYMENTS', payload);
+                returnSearchedPayment.value = response;
+                debugger
                 isBusy.value = false;
             } catch (err) {
                 isBusy.value = false;
@@ -190,7 +188,7 @@ export default function useUsersList() {
 
                             id: item.user_id
                         };
-                        debugger
+
                         store
                             .dispatch('Users/UPDATE_SINGLE_USER', userUpdateRecord)
                             .catch(err => {
@@ -231,32 +229,18 @@ export default function useUsersList() {
             return false;
         }
         refreshCard.value.showLoading = true;
-        refUserListTable.value.refresh();
+        refPaymentListTable.value.refresh();
         totalUsers.value = 0;
 
         fetchUsers();
     };
 
     const refetchData = ([currentPageValue, perPageValue, responseObjectValue]) => {
-        refUserListTable.value.refresh();
+        refPaymentListTable.value.refresh();
     };
 
-    // *===============================================---*
-    // *--------- UI ---------------------------------------*
-    // *===============================================---*
 
-    const resolveUserRoleVariant = role => {
-        if (role === 'student') return 'primary';
-        if (role === 'admin') return 'danger';
-        return 'primary';
-    };
 
-    const resolveUserRoleIcon = role => {
-        if (role === 2) return 'BookmarkIcon'; // for admin
-        if (role === 1) return 'SettingsIcon'; // for student
-
-        return 'BookmarkIcon';
-    };
 
     const resolvePaymentStatusVariant = status => {
         if (status === 0) return 'info';
@@ -268,12 +252,11 @@ export default function useUsersList() {
     return {
         refreshCard,
         showLoading,
-        countries,
-        navUserDiff,
+
         isBusy,
-        contactType,
-        isAddNewUserSidebarActive,
-        roleOptions,
+
+
+
 
         statusOptions,
 
@@ -287,8 +270,8 @@ export default function useUsersList() {
         sortBy,
         isSortDirDesc,
         isSortDirAsc,
-        refUserListTable,
-        companyContactType,
+        refPaymentListTable,
+
 
         // *** computed ****//
 
@@ -299,17 +282,13 @@ export default function useUsersList() {
 
         fetchUsers,
 
-        resolveUserRoleVariant,
-        resolveUserRoleIcon,
+
         resolvePaymentStatusVariant,
         refetchData,
 
         nameShortener,
         confirmPayment,
 
-        // Extra Filters
-        roleFilter,
-        planFilter,
-        statusFilter
+
     };
 }

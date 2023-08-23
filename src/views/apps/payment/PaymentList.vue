@@ -237,7 +237,7 @@
 		setup() {
 			const {
 				refreshCard,
-				isAddNewPaymentSidebarActive,
+
 				tableColumns,
 				perPage,
 				currentPage,
@@ -255,31 +255,21 @@
 				// ****************  FXN *****
 				refreshStop,
 
-				changeContactType,
-				avatarClick,
-				detailsClick,
-				editClick,
-				deleteClick,
 				fetchPayments,
 				refetchData,
 
-				resolvePaymentRoleVariant,
-				resolvePaymentRoleIcon,
 				resolvePaymentStatusVariant,
-				deleteOrdPayment,
+
 				nameShortener,
 
 				// Extra Filters
-				roleFilter,
-				planFilter,
-				statusFilter,
+
 				confirmPayment,
 			} = usePaymentsList();
 
 			return {
 				// Sidebar
 				refreshCard,
-				isAddNewPaymentSidebarActive,
 
 				tableColumns,
 				perPage,
@@ -293,9 +283,7 @@
 				refPaymentListTable,
 
 				// Extra Filters
-				roleFilter,
-				planFilter,
-				statusFilter,
+
 				isBusy,
 				showLoading,
 				// ************** WATCHERS *********
@@ -303,19 +291,13 @@
 
 				// ******* FXN *******
 				refreshStop,
-				changeContactType,
-				avatarClick,
-				detailsClick,
-				editClick,
-				deleteClick,
+
 				refetchData,
 				fetchPayments,
-				deleteOrdPayment,
+
 				nameShortener,
 				// Filter
-				avatarText,
-				resolvePaymentRoleVariant,
-				resolvePaymentRoleIcon,
+
 				resolvePaymentStatusVariant,
 				confirmPayment,
 			};

@@ -107,6 +107,7 @@ export default {
             return new Promise(async(resolve, reject) => {
                 const listOfPayment = collection(db, 'Money_Transfers');
 
+
                 try {
                     const q = query(
                         listOfPayment,
@@ -114,7 +115,7 @@ export default {
                         orderBy('trans_token', 'asc'),
                         orderBy('created_at', 'desc'),
                         where('status', '==', 1),
-                        where('is_root', '==', false),
+
                         where('trans_token', '>=', payload.searchString),
                         where('trans_token', '<', payload.searchString + '\uf8ff')
                     );
