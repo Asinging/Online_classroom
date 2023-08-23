@@ -384,7 +384,8 @@
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
-						{{ numbFormat(15, "en-US", "USD") }}
+						<!-- {{ numbFormat(14000, "en-NG", "NGN") }} -->
+						{{ formatNigeriaCurrency }}
 					</div>
 				</div>
 			</div>
@@ -444,7 +445,7 @@
 			<div class="d-flex justify-content-center my-3">
 				<div>
 					<div class="font-weight-bold text-primary display-4">
-						{{ numbFormat(15, "en-US", "USD") }}
+						{{ formatNigeriaCurrency }}
 					</div>
 				</div>
 			</div>
@@ -475,6 +476,20 @@
 						<span class="text-white font-weight-bold pl-1">
 							Zenith Bank
 						</span>
+					</p>
+					<p class="d-flex font-weight-bold">
+						<span class="text-white font-weight-bold">
+							Transaction Token :</span
+						>
+						<span class="text-white font-weight-bold pl-1">
+							{{ randomStr(10, '12345abcde')}}
+						</span>
+					</p>
+				</div>
+				<div class="d-flex justify-content-center">
+					<p class="text-italics text-center">
+						Use the transaction token as you transfer
+						remark/description for easy transaction confirmation
 					</p>
 				</div>
 			</div>
@@ -511,7 +526,7 @@
 						</validation-provider>
 					</b-form-group>
 
-					<b-form-group>
+					<!-- <b-form-group>
 						<validation-provider
 							#default="{ errors }"
 							name="Transaction Reference"
@@ -521,6 +536,20 @@
 								v-model="transRef"
 								:state="errors.length > 0 ? false : null"
 								placeholder="Paste Transaction Refs"
+							/>
+							<small class="text-danger">{{ errors[0] }}</small>
+						</validation-provider>
+					</b-form-group> -->
+					<b-form-group>
+						<validation-provider
+							#default="{ errors }"
+							name="Transaction Token"
+							rules="required"
+						>
+							<b-form-input
+								v-model="transToken"
+								:state="errors.length > 0 ? false : null"
+								placeholder="Copy and paste the transaction token generated for you"
 							/>
 							<small class="text-danger">{{ errors[0] }}</small>
 						</validation-provider>
@@ -642,11 +671,13 @@
 				numbFormat,
 				fulName: "",
 				email: "",
-				amount: 15,
+				amount: 14500,
 				paystackPublicKey:
 					// "pk_test_2682ed4a145e5a19e2ebe0d09c6ed25230130cad", demo
 					"pk_live_2b9a5b4f237c04ace3b3f328950d078a0a41f67a",
 				transRef: "",
+				transToken: "",
+
 				phone: "",
 				nameState: null,
 				isSendingTransfer: false,
@@ -692,11 +723,19 @@
 		},
 
 		computed: {
+			formatNigeriaCurrency() {
+				let x = new Intl.NumberFormat("en-NG", {
+					currency: "NGN",
+					style: "currency",
+				});
+				return x.format(14500);
+			},
 			flutterwavePaymentData() {
 				return {
 					tx_ref: this.generateReference(),
 					amount: 15,
 					currency: "USD",
+					// currency: "NGN",
 					payment_options: "card,ussd",
 					redirect_url: "",
 					meta: {
@@ -747,6 +786,17 @@
 		},
 
 		methods: {
+			randomStr(len, arr) {
+							let ans = '';
+							for (let i = len; i > 0; i--) {
+											ans +=
+															arr[(Math.floor(Math.random() * arr.length))];
+							}
+							return ans
+							
+			}, 
+ 
+			
 			toDashboard() {
 				let isAdmin = store.getters["appConfig/whoIsinGetter"];
 				if (isAdmin) {
@@ -785,7 +835,7 @@
 						});
 				}
 			},
-			makePaymentWithFlutterwave(response) {
+			makePaymentWithFlutterwave(val) {
 				if (!val) {
 					this.$toast({
 						component: ToastificationContent,
@@ -798,17 +848,8 @@
 					});
 					return false;
 				}
-				this.$toast({
-					component: ToastificationContent,
-					props: {
-						title: "Oops, Service not available",
-						text: `Please we have issues with payment using transfers, please use paystack while we resolve the issue, thanks for understanding`,
-						icon: "XIcon",
-						variant: "danger",
-					},
-				});
 
-				if (val.status === "success") {
+				if (val.status === "successful") {
 					sessionStorage.setItem("isValid", true);
 					this.$toast({
 						component: ToastificationContent,
@@ -820,13 +861,14 @@
 						},
 					});
 					let transactions = {
-						transRef: val.trxref,
-						transId: val.trans,
+						transRef: val.tx_ref,
+						transId: val.transaction_id,
 					};
 
 					let payload = {
 						id: this.currenUserId,
 						data: {
+							payment_details: val,
 							transaction: transactions,
 							subscribed: true,
 						},
@@ -856,6 +898,7 @@
 			},
 			payWithTransfer() {
 				this.$refs.transfersCash.validate().then((success) => {
+					
 					if (!success) {
 						this.$toast({
 							component: ToastificationContent,
@@ -868,30 +911,31 @@
 						});
 						return false;
 					}
-					this.$toast({
-						component: ToastificationContent,
-						props: {
-							title: "Oops, Service not available",
-							text: `Please we have issues with payment using transfers, please use paystack while we resolve the issue, thanks for understanding`,
-							icon: "XIcon",
-							variant: "danger",
-						},
-					});
-					return false;
+					// this.$toast({
+					// 	component: ToastificationContent,
+					// 	props: {
+					// 		title: "Oops, Service not available",
+					// 		text: `Please we have issues with payment using transfers, please use paystack while we resolve the issue, thanks for understanding`,
+					// 		icon: "XIcon",
+					// 		variant: "danger",
+					// 	},
+					// });
 
 					let data = {
-						create_at: serverTimestamp(),
+						created_at: serverTimestamp(),
 						status: 1,
-						subject: "Subscription Payment with Transfer",
-						tag: "subscription, payment, transfer",
-						category: "payment",
+					
 						email: this.email,
 						user_id: this.currenUserId,
+						trans_token: this.transToken,
+						
+						description: this.body,
+						phone: this.phone,
 					};
 
 					this.isSendingTransfer = true;
 					this.$store
-						.dispatch("Ticket/CREATE_TICKET", { data })
+						.dispatch("Ticket/Make_Transfer", { data })
 						.then((resp) => {
 							this.$refs["modalTransferCash"].hide();
 
@@ -900,16 +944,18 @@
 							this.subject = "";
 							this.email = "";
 							this.body = "";
+							this.phone = ""
+							this.transToken = "";
 							this.$toast({
 								component: ToastificationContent,
 								props: {
 									title: "All Good",
-									text: `Ticket created successfully! Issues will be addresss accordingly`,
+									text: `We will confirm your payment, wait a few minutes  and relogin`,
 									icon: "CheckIcon",
 									variant: "success",
 								},
 							});
-							this.$router.push({ name: "dashboard-analytics" });
+					return
 						})
 						.catch((err) => {
 							this.isSendingTransfer = false;
@@ -970,6 +1016,7 @@
 						data: {
 							transaction: transactions,
 							subscribed: true,
+							payment_details: val,
 						},
 					};
 					this.$store

@@ -59,7 +59,7 @@
 							class="mx-auto mt-2 mb-5 text-md-center"
 							style="color: #fff"
 						>
-							With $15K Subscription plan, you have full
+							With $15 Subscription plan, you have full
 							experience of our one to one tutoring, we prioritise
 							your comfort in learning whilst still given you the
 							neccessary skills needed for making wealth
