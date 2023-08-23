@@ -1,4 +1,22 @@
 export default [{
+        path: '/admin/payment-list',
+        name: 'payment-list',
+        component: () =>
+            import ('@/views/apps/payment/PaymentList.vue'),
+        meta: {
+            resource: 'Auth',
+            pageTitle: 'Transfers',
+            breadcrumb: [{
+                    text: 'List'
+                },
+                {
+                    text: 'Transfer Payment'
+                }
+            ]
+        }
+    }
+
+    , {
         path: '/admin/all/tickets',
         name: 'app-tickets',
         component: () =>

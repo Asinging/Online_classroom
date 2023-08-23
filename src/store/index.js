@@ -11,20 +11,22 @@ import course from './course';
 import auth from './auth';
 import counter from './counters';
 import ticket from './tickets';
+import transferPayment from './tickets/transferPayment';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-   modules: {
-      app,
-      appConfig,
-      verticalMenu,
-      Users: users,
-      Course: course,
-      Auth: auth,
-      Ticket: ticket,
-      Counter: counter
-      // 'app-ecommerce': ecommerceStoreModule
-   },
-   strict: process.env.DEV
+    modules: {
+        app,
+        appConfig,
+        verticalMenu,
+        Users: users,
+        Course: course,
+        Auth: auth,
+        Ticket: ticket,
+        Counter: counter,
+        TransferPayment: transferPayment
+            // 'app-ecommerce': ecommerceStoreModule
+    },
+    strict: process.env.DEV
 });

@@ -16,6 +16,12 @@ export default [{
         route: 'dashboard-ecommerce',
         key: 'dashboard'
     },
+    {
+        title: 'Confirm Payments',
+        icon: 'DollarSignIcon',
+        key: 'payment',
+        route: 'payment-list',
+    },
 
     {
         title: 'User',

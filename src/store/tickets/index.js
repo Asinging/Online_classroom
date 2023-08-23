@@ -82,19 +82,7 @@ export default {
                 }
             });
         },
-        Make_Transfer({ commit }, payload) {
-            debugger
-            return new Promise(async(resolve, reject) => {
-                try {
-                    let docRef = await addDoc(collection(db, 'Money_Transfers'), payload.data);
 
-                    resolve(docRef);
-                } catch (err) {
-                    console.log(err)
-                    reject(err);
-                }
-            });
-        }
     },
     getters: {
         allTicketGetter(state) {

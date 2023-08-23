@@ -438,8 +438,7 @@
 				</b-button>
 			</template>
 			<div class="pa-2 my-2 text-center font-weight-bold h4">
-				Payment using transfers may take a while before confirmation,
-				please bear with us as we resolve this issues
+				Payment using transfers may take a while before confirmation.
 			</div>
 
 			<div class="d-flex justify-content-center my-3">
@@ -482,12 +481,12 @@
 							Transaction Token :</span
 						>
 						<span class="text-white font-weight-bold pl-1">
-							{{ randomStr(10, '12345abcde')}}
+							{{ randomStr(10, "12345abcde") }}
 						</span>
 					</p>
 				</div>
 				<div class="d-flex justify-content-center">
-					<p class="text-italics text-center">
+					<p class="text-italics text-center px-25">
 						Use the transaction token as you transfer
 						remark/description for easy transaction confirmation
 					</p>
@@ -787,16 +786,13 @@
 
 		methods: {
 			randomStr(len, arr) {
-							let ans = '';
-							for (let i = len; i > 0; i--) {
-											ans +=
-															arr[(Math.floor(Math.random() * arr.length))];
-							}
-							return ans
-							
-			}, 
- 
-			
+				let ans = "";
+				for (let i = len; i > 0; i--) {
+					ans += arr[Math.floor(Math.random() * arr.length)];
+				}
+				return ans;
+			},
+
 			toDashboard() {
 				let isAdmin = store.getters["appConfig/whoIsinGetter"];
 				if (isAdmin) {
@@ -898,7 +894,6 @@
 			},
 			payWithTransfer() {
 				this.$refs.transfersCash.validate().then((success) => {
-					
 					if (!success) {
 						this.$toast({
 							component: ToastificationContent,
@@ -924,18 +919,18 @@
 					let data = {
 						created_at: serverTimestamp(),
 						status: 1,
-					
+
 						email: this.email,
 						user_id: this.currenUserId,
 						trans_token: this.transToken,
-						
+
 						description: this.body,
 						phone: this.phone,
 					};
 
 					this.isSendingTransfer = true;
 					this.$store
-						.dispatch("Ticket/Make_Transfer", { data })
+						.dispatch("TransferPayment/MAKE_TRANSFER", { data })
 						.then((resp) => {
 							this.$refs["modalTransferCash"].hide();
 
@@ -944,7 +939,7 @@
 							this.subject = "";
 							this.email = "";
 							this.body = "";
-							this.phone = ""
+							this.phone = "";
 							this.transToken = "";
 							this.$toast({
 								component: ToastificationContent,
@@ -955,7 +950,7 @@
 									variant: "success",
 								},
 							});
-					return
+							return;
 						})
 						.catch((err) => {
 							this.isSendingTransfer = false;
