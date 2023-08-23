@@ -36,7 +36,7 @@
 										/>
 									</span>
 									<span
-										class="font-weight-bold h4 text-danger text-left"
+										class="font-weight-bold h4 text-danger text-center"
 										>Please Upgrade Account to access our
 										premium services</span
 									>
@@ -179,14 +179,19 @@
 											:src="
 												require('@/assets/images/introducevideo.ac68531f.png')
 											"
-											class="img-responsive img-fluid"
+											class="img-responsive img-fluid d-none d-md-block"
+										/><b-img
+											:src="
+												require('@/assets/images/manPointing1.png')
+											"
+											class="img-responsive img-fluid d-block d-md-none"
 										/>
 									</div>
 								</b-col>
 								<b-col cols="12" md="6">
 									<div
 										style="hieght: 100%"
-										class="align-items-md-center my-1 my-md-0 mx-1"
+										class="align-items-md-center my-5 my-md-0 mx-1"
 									>
 										<div
 											v-if="isRequesting"
@@ -885,8 +890,8 @@
 					return false;
 				}
 			},
-			closedPaymentModal() {
-				console.log("payment is closed");
+			closedPaymentModal(val) {
+				debugger;
 			},
 			generateReference() {
 				let date = new Date();
@@ -1056,13 +1061,13 @@
 	}
 
 	.header-card {
-		background-image: url("../../../assets/images/cardBackgound.jpg");
+		background-image: url("../../../assets/images/lightBlack.jpg");
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
 	}
 	.body-card {
-		background-image: url("../../../assets/images/background4.4ab67b51.jpg");
+		background-image: url("../../../assets/images/extremeBlue.jpg");
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
@@ -1095,8 +1100,9 @@
 		position: relative;
 		overflow: hidden;
 		padding-top: 56.25%;
+		border-radius: 6px !important;
 
-		max-height: 500px;
+		max-height: 300px;
 	}
 	.iframe2 iframe {
 		position: absolute;
@@ -1104,7 +1110,7 @@
 		left: 0;
 		width: 100%;
 		height: 30px;
-		// border-radius: 12px !important;
+		border-radius: 6px !important;
 
 		border: 0; /* Remove iframe border */
 	}

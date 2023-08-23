@@ -11,9 +11,7 @@
 			<feather-icon size="28" icon="AwardIcon" />
 		</b-avatar>
 		<h2 class="mb-1 mt-50 text-white">{{ title }}</h2>
-		<b-card-text
-			class="m-auto w-75 font-weight-bold h5 font-italic text-white"
-		>
+		<b-card-text class="m-auto w-75 h5 text-white">
 			{{ text }}
 		</b-card-text>
 	</b-card>
