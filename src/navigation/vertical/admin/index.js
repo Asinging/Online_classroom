@@ -17,7 +17,7 @@ export default [{
         key: 'dashboard'
     },
     {
-        title: 'Transfer Payment',
+        title: 'Confirm Payments',
         icon: 'DollarSignIcon',
         key: 'payment',
         route: 'payment-list',

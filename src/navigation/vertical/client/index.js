@@ -23,13 +23,13 @@ export default [{
         route: 'courses-card'
     },
 
-    {
-        title: 'Raise Ticket',
-        icon: 'ChevronsUpIcon',
-        tag: '',
+    // {
+    //     title: 'Raise Ticket',
+    //     icon: 'ChevronsUpIcon',
+    //     tag: '',
 
-        route: 'app-raise-ticket'
-    },
+    //     route: 'app-raise-ticket'
+    // },
     {
         title: 'Mentorship',
         icon: 'LayersIcon',
