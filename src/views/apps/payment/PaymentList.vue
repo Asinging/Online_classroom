@@ -73,70 +73,6 @@
 						</div>
 					</template>
 
-					<!-- Column: Name -->
-					<template #cell(f_name)="data">
-						<b-media vertical-align="center">
-							<template #aside>
-								<b-avatar
-									size="32"
-									:src="data.item.avatar"
-									:text="
-										avatarText(
-											data.item.f_name ||
-												data.item.username
-										)
-									"
-									:variant="`light-${resolvePaymentRoleVariant(
-										data.item.user_type == 1
-											? 'admin'
-											: 'student'
-									)}`"
-									:to="{
-										name: 'apps-users-view',
-										params: { id: data.item.id },
-									}"
-								/>
-							</template>
-							<b-link
-								:to="{
-									name: 'apps-users-view',
-									params: { id: data.item.id },
-								}"
-								class="font-weight-bold d-block text-nowrap text-capitalize text-primary text-decoration-none"
-								v-b-tooltip.hover.bottom
-								:title="data.item.f_name || data.item.username"
-							>
-								{{
-									nameShortener(data.item.f_name) ||
-									nameShortener(data.item.username)
-								}}
-							</b-link>
-							<small class="text-muted text-lighten-blue"
-								>@{{ data.item.username }}</small
-							>
-						</b-media>
-					</template>
-
-					<!-- Column: Role -->
-					<template #cell(user_type)="data">
-						<div class="text-nowrap">
-							<feather-icon
-								:icon="
-									resolvePaymentRoleIcon(data.item.user_type)
-								"
-								size="18"
-								class="mr-50"
-								:class="`text-${resolvePaymentRoleVariant(
-									data.item.user_type == 1
-										? 'admin'
-										: 'student'
-								)}`"
-							/>
-							<span class="align-text-top text-capitalize">{{
-								data.item.user_type == 1 ? "Admin" : "Student"
-							}}</span>
-						</div>
-					</template>
 					<!-- Column: Role -->
 					<template #cell(subscribed)="data">
 						<div class="text-nowrap">
@@ -149,63 +85,44 @@
 					</template>
 
 					<!-- Column: Status -->
-					<template #cell(enabled)="data">
+					<template #cell(remark)="data">
 						<b-badge
+							v-b-tooltip.hover
+							:title="`Transaction is   ${
+								data.item.remark == 1 ? 'Pending' : 'Confirmed'
+							}`"
 							pill
 							:variant="`light-${resolvePaymentStatusVariant(
-								data.item.enabled
+								data.item.remark
 							)}`"
 							class="text-capitalize"
 						>
 							{{
-								data.item.enabled == true
-									? "active"
-									: "disabled"
+								data.item.remark == 1 ? "Pending" : "Confirmed"
 							}}
 						</b-badge>
 					</template>
 
 					<!-- Column: Actions -->
 					<template #cell(actions)="data">
-						<b-dropdown
-							variant="link"
-							no-caret
-							:right="$store.state.appConfig.isRTL"
-						>
-							<template #button-content>
+						<div class="text-nowrap">
+							<b-button
+								class="btn icon-btn bg-primary"
+								size="sm"
+								variant="primary"
+								:disabled="data.item.remark == 2"
+							>
 								<feather-icon
-									icon="MoreVerticalIcon"
+									:id="`invoice-row-${data.item.id}-send-icon`"
+									icon="CheckIcon"
+									class="cursor-pointer text-light"
+									v-b-tooltip.hover
 									size="16"
-									class="align-middle text-body"
+									title="Confirm Payment"
+									@click="confirmPayment(data.item)"
 								/>
-							</template>
-							<b-dropdown-item
-								:to="{
-									name: 'apps-users-view',
-									params: { id: data.item.id },
-								}"
-							>
-								<feather-icon icon="FileTextIcon" />
-								<span class="align-middle ml-50">Details</span>
-							</b-dropdown-item>
-
-							<b-dropdown-item
-								:to="{
-									name: 'apps-users-edit',
-									params: { id: data.item.id },
-								}"
-							>
-								<feather-icon icon="EditIcon" />
-								<span class="align-middle ml-50">Edit</span>
-							</b-dropdown-item>
-
-							<b-dropdown-item
-								@click="deleteOrdPayment(data.item)"
-							>
-								<feather-icon icon="TrashIcon" />
-								<span class="align-middle ml-50">Delete</span>
-							</b-dropdown-item>
-						</b-dropdown>
+							</b-button>
+						</div>
 					</template>
 				</b-table>
 
@@ -356,6 +273,7 @@
 				roleFilter,
 				planFilter,
 				statusFilter,
+				confirmPayment,
 			} = usePaymentsList();
 
 			return {
@@ -399,6 +317,7 @@
 				resolvePaymentRoleVariant,
 				resolvePaymentRoleIcon,
 				resolvePaymentStatusVariant,
+				confirmPayment,
 			};
 		},
 	};

@@ -16,11 +16,11 @@ import {
 export default {
     namespaced: true,
     state: {
-        allTickets: null
+        allPayments: null
     },
     mutations: {
-        mAllTicket(state, payload) {
-            state.allTickets = payload;
+        mAllPayments(state, payload) {
+            state.allPayments = payload;
         }
     },
     actions: {
@@ -77,24 +77,25 @@ export default {
         },
 
         GET_PAYMENTS({ commit }, payload) {
+
             return new Promise(async(resolve, reject) => {
-                const listOfUsers = collection(db, 'Money_Transfers');
+                const listOfPayment = collection(db, 'Money_Transfers');
 
                 try {
                     const q = query(
-                        listOfUsers,
+                        listOfPayment,
                         limit(50),
-                        orderBy('is_root', 'desc'),
+
                         orderBy('created_at', 'desc'),
                         where('status', '==', 1),
-                        where('is_root', '!=', true)
+
                     );
                     let fetcheData = await getDocs(q);
-                    let filteredUserObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
+                    let filteredPaymentObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
 
-                    commit('mAllUser', filteredUserObject);
+                    commit('mAllPayments', filteredPaymentObject);
 
-                    resolve(filteredUserObject);
+                    resolve(filteredPaymentObject);
                 } catch (err) {
                     console.log(err);
                     reject(err);
@@ -104,11 +105,11 @@ export default {
         SEARCH_PAYMENTS({ commit }, payload) {
             // ;
             return new Promise(async(resolve, reject) => {
-                const listOfUsers = collection(db, 'Money_Transfers');
+                const listOfPayment = collection(db, 'Money_Transfers');
 
                 try {
                     const q = query(
-                        listOfUsers,
+                        listOfPayment,
                         limit(50),
                         orderBy('trans_token', 'asc'),
                         orderBy('created_at', 'desc'),
@@ -118,9 +119,9 @@ export default {
                         where('trans_token', '<', payload.searchString + '\uf8ff')
                     );
                     let fetcheData = await getDocs(q);
-                    let filteredUserObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
+                    let filteredPaymentObject = fetcheData.docs.map(doc => ({...doc.data(), id: doc.id }));
 
-                    resolve(filteredUserObject);
+                    resolve(filteredPaymentObject);
                 } catch (err) {
                     console.log(err);
                     reject(err);
@@ -133,7 +134,7 @@ export default {
 
     getters: {
         allPaymentGetter(state) {
-            return state.allTickets;
+            return state.allPayments || []
         }
     }
 };

@@ -10,6 +10,7 @@ import { paginateCounteFromOne, countFromOne } from '@/helpers/number-helpers/nu
 import { paginate } from '@/helpers/pagination-helpers/generalPagination';
 import router from '@/router';
 import Swal from 'sweetalert2';
+import { serverTimestamp } from "firebase/firestore";
 import { getAuth, deleteUser } from 'firebase/auth';
 const auth = getAuth();
 
@@ -30,6 +31,7 @@ export default function useUsersList() {
     const tableColumns = [
         { key: 'count', label: 'S/N', sortable: true },
         { key: 'email', sortable: true },
+        { key: 'trans_token', label: 'Transaction Token' },
         { key: 'phone', label: 'Phone', sortable: true },
         {
             key: 'remark',
@@ -62,8 +64,8 @@ export default function useUsersList() {
     const roleOptions = [{ label: 'Admin', value: 1 }, { label: 'Student', value: 2 }];
 
     const statusOptions = [
-        { label: 'Pending', value: 2 },
-        { label: 'Active', value: 1 },
+        { label: 'Confirmed', value: 2 },
+        { label: 'Pending', value: 1 },
         { label: 'Inactive', value: 0 }
     ];
 
@@ -83,26 +85,19 @@ export default function useUsersList() {
         };
     });
 
-    const computeUsers = computed(() => {
-        let getUsersObj = store.getters['TransferPayment/allPaymentGetter'];
-        let users = searchQuery.value ? returnSearchedUser.value : getUsersObj;
+    const computePayments = computed(() => {
+        let getPaymentObj = store.getters['TransferPayment/allPaymentGetter'];
+        let payments = searchQuery.value ? returnSearchedUser.value : getPaymentObj;
+        debugger
+        responseObject.value = getPaymentObj;
 
-        responseObject.value = getUsersObj;
-        // totalUsers.value = users.length;
-
-        // let payload = {
-        //     data: paginate(users, currentPage.value, perPage.value),
-        //     perPage: perPage.value,
-        //     currentPage: currentPage.value
-        // };
-        // return paginateCounteFromOne(payload);
-        users = users.map(item => {
+        payments = payments.map(item => {
             if (!item.phone) {
                 item.phone = 'Nil';
             }
             return item;
         });
-        return countFromOne(users);
+        return countFromOne(payments);
     });
 
     //*************************************************************** */
@@ -123,7 +118,7 @@ export default function useUsersList() {
                 searchString: val.toLocaleLowerCase()
             };
             try {
-                let response = await store.dispatch('Users/SEARCH_USERS', payload);
+                let response = await store.dispatch('TransferPayment/SEARCH_USERS', payload);
                 returnSearchedUser.value = response;
                 isBusy.value = false;
             } catch (err) {
@@ -136,10 +131,10 @@ export default function useUsersList() {
 
     //*************************************************************** */
     // ********************** FUNCTIONS (MEHTODS) ********************************//
-    const deleteOrdUser = user => {
+    const confirmPayment = user => {
         new Swal({
-            title: ' 😕 Hey Carefull! ',
-            text: `You are about to delete this user permanently`,
+            title: ' 😕 Confirmation ',
+            text: `You are about to confirm this payment, check transaction detail carefully`,
             icon: 'info',
 
             showCancelButton: true,
@@ -157,20 +152,19 @@ export default function useUsersList() {
                 isBusy.value = true;
                 let payload = {
                     data: {
-                        status: 0
+                        remark: 2,
+                        updated_at: serverTimestamp()
                     },
                     id: user.id
                 };
                 store
-                    .dispatch('Users/UPDATE_SINGLE_USER', payload)
+                    .dispatch('TransferPayment/UPDATE_SINGLE_PAYMENT', payload)
                     .then(resp => {
                         isBusy.value = false;
-                        new Swal('Good job!', 'User successfully deleted!', 'success');
+                        new Swal('Good job!', 'Transaction Confirmed!', 'success');
                         fetchUsers(1, 1);
                         let user = auth ? auth.currentUser : 0;
-                        // deleteUser(user).then(() => {}).catch(error => {
-                        //    console.log(error);
-                        // });
+
                     })
                     .catch(err => {
                         isBusy.value = false;
@@ -189,7 +183,8 @@ export default function useUsersList() {
             pageNumber
         };
         try {
-            let resp = await store.dispatch('Users/GET_USERS', payload);
+            let resp = await store.dispatch('TransferPayment/GET_PAYMENTS', payload);
+
             isBusy.value = false;
             totalUsers.value = resp.length;
             refreshCard.value.showLoading = false;
@@ -231,10 +226,11 @@ export default function useUsersList() {
         return 'BookmarkIcon';
     };
 
-    const resolveUserStatusVariant = status => {
-        if (status === true) return 'success';
-        if (status === false) return 'danger';
-        return 'primary';
+    const resolvePaymentStatusVariant = status => {
+        if (status === 0) return 'info';
+        if (status === 1) return 'danger';
+        if (status === 2) return 'success';
+        return 'info';
     };
 
     return {
@@ -264,7 +260,7 @@ export default function useUsersList() {
 
         // *** computed ****//
 
-        computeUsers,
+        computePayments,
 
         // *** Fxn****//
         refreshStop,
@@ -273,10 +269,11 @@ export default function useUsersList() {
 
         resolveUserRoleVariant,
         resolveUserRoleIcon,
-        resolveUserStatusVariant,
+        resolvePaymentStatusVariant,
         refetchData,
-        deleteOrdUser,
+
         nameShortener,
+        confirmPayment,
 
         // Extra Filters
         roleFilter,

@@ -1,6 +1,6 @@
 export default [{
         path: '/admin/payment-list',
-        name: 'payemnt-list',
+        name: 'payment-list',
         component: () =>
             import ('@/views/apps/payment/PaymentList.vue'),
         meta: {
@@ -10,7 +10,7 @@ export default [{
                     text: 'List'
                 },
                 {
-                    text: 'Transfer Payemnt'
+                    text: 'Transfer Payment'
                 }
             ]
         }
