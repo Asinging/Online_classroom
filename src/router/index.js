@@ -38,13 +38,13 @@ const router = new VueRouter({
     ]
 });
 router.beforeEach((to, from, next) => {
-    let isAdmin = store.getters['appConfig/whoIsinGetter'];
+    // let isAdmin = store.getters['appConfig/whoIsinGetter'];
+    let isAdmin = JSON.parse(sessionStorage.getItem("isAdminIn"))
     let userData = JSON.parse(sessionStorage.getItem('userData') || 'false');
     // let userSubscriptionCheck = store.getters['appConfig/subscribeUserGetter']
 
     let userSubscriptionCheck = JSON.parse(sessionStorage.getItem("isValid"))
-    let notFirstTime = JSON.parse(sessionStorage.getItem('notFirstTime') || 'false');
-
+    let notFirstTime = JSON.parse(sessionStorage.getItem('notFirstTime') || 'false')
 
     if (to.path !== '/welcome' && !notFirstTime) {
         return next('/welcome');

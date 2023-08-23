@@ -16,6 +16,12 @@ export default [{
         route: 'dashboard-ecommerce',
         key: 'dashboard'
     },
+    {
+        title: 'Transfer Payment',
+        icon: 'DollarSignIcon',
+        key: 'payment',
+        route: 'payment-list',
+    },
 
     {
         title: 'User',
