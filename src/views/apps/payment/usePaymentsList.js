@@ -88,7 +88,7 @@ export default function useUsersList() {
     const computePayments = computed(() => {
         let getPaymentObj = store.getters['TransferPayment/allPaymentGetter'];
         let payments = searchQuery.value ? returnSearchedUser.value : getPaymentObj;
-        debugger
+
         responseObject.value = getPaymentObj;
 
         payments = payments.map(item => {
@@ -128,10 +128,22 @@ export default function useUsersList() {
             immediate: false
         }
     );
+    const reference = () => {
+        let text = "";
+        let possible =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (let i = 0; i < 11; i++) {
+            text += possible.charAt(
+                Math.floor(Math.random() * possible.length)
+            );
+        }
+        return text;
+    }
 
     //*************************************************************** */
     // ********************** FUNCTIONS (MEHTODS) ********************************//
-    const confirmPayment = user => {
+    const confirmPayment = item => {
         new Swal({
             title: ' 😕 Confirmation ',
             text: `You are about to confirm this payment, check transaction detail carefully`,
@@ -155,7 +167,7 @@ export default function useUsersList() {
                         remark: 2,
                         updated_at: serverTimestamp()
                     },
-                    id: user.id
+                    id: item.id
                 };
                 store
                     .dispatch('TransferPayment/UPDATE_SINGLE_PAYMENT', payload)
@@ -163,7 +175,27 @@ export default function useUsersList() {
                         isBusy.value = false;
                         new Swal('Good job!', 'Transaction Confirmed!', 'success');
                         fetchUsers(1, 1);
-                        let user = auth ? auth.currentUser : 0;
+
+                        let transactions = {
+                            transRef: reference(),
+                            transId: item.id,
+                        };
+                        let userUpdateRecord = {
+                            data: {
+                                transaction: transactions,
+                                subscribed: true,
+                                payment_details: item,
+                                updated_at: serverTimestamp(),
+                            },
+
+                            id: item.user_id
+                        };
+                        debugger
+                        store
+                            .dispatch('Users/UPDATE_SINGLE_USER', userUpdateRecord)
+                            .catch(err => {
+                                console.log('err')
+                            });
 
                     })
                     .catch(err => {
