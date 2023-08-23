@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper d-flex justify-content-center">
-		<b-card class="innerWrapper">
+		<b-card class="">
 			<validation-observer ref="simpleRules">
 				<b-form @submit.prevent>
 					<b-row>
@@ -218,7 +218,7 @@
 							component: ToastificationContent,
 							position: "top-right",
 							props: {
-								title: `All Good `,
+								title: `Thanks for the feedback`,
 								icon: "CoffeeIcon",
 								variant: "success",
 								text: `We have received your message we will get back to you in due time.`,

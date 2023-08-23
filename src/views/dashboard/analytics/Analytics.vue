@@ -183,7 +183,7 @@
 									v-else-if="
 										course && computeCourseDisplay.isIframe
 									"
-									class="iframe p-0 my-1 embed-responsive embed-responsive-16by9"
+									class="iframe3 p-0 my-1 embed-responsive embed-responsive-16by9"
 									v-html="computeCourseDisplay.video_url"
 								></div>
 
@@ -453,7 +453,7 @@
 		font-weight: 500;
 		font-family: Arial, Helvetica, sans-serif;
 	}
-	.iframe {
+	.iframe3 {
 		position: relative;
 		overflow: hidden;
 		padding-bottom: 56.25%; /* 16:9 aspect ratio (height / width) */
@@ -463,7 +463,7 @@
 		border-radius: 7px !important;
 		border: 1px solid rgb(249, 249, 250) !important;
 	}
-	.iframe iframe {
+	.iframe3 iframe {
 		position: absolute;
 		width: 100%;
 		height: 30px;
