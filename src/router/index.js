@@ -38,7 +38,9 @@ const router = new VueRouter({
     ]
 });
 router.beforeEach((to, from, next) => {
-    let isAdmin = store.getters['appConfig/whoIsinGetter'];
+    // let isAdmin = store.getters['appConfig/whoIsinGetter'];
+
+    let isAdmin = JSON.parse(sessionStorage.getItem('isAdminIn') || 'false');
     let userData = JSON.parse(sessionStorage.getItem('userData') || 'false');
     // let userSubscriptionCheck = store.getters['appConfig/subscribeUserGetter']
 
