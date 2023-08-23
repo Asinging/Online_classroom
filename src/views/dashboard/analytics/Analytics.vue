@@ -149,6 +149,7 @@
 			<div class="col col-12">
 				<div class="row no-gutters">
 					<div class="col col-12 col-sm-6 col-md-9">
+						<!--  -->
 						<b-card class="card m-1">
 							<div class="my-2 mb-2 pb-1">
 								<p
@@ -177,24 +178,14 @@
 										></b-spinner>
 									</div>
 								</div>
-								<div class="" v-else-if="course">
-									<div
-										v-if="computeCourseDisplay.isIframe"
-										class="iframe p-0 my-1"
-										v-html="computeCourseDisplay.video_url"
-									></div>
-									<div v-else class="iframe p-0 m-0">
-										<b-embed
-											class="embed-responsive-item"
-											type="iframe"
-											aspect="16by9"
-											:src="
-												computeCourseDisplay.video_url
-											"
-											allowfullscreen
-										/>
-									</div>
-								</div>
+
+								<div
+									v-else-if="
+										course && computeCourseDisplay.isIframe
+									"
+									class="iframe p-0 my-1 embed-responsive embed-responsive-16by9"
+									v-html="computeCourseDisplay.video_url"
+								></div>
 
 								<div class="" v-else>
 									<b-alert
@@ -353,8 +344,7 @@
 		},
 		computed: {
 			computeCourseDisplay() {
-				if (!this.courseDisplay) return null;
-				return checkIframe(this.courseDisplay);
+				return this.courseDisplay ? checkIframe(this.courseDisplay) : null;
 			},
 			currentUser() {
 				let x = this.$store.getters["Auth/currentUserGetter"];
@@ -447,7 +437,7 @@
 	};
 	// <style lang="sss" scoped>
 </script>
-	<style lang="scss">
+	<style lang="scss" scoped >
 	.header_title {
 		font-weight: 800;
 		font-family: Arial, Helvetica, sans-serif;
@@ -467,17 +457,18 @@
 		position: relative;
 		overflow: hidden;
 		padding-bottom: 56.25%; /* 16:9 aspect ratio (height / width) */
-		width: 100%;
-		height: 38vh;
-
-		// border: 5px solid red !important;
+		// width: 100%;
+		max-height: 200px;
+		// height: 38vh;
+		border-radius: 7px !important;
+		border: 1px solid rgb(249, 249, 250) !important;
 	}
 	.iframe iframe {
 		position: absolute;
 		width: 100%;
-		height: 100%;
+		height: 30px;
 		top: 0;
-		// left: 0;
+		left: 0;
 		right: 1;
 		border-radius: 12px !important;
 
