@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
         return next('/welcome');
     }
 
-    if (to.path !== '/welcome' && to.path !== '/payment-methods' && to.path !== "/account-init" && !userSubscriptionCheck && to.path !== '/login' && to.path !== '/register') {
+    if (to.path !== '/welcome' && to.path !== '/payment-methods' && to.path !== "/account-init" && !userSubscriptionCheck && to.path !== '/login' && to.path !== '/register' && !isAdmin) {
         return next('/payment-methods');
     }
 

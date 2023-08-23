@@ -66,7 +66,7 @@ export default {
                     const q = query(
                         listOfCourses,
                         limit(50),
-                        orderBy('created_at', 'desc'),
+                        orderBy('created_at', 'asc'),
                         where('status', '==', 1),
                         where('intro_video', '==', 0)
                     );
