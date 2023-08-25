@@ -242,8 +242,6 @@
 			const childIndex = ref(0);
 			const courseNotExist = ref(false);
 
-	
-
 			const windowWidth = ref(window.innerWidth);
 
 			const courseTitles = [
@@ -331,7 +329,7 @@
 				});
 			};
 			const computeCourseDisplay = computed(() => {
-				let counter = 1;
+				let counter = 0;
 				if (!courseDisplay.value) {
 					// let storage = JSON.parse(
 					// 	sessionStorage.getItem("courseModuleDisplay") || "null"
@@ -382,7 +380,7 @@
 					.then((response) => {
 						isServerResponse.value = true;
 						isRequesting.value = false;
-						let counter = 1;
+						let counter = 0;
 
 						if (!response) {
 							let storage = JSON.parse(
@@ -434,6 +432,8 @@
 						);
 					})
 					.catch((err) => {
+						console.log(err);
+						debugger;
 						courseNotExist.value = true;
 						isServerResponse.value = true;
 						isRequesting.value = false;
