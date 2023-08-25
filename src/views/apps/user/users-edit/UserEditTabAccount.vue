@@ -3,9 +3,19 @@
 		<!-- Media -->
 		<b-media class="mb-2">
 			<template #aside>
-				<b-avatar
+				<b-img
+					v-if="imgFileUpload"
+					:src="coverArtUrl"
 					ref="refPreviewEl"
-					:src="computeUserData.avatar || coverArtUrl"
+					height="50"
+					width="80"
+					class="rounded mr-2 mb-1 mb-md-0 img-fluid img-responsive"
+				/>
+				<!-- :src="computeUserData.avatar || coverArtUrl" -->
+				<b-avatar
+					v-else
+					ref="refPreviewEl"
+					:src="computeUserData.avatar"
 					:text="
 						avatarText(
 							computeUserData.f_name || computeUserData.username
@@ -14,7 +24,7 @@
 					:variant="`light-${resolveUserRoleVariant(
 						computeUserData.user_type
 					)}`"
-					size="90px"
+					size="80px"
 					rounded
 				/>
 			</template>
@@ -208,6 +218,7 @@
 		BCardHeader,
 		BCardTitle,
 		BFormCheckbox,
+		BImg,
 	} from "bootstrap-vue";
 	import { avatarText } from "@core/utils/filter";
 	import { useInputImageRenderer } from "@core/comp-functions/forms/form-utils";
@@ -238,6 +249,7 @@
 			BCardTitle,
 			BFormCheckbox,
 			vSelect,
+			BImg,
 		},
 
 		setup() {
@@ -249,6 +261,7 @@
 			const isResetRecord = ref(false);
 			const isFormEdited = ref(false);
 			const coverArtUrl = ref(null);
+			const imgFileUpload = ref(null);
 
 			const roleOptions = [
 				{ label: "Admin", value: 1 },
@@ -278,6 +291,8 @@
 				userDefaultValue.value = x;
 
 				coverArtUrl.value = x.avatar;
+				
+
 				if (!x) return false;
 
 				if (x.enabled == 1) {
@@ -398,7 +413,7 @@
 
 					data.enabled = data.enable.value;
 					data.updated_at = serverTimestamp();
-					data.avatar = coverArtUrl.value ? coverArtUrl.value : null;
+					// data.avatar = coverArtUrl.value ? coverArtUrl.value : null;
 					data.subscribed = data.subscription.value === 1 ? true : false;
 					data.user_type = data.userType.value;
 					delete data.enable;
@@ -438,7 +453,7 @@
 				async (file, base64) => {
 					let userId = router.currentRoute.params.id;
 					// computeUserData.value.avatar = base64;
-
+					//
 					if (file.size > 2000000) {
 						toast({
 							component: ToastificationContent,
@@ -453,11 +468,15 @@
 					}
 
 					isUpdateProfilePhoto.value = true;
+					imgFileUpload.value = file;
 
 					store
-						.dispatch("Users/USER_PROFILE_UPLOAD", { image: file })
+						.dispatch("Users/USER_PROFILE_UPLOAD", {
+							image: file,
+							id: userId,
+						})
 						.then((resp) => {
-							isUpdateProfilePhoto.value = false;
+					
 							if (!resp) {
 								return false;
 							}
@@ -467,19 +486,28 @@
 									.dispatch("Users/DELETE_PROFILE_UPLOAD", {
 										path: coverArtUrl.value,
 									})
-
 									.catch((err) => {});
 							}
 
 							getDownloadURL(resp.ref)
-								.then((response) => {
+								.then(async (response) => {
 									coverArtUrl.value = response;
+									await store.dispatch(
+										"Users/UPDATE_SINGLE_USER",
+										{
+											id: userId,
+											data: {
+												avatar: response,
+											},
+										}
+									);
 								})
 								.catch();
 
 							store.dispatch("Users/GET_SINGLE_USER_BY_Id", {
 								id: userId,
 							});
+							isUpdateProfilePhoto.value = false;
 						})
 						.catch((err) => {
 							isUpdateProfilePhoto.value = false;
@@ -516,6 +544,7 @@
 				subscriptionOptions,
 				formatter,
 				coverArtUrl,
+				imgFileUpload,
 
 				//  ? Demo - Update Image on click of update button
 				refInputEl,
