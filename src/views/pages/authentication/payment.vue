@@ -28,7 +28,7 @@
 								<div
 									class="d-flex bg-light px-25 rounded-5 subscription-alert justify-content-start"
 								>
-									<span class="pr-1">
+									<span class="pr-1 d-none d-sm-block">
 										<feather-icon
 											icon="AlertTriangleIcon"
 											class="text-danger"
@@ -65,7 +65,7 @@
 
 						<div class="my-3 my-md-0">
 							<b-card-text
-								class="mb-1 text-capitalize display-3 text-responsive font-weight-bold text-white"
+								class="mb-25 text-capitalize display-3 text-responsive font-weight-bold text-white"
 								style=""
 							>
 								{{
@@ -76,7 +76,7 @@
 								{{ currentUser ? currentUser.username : "" }}
 							</b-card-text>
 							<b-card-text
-								class="mb-1 text-capitalize h1 text-white"
+								class="mb-2 mt-0 text-capitalize h1 text-white"
 								style="font-size: 20px"
 							>
 								Welcome Back! Good to have you
@@ -230,13 +230,15 @@
 											<p
 												class="footer-card-text text-center font-weight-bold text-dark h2"
 											>
-												One of the greatest ways, our
+												One of the best ways, our
 												students optimally utilized our
 												platform is by ensuring they
 												learn from the comfort of their
 												study space! With this the
 												platform has welcome more
-												student that we can mention!
+												student and has impacted lives
+												tremendously such that we now
+												synonymous wiht Wealth Creators
 											</p>
 										</div>
 									</div>
@@ -251,7 +253,7 @@
 													require('@/assets/images/peopleLearning.webp')
 												"
 												style="max-height: 270px"
-												class="img-responsive img-fluid"
+												class="img-responsive img-fluid imgs"
 											/>
 										</div>
 									</div>
@@ -755,7 +757,7 @@
 						title: "Wealth Link Platform Payment",
 						description:
 							"This payment allows you acces to the Wealth link platform",
-						logo: "https://flutterwave.com/images/logo-colored.svg",
+						logo: require("@/assets/images/pages/under-maintenance.svg"),
 					},
 					callback: this.makePaymentWithFlutterwave,
 					onclose: this.closedPaymentModal,
@@ -1082,6 +1084,9 @@
 	// 	background-size: cover;
 	// }
 
+	.imgs {
+		border-radius: 8px;
+	}
 	.footer-card-text {
 		line-height: 2;
 		font-weight: 800 !important;
